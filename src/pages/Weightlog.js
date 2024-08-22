@@ -1,5 +1,5 @@
 import React from 'react';
-import './Weightlog.css'; // Import the CSS file
+import '../styles/Weightlog.css';
 
 function WeightLog() {
     return (

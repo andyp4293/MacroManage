@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Calculator.css';
+import '../styles/Calculator.css';
 
 function Calculator() {
     const [age, setAge] = useState(21);
