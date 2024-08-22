@@ -1,0 +1,28 @@
+.date-container{
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    background-color:rgba(0, 198, 145, 1);
+}
+
+.date-container input[type = "date"]{
+    font-size: 24px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+}
+.date-container input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.date-container input[type="date"]:hover {
+    background-color: rgb(3, 152, 112);
+    color: white;
+
+}
+
+

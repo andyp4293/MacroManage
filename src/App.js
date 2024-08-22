@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';  // Import Routes
 import Navbar from './Navbar';
 import Calculator from './Calculator';
+import Weightlog from './Weightlog';
 
 
 function App() {
@@ -10,8 +11,8 @@ function App() {
             <div>
                 <Navbar />
                 <Routes>  
-                    <Route path="/" element={<Calculator />} />
                     <Route path="/calculator" element={<Calculator />} />
+                    <Route path="/weight-log" element={<Weightlog />} />
                 </Routes>
             </div>
         </Router>
