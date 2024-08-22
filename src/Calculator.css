@@ -1,0 +1,162 @@
+.tdee-calculator {
+    margin-top: 0px; 
+    max-width: 300px;
+    font-family: "Roboto", sans-serif; 
+    padding: 8px 24px;
+    box-shadow: 0 4px 8px -3px rgba(0, 0, 0, 0.3); 
+    margin-top: 10px;
+    margin-left: 10px;  
+}
+
+
+
+.tdee-calculator, 
+.tdee-calculator * {
+    box-sizing: border-box;
+}
+
+.tdee-calculator h2 {
+    text-align:center; 
+    background: rgba(0, 198, 145, 1); 
+    color: #fff; 
+    font-weight: 100; 
+    margin-bottom: 8px; 
+    padding: 16px; 
+    margin: -8px -24px;
+}
+
+.tdee-calculator form h3 {
+    font-size: 15px; 
+    text-transform: uppercase; 
+    margin: 16px 0 10px 0; 
+
+}
+
+.tdee-calculator form input[type = "text"] {
+    width: 100%; 
+    padding: 4px 16px; 
+    font-size: 24px; 
+    font-weight: bold; 
+    border: 1px solid #d5dbdd
+}
+
+.tdee-calculator form{
+    display: flex;
+    flex-direction: column; 
+    gap: 4px; 
+}
+
+.tdee-calculator form #female {
+    margin-left: 20px; 
+
+}
+
+.tdee-calculator form .height, 
+.tdee-calculator form .weight {
+    position: relative; 
+}
+
+.tdee-calculator form .unit {
+    position: absolute; 
+    right: 20px; 
+    top: 50px; 
+    color: #777; 
+}
+
+.tdee-calculator .result .calculate-btn{
+    padding: 8px 24px; 
+    margin: 16px 0; 
+    font-size: 18px; 
+    font-weight: 100; 
+    text-transform: uppercase; 
+    border:none; 
+    background: rgba(0, 198, 145, 1); 
+    color: white; 
+    cursor: pointer; 
+    margin-bottom: 14px; 
+}
+
+.tdee-calculator .result{
+    text-align: center; 
+    color: black; 
+    font-size: 18px; 
+    margin-bottom: 15px;
+} 
+
+.tdee-calculator .result .calories{
+    color: black; 
+    font-size: 38px; 
+    font-weight: 900; 
+    margin-right: 8px; 
+    vertical-align: middle; 
+}
+
+
+
+.tdee-calculator .activity select {
+    width: 255px; 
+    padding: 12px; 
+    font-size: 17px; 
+    height: auto; 
+    border: 2px solid #ccc;
+    border-radius: 4px; 
+    background-color: #f9f9f9; 
+    color: #333; 
+    margin-top: 5px;
+    font-weight: bold;
+    
+}
+
+/* Style for the popup container */
+.popup {
+    display: none; /* Hidden by default */
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #f5c6cb; /* Light red border */
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Style for the close button */
+.close-btn {
+    float: right;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+/*Style the error message block */
+.popup {
+    display: none; 
+    background-color: #f8d7da; 
+    color: #721c24; 
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Style for the close button */
+.close-btn {
+    float: right;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+

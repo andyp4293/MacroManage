@@ -1,0 +1,54 @@
+nav {
+    width: 300%;
+    background-color: rgba(0, 198, 145, 1); /* Example color */
+    padding: 10px 20px;
+    margin-bottom: 10px; 
+    margin-top: -10px;
+    font-family: "Roboto", sans-serif; 
+    font-weight: bold; 
+    margin-left: -30px
+}
+
+nav .home {
+    font-size: 40px;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: rgba(0, 198, 145, 1);
+    border-radius: 4px;
+}
+
+/* style for the calculator, food log, and weight log links*/
+nav ul {
+    margin-left: 10px; 
+    margin-bottom: 10px; 
+    list-style: none; 
+    display: flex;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 0px 10px;
+}
+
+nav ul li a {
+    color: White;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: rgba(0, 198, 145, 1);
+    border-radius: 4px;
+}
+
+nav ul li a:hover {
+    background-color: rgb(3, 152, 112);
+}
+
+
+
+.tdee-calculator {
+    margin-top: 0px; 
+    max-width: 300px;
+    font-family: "Roboto", sans-serif; 
+    padding: 8px 24px;
+    box-shadow: 0 4px 8px -3px rgba(0, 0, 0, 0.3);  
+}
