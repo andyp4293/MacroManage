@@ -28,6 +28,7 @@ function Calculator() {
     };
 
     return (
+        <div>
             <div className="tdee-calculator">
                 <h2>TDEE Calculator</h2>
                 <div className="controls">
@@ -73,6 +74,7 @@ function Calculator() {
                     </div>
                 </div>
             </div>
+        </div>
     );
 }
 

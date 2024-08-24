@@ -32,8 +32,8 @@ function DateSelector(){
     
     return (
             <Box
-            variant = "contained"
             sx = {{
+                position: 'relative',
                 backgroundColor: '#00c691',
                 display: 'flex', 
                 alignItems: 'center',
@@ -92,15 +92,24 @@ function DateSelector(){
                 <KeyboardArrowRightIcon />
             </IconButton>
             {openCal && (
-            <DatePicker
-                selected={date}
-                onChange={(newDate) => {
-                    setDate(newDate);
-                    setOpenCal(false);
-        }}
-            inline
-            onClickOutside={() => setOpenCal(false)}
-        />
+                <Box
+                    sx = {{
+                        position: 'absolute',
+                        top: '110%',
+                        right: '0', 
+                    }}
+
+                >
+                <DatePicker
+                    selected={date}
+                    onChange={(newDate) => {
+                        setDate(newDate);
+                        setOpenCal(false);
+            }}
+                inline
+                onClickOutside={() => setOpenCal(false)}
+            />
+            </Box>
         )}
             </Box> 
             
