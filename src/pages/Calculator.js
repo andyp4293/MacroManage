@@ -58,7 +58,7 @@ function Calculator() {
                             <label htmlFor="activity-dropdown">Select Activity Level</label>
                             <select id="activity-dropdown" value={activity} onChange={e => setActivity(e.target.value)}>
                                 <option value="option1">Sedentary</option>
-                                <option value="option2">Light Exercise (1-2 days/week)</option>
+                                <option value="option2">Light Exercise (1-2 days/week or 7-10k steps)</option>
                                 <option value="option3">Moderate Exercise (3-5 days/week)</option>
                                 <option value="option4">Heavy Exercise (6-7 days/week)</option>
                                 <option value="option5">Athlete (2x per day) or physical job</option>

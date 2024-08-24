@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { Button, IconButton, Typography } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import {IconButton, Typography, Box} from '@mui/material';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { format, addDays, subDays } from 'date-fns';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 function DateSelector(){
     // state for the selected date
     const [date, setDate] = useState(new Date()); // starts off with the current date
+
+    // state to turn the calendar visibility on or off
+    const[openCal, setOpenCal] = useState(false); 
 
     // function to go to the previous day
     const prevDay = () => {
@@ -17,47 +23,86 @@ function DateSelector(){
     const nextDay = () => {
         setDate(addDays(date, 1)); 
     };
+
+    // function to open the calendar when the date is clicked
+    const dateClick = () => {
+        setOpenCal(!openCal); 
+    }
     
     return (
-        <Button
-        variant = "contained"
-        sx = {{
-            backgroundColor: '#00c691',
-            display: 'flex', 
-            alignItems: 'center',
-            justifyContent: 'space-between', 
-            borderRadius: '20px', 
-            padding: '10px 20px',
-            minWidth: '250px',
-            '&:hover':{
-                backgroundColor: '#00a67e',
-            }
-        }}
-        >
-
-        <IconButton
-            color = "inherent"
-            onClick = {prevDay}
+            <Box
+            variant = "contained"
             sx = {{
-                padding: '0', 
-                marginRight: '10px'
+                backgroundColor: '#00c691',
+                display: 'flex', 
+                alignItems: 'center',
+                justifyContent: 'space-between', 
+                borderRadius: '10px', 
+                padding: '0px 0px',
+                width: '300px',
             }}
-        >
-            <ArrowBackIosIcon />
-        </IconButton>
+            >
+            
+            {/*Left arrow button */}
+            <IconButton
+                disableRipple
+                onClick = {prevDay}
+                sx = {{
+                    color: 'white', 
+                    borderRadius: '10px 0 0 10px',
+                    borderRight: '3px solid white', 
+                    '&:hover':{
+                    backgroundColor: '#00a67e',
+                },
 
-        <Typography variant="body1" sx={{ color: 'white' }}>
-        {format(date, 'EEEE, MMM d, yyyy')}
-        </Typography>
+                }}
+                
+            >
+                <KeyboardArrowLeftIcon />
+            </IconButton>
 
-        <IconButton
-        color = 'white'
-        onClick={nextDay}
-        sx={{ padding: '0', marginLeft: '10px' }}
-        >
-            <ArrowForwardIosIcon />
-        </IconButton>
-        </Button> 
+            <Typography //
+            variant="body1" 
+            sx={{ 
+                color: 'white',
+                textAlign: 'center', 
+                flexGrow: 1,
+                cursor: 'pointer'
+
+            }}
+            onClick = {dateClick}
+            >
+            {format(date, 'EEE, MMM d, yyyy')}
+            </Typography>
+
+            {/*Right arrow button */}
+            <IconButton
+            onClick = {nextDay}
+            disableRipple
+            sx={{ 
+                color: 'white',
+                borderRadius: '0 10px 10px 0',
+                borderLeft: '3px solid white', 
+                '&:hover':{
+                    backgroundColor: '#00a67e',
+                },
+            }}
+            >
+                <KeyboardArrowRightIcon />
+            </IconButton>
+            {openCal && (
+            <DatePicker
+                selected={date}
+                onChange={(newDate) => {
+                    setDate(newDate);
+                    setOpenCal(false);
+        }}
+            inline
+            onClickOutside={() => setOpenCal(false)}
+        />
+        )}
+            </Box> 
+            
     )
 
 };
