@@ -1,0 +1,9 @@
+/*Changing the highlight color of the selected date*/
+.react-datepicker__day--selected {
+    background-color: #00c691;
+    color: white;
+}
+
+.react-datepicker__day--selected:hover {
+    background-color: #00a67e ; /* Custom hover color */
+}
