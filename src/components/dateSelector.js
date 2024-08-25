@@ -25,15 +25,16 @@ function DateSelector(){
         setDate(addDays(date, 1)); 
     };
 
-    // function to open the calendar when the date is clicked
+    // function to change the status of the calender open or closed
     const dateClick = () => {
-        setOpenCal(!openCal); 
+        setOpenCal(!openCal); // every time this function is called, the state of the calender is switched
+                            // ie if the calender wasn't visible before, it will be after
     }
     
     return (
             <Box
             sx = {{
-                position: 'relative',
+                position: 'relative', // relative for positioning context of the date picker component
                 backgroundColor: '#00c691',
                 display: 'flex', 
                 alignItems: 'center',
@@ -47,7 +48,7 @@ function DateSelector(){
             {/*Left arrow button */}
             <IconButton
                 disableRipple
-                onClick = {prevDay}
+                onClick = {prevDay} // when left arrow clicked the date is decremented by 1 day
                 sx = {{
                     color: 'white', 
                     borderRadius: '10px 0 0 10px',
@@ -78,7 +79,7 @@ function DateSelector(){
 
             {/*Right arrow button */}
             <IconButton
-            onClick = {nextDay}
+            onClick = {nextDay} // when right arrow is clicked, the date is incremented by 1 day
             disableRipple
             sx={{ 
                 color: 'white',
@@ -91,8 +92,9 @@ function DateSelector(){
             >
                 <KeyboardArrowRightIcon />
             </IconButton>
-            {openCal && (
-                <Box
+            {openCal && ( // everything within this bracket is rendered only if openCal is true
+                         // so if openCal is true, the date picker component is visible 
+                <Box // the date picker component is rendered within a box component
                     sx = {{
                         position: 'absolute',
                         top: '110%',
@@ -104,10 +106,10 @@ function DateSelector(){
                     selected={date}
                     onChange={(newDate) => {
                         setDate(newDate);
-                        setOpenCal(false);
+                        setOpenCal(false); // closes calendar when a day date is picked
             }}
                 inline
-                onClickOutside={() => setOpenCal(false)}
+                onClickOutside={() => setOpenCal(false)} // closes calender if user clicks anywhere outside of i
             />
             </Box>
         )}

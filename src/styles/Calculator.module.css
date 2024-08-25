@@ -18,7 +18,7 @@
 .tdee-calculator h2 {
     text-align:center; 
     background: rgba(0, 198, 145, 1); 
-    color: #fff; 
+    color: white; 
     font-weight: 100; 
     margin-bottom: 8px; 
     padding: 16px; 
@@ -51,7 +51,9 @@
 
 }
 
-.tdee-calculator form .height, 
+.tdee-calculator form .height{
+    position: relative; 
+}
 .tdee-calculator form .weight {
     position: relative; 
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/Calculator.css';
+import styles from '../styles/Calculator.module.css';
 
 function Calculator() {
     const [age, setAge] = useState(21);
@@ -11,8 +11,8 @@ function Calculator() {
 
     const calculateBMR = () => {
         let BMR = gender === "male" 
-            ? 10 * weight + 6.25 * height - 5 * age + 5 
-            : 10 * weight + 6.25 * height - 5 * age - 161;
+            ? 10 * weight + 6.25 * height - 5 * age + 5 // executed if checked gender is male
+            : 10 * weight + 6.25 * height - 5 * age - 161; // executed if checked gender is not male, ie female
         
         let activityMultiplier;
         switch (activity) {
@@ -29,7 +29,7 @@ function Calculator() {
 
     return (
         <div>
-            <div className="tdee-calculator">
+            <div className = {styles['tdee-calculator']}>
                 <h2>TDEE Calculator</h2>
                 <div className="controls">
                     <form onSubmit={e => e.preventDefault()}>
@@ -37,29 +37,29 @@ function Calculator() {
                             <h3>Age</h3>
                             <input type="text" id="age" value={age} onChange={e => setAge(e.target.value)} />
                         </div>
-                        <div className="gender">
+                        <div className={styles.gender}>
                             <h3>Gender</h3>
                             <input type="radio" id="male" value="male" name="gender" checked={gender === 'male'} onChange={e => setGender(e.target.value)} />
                             <label htmlFor="male">Male</label> 
                             <input type="radio" id="female" value="female" name="gender" checked={gender === 'female'} onChange={e => setGender(e.target.value)} />
                             <label htmlFor="female">Female</label> 
                         </div>
-                        <div className="height">
+                        <div className= {styles.height}>
                             <h3>Height</h3>
                             <input type="text" id="height" value={height} onChange={e => setHeight(e.target.value)} />
-                            <div className="unit">cm</div>
+                            <div className={styles.unit}>cm</div>
                         </div>
-                        <div className="weight">
+                        <div className= {styles.height}>
                             <h3>Weight</h3>
                             <input type="text" id="weight" value={weight} onChange={e => setWeight(e.target.value)} />
-                            <div className="unit">kg</div>
+                            <div className={styles.unit}>kg</div>
                         </div>
-                        <div className="activity">
+                        <div className= {styles.activity}>
                             <h3>Activity</h3>
                             <label htmlFor="activity-dropdown">Select Activity Level</label>
                             <select id="activity-dropdown" value={activity} onChange={e => setActivity(e.target.value)}>
                                 <option value="option1">Sedentary</option>
-                                <option value="option2">Light Exercise (1-2 days/week or 7-10k steps)</option>
+                                <option value="option2">Light Exercise (1-2 days/week )</option>
                                 <option value="option3">Moderate Exercise (3-5 days/week)</option>
                                 <option value="option4">Heavy Exercise (6-7 days/week)</option>
                                 <option value="option5">Athlete (2x per day) or physical job</option>
@@ -67,8 +67,8 @@ function Calculator() {
                         </div>
                     </form>
                 </div>
-                <div className="result">
-                    <button className="calculate-btn" onClick={calculateBMR}>Calculate</button>
+                <div className={styles.result}>
+                    <button className= {styles['calculate-btn']} onClick={calculateBMR}>Calculate</button>
                     <div className="result-message">
                         {tdee && <span className="calories">{tdee}</span>} Calories/day
                     </div>

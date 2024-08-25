@@ -1,13 +1,26 @@
 import React from 'react';
 import DateSelector from '../components/dateSelector'; 
-import '../styles/Weightlog.css';
+import '../styles/Weightlog.module.css';
 
 function WeightLog() {
     return (
             <div>
-                <h2>Weight Entry For:</h2>
-                <DateSelector/>
+                <div className = 'date-container'>
+                    <h3>Log Entry For:</h3>
+                    <DateSelector/>
+                </div> 
+                <hr></hr>
+                <div className = 'weight-input'> 
+                    <h4>Enter weigh-in</h4>
+                    <input // input for the weight log of the day
+                        name = 'weight' 
+                        type = 'number' // user can only input numbers
+                        placeholder = 'lbs' // displays lbs on the right side of the 
+                    />
+                </div>
+                
             </div>
+
     );
 }
 
