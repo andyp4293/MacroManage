@@ -59,8 +59,10 @@ input[type="number"] {
     background: rgb(3, 152, 112);
 }
 
-.weight-entry-table h2{
-    margin-top: 20px; 
+.weight-entry-table h1{
+    margin-top: -5px; 
+    margin-left: 10px; 
+    margin-bottom: 3px; 
 }
 
 .weight-entry-table .actionButton{
