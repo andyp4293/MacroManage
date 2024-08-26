@@ -77,7 +77,8 @@ function DateSelector({onDateChange}){
                 textAlign: 'center', 
                 flexGrow: 1,
                 cursor: 'pointer',
-                fontSize: '20px',
+                fontSize: '22px',
+                fontFamily: '"Roboto", sans-serif'
             }}
             onClick = {dateClick}
             >

@@ -60,7 +60,7 @@ input[type="number"] {
 }
 
 .weight-entry-table h1{
-    margin-top: -5px; 
+    margin-top: 0px; 
     margin-left: 10px; 
     margin-bottom: 3px; 
 }
@@ -89,3 +89,17 @@ input[type="number"] {
     gap: 10px; 
     max-height: 50%;
 }
+
+.weight-edit-input {
+    width: 10%;
+    height: 30px;
+    font-size: 20px; 
+    text-align: center;
+
+}
+
+.edit-unit {
+    margin-left: 5px; 
+    font-size: 20px; 
+}
+

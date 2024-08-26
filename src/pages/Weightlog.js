@@ -86,12 +86,22 @@ function WeightLog() {
         setEntries(updatedEntries); 
         setEditIndex(null); 
     }
+    // ensure the user cannot type a number greater 999.999 or less than 0  
+    const handleEditInput = (event) =>{
+        let value = event.target.value; // Get the current value of the input
+        
+        // the weight value inside the input only changes as long as it is below 1000
+        // the input also cannot have more than 7 digits, highest possible input is 999.999
+        if (value < 1000 && value.length < 8 && value >= 0){ // if the current value is 999, if a user tries typing another 9 the value won't change
+            setNewWeight(value);
+        }
+    }
 
 
     return (
             <div>
                 <div className = {styles['date-container']}>
-                    <h3>Log Entry For:</h3>
+                    <h3>Weight Log Entry For:</h3>
                     <DateSelector onDateChange={updateDate}/>
                 </div> 
                 <hr></hr>
@@ -125,28 +135,33 @@ function WeightLog() {
                     >
                         <thead>
                             <tr style={{ backgroundColor: '#00c691', color: 'white' }}>
-                                <th style={{ padding: '10px', border: '1px solid #ddd', width: '45%'}}>Date</th>
-                                <th style={{ padding: '10px', border: '1px solid #ddd', width: '35%'}}>Weight</th>
-                                <th style={{ padding: '10px', border: '1px solid #ddd', width: '20%'}}>Action</th>
+                                <th style={{ padding: '10px', border: '1px solid #ddd', width: '40%'}}>Date</th>
+                                <th style={{ padding: '10px', border: '1px solid #ddd', width: '30%'}}>Weight</th>
+                                <th style={{ padding: '10px', border: '1px solid #ddd', width: '30%'}}>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                         {entries.map((entry, index) => (
                             <tr key={index}>
                                 {/* first column with date value of entry */}
-                                <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>{entry.date}</td>
+                                <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center', fontFamily: '"Roboto", sans-serif' }}>{entry.date}</td>
                                 {/* second column with weight value of entry */}
-                                <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center'  }}> 
+                                <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center', fontFamily: '"Roboto", sans-serif' }}> 
                                     {editIndex === index 
                                             ? 
-                                            <input // if the index of the entry is the one being edited, its weight column becomes an input element
+                                            <div>
+                                                <input // if the index of the entry is the one being edited, its weight column becomes an input element
+                                                className = {styles['weight-edit-input']}
                                                 type="number"
                                                 value={newWeight}
-                                                onChange={(e) => setNewWeight(e.target.value)}
+                                                onChange={handleEditInput}
+                                                //onChange={(e) => setNewWeight(e.target.value)}
                                                 style={{ width: '80px' }}
                                                 max = '1000'
                                                 min = '0'
-                                            />
+                                                />
+                                                <span className = {styles['edit-unit']}>lbs</span>
+                                            </div>
                                             :
                                             <div>
                                                 {entry.weight === '' 
