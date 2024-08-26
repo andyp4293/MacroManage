@@ -12,7 +12,12 @@ function WeightLog() {
     const [selectedDate, setSelectedDate] = useState(new Date())
     
     // entries is an array for objects that will hold each entry's date and weight
-    const [entries, setEntries] = useState([]); 
+    const [entries, setEntries] = useState([
+        { date: '8/24/2024', weight: 150 },
+        { date: '8/23/2024', weight: 152 },
+        { date: '8/22/2024', weight: 148 },
+        { date: '8/21/2024', weight: 151 },
+    ]); 
 
     // function to handle whenever the user inputs anything
     const handleInput = (event) => {
@@ -28,26 +33,42 @@ function WeightLog() {
 
     // func to add a new weight entry whenever user presses save
     const addEntry = () => {
+        // taken is true if the date selected already has a weight entry associated with it
+        const taken = entries.some(entry => entry.date === selectedDate.toLocaleDateString());
         let weightValue;
+
         if (weight === ''){
             weightValue = 0; 
         }
         else {
             weightValue = parseFloat(weight)
         }
-        
 
-        const newEntry = {
-            weight: weightValue, 
-            date: selectedDate.toLocaleDateString()
+        if (!taken){  // if the date selected isn't taken, just make a new entry
+            
+            const newEntry = {
+                weight: weightValue, 
+                date: selectedDate.toLocaleDateString()
+            }
+            let newEntries = [...entries, newEntry]; // entries with the new entry added
+            
+            // sort the entries by most recent, ie most recent date is at index 0 of entries
+            newEntries = newEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            setEntries(newEntries); 
+            setWeight('');    
         }
-        let newEntries = [...entries, newEntry]; // entries with the new entry added
-        
-        // sort the entries by most recent, ie most recent date is at index 0 of entries
-        newEntries = newEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        setEntries(newEntries); 
-        setWeight('');
+        else { // if the date is taken, just update the weight on the entry associated with that date
+            const index = entries.findIndex(entry => entry.date === selectedDate.toLocaleDateString());
+            const updatedEntries = [...entries];
+            updatedEntries[index] = {
+                ...updatedEntries[index],
+                weight: weightValue
+            }
+            setEntries(updatedEntries);
+            setWeight('');
+        }   
     }
     
     const deleteEntry = (index) => {

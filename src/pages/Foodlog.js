@@ -3,10 +3,11 @@ import DateSelector from '../components/dateSelector';
 import styles from '../styles/Foodlog.module.css';
 
 function FoodLog() {
-    const [selectedDate, setSelectedDate] = useState(new Date())
+    const [, setSelectedDate] = useState(new Date())
     const updateDate = (newDate) => {
         setSelectedDate(newDate); 
     };
+
 
 
     return (
