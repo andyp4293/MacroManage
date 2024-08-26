@@ -59,7 +59,7 @@ input[type="number"] {
     background: rgb(3, 152, 112);
 }
 
-.weight-entry-table {
+.weight-entry-table h2{
     margin-top: 20px; 
 }
 

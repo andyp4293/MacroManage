@@ -26,8 +26,17 @@ function WeightLog() {
 
     // func to add a new weight entry whenever user presses save
     const addEntry = () => {
+        let weightValue;
+        if (weight === ''){
+            weightValue = 0; 
+        }
+        else {
+            weightValue = parseFloat(weight)
+        }
+        
+
         const newEntry = {
-            weight: parseFloat(weight), 
+            weight: weightValue, 
             date: selectedDate.toLocaleDateString()
         }
         setEntry([...entries, newEntry]); 
@@ -79,6 +88,7 @@ function WeightLog() {
                 </div>
 
                 <div className = {styles['weight-entry-table']}>
+                    <h1>Weight Entries</h1>
                     <table 
                         style = {{
                             width: '65%'
