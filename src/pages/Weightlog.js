@@ -41,13 +41,22 @@ function WeightLog() {
             weight: weightValue, 
             date: selectedDate.toLocaleDateString()
         }
-        setEntries([...entries, newEntry]); 
+        let newEntries = [...entries, newEntry]; // entries with the new entry added
+        
+        // sort the entries by most recent, ie most recent date is at index 0 of entries
+        newEntries = newEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        setEntries(newEntries); 
         setWeight('');
     }
     
     const deleteEntry = (index) => {
-        const updatedEntries = [...entries];
+        let updatedEntries = [...entries];
         updatedEntries.splice(index,1);
+
+        // sort the entries by most recent, ie most recent date is at index 0 of entries
+        updatedEntries = updatedEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
         setEntries(updatedEntries);
     }
 
@@ -140,7 +149,7 @@ function WeightLog() {
                                             />
                                             :
                                             <div>
-                                                {entry.weight == '' 
+                                                {entry.weight === '' 
                                                 ? '0 lbs' // display 0 lbs if the input is empty
                                                 : <div>{entry.weight} lbs</div>
                                                 }
