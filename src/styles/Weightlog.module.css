@@ -19,10 +19,43 @@ input[type="number"] {
 
 
 /*for the weight entry div*/
-.weight-input{
+.weight{
+    position: relative; 
     display: flex;
     align-items: center;
-    gap: 10px; 
+    gap: 7px; 
     margin-left: 10px; 
-    margin-top: -15px; 
+    margin-top: -10px; 
+}
+
+.weight .weight-input {
+    width: 150px;
+    height: 40px;
+    font-size: 25px; 
+}
+
+.weight .unit {
+    color: gray; 
+    position: absolute;
+    top: 15px; 
+    right: 580px;
+    font-size: 25px; 
+}
+
+.weight .save-button {
+    padding: 8px 24px; 
+    margin: 13px 0; 
+    font-size: 18px; 
+    font-weight: 100; 
+    text-transform: uppercase; 
+    border:none; 
+    background: rgba(0, 198, 145, 1); 
+    color: white; 
+    cursor: pointer; 
+    margin-bottom: 14px; 
+    border-radius: 10px; 
+}
+
+.weight .save-button:hover {
+    background: rgb(3, 152, 112)
 }

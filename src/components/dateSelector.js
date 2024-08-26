@@ -69,8 +69,7 @@ function DateSelector(){
                 color: 'white',
                 textAlign: 'center', 
                 flexGrow: 1,
-                cursor: 'pointer'
-
+                cursor: 'pointer',
             }}
             onClick = {dateClick}
             >
@@ -99,6 +98,7 @@ function DateSelector(){
                         position: 'absolute',
                         top: '110%',
                         right: '0', 
+                        zIndex: 1000,
                     }}
 
                 >
