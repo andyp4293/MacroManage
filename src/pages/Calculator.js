@@ -70,7 +70,7 @@ function Calculator() {
                 <div className={styles.result}>
                     <button className= {styles['calculate-btn']} onClick={calculateBMR}>Calculate</button>
                     <div className="result-message">
-                        {tdee && <span className="calories">{tdee}</span>} Calories/day
+                        {tdee && <span className={styles['calories']}>{tdee}</span>} Calories/day
                     </div>
                 </div>
             </div>

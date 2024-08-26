@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import DateSelector from '../components/dateSelector'; 
 import styles from '../styles/Weightlog.module.css';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function WeightLog() {
     // setting the weight value in the weight input box
@@ -22,14 +24,22 @@ function WeightLog() {
 
     };
 
+    // func to add a new weight entry whenever user presses save
     const addEntry = () => {
         const newEntry = {
             weight: parseFloat(weight), 
-            date: selectedDate.toLocaleDateString(),
+            date: selectedDate.toLocaleDateString()
         }
         setEntry([...entries, newEntry]); 
         setWeight('');
     }
+    
+    const deleteEntry = (key) => {
+        const updatedEntries = [...entries];
+        updatedEntries.splice(key,1);
+        setEntry(updatedEntries);
+    }
+
 
     const updateDate = (newDate) => {
         setSelectedDate(newDate); 
@@ -84,12 +94,24 @@ function WeightLog() {
                         <tbody>
                         {entries.map((entry, index) => (
                             <tr key={index}>
-                                {/* First column with a static value "Weight" */}
+                                {/* first column with date value of entry */}
                                 <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>{entry.date}</td>
-                                {/* Second column with the date of the entry */}
+                                {/* second column with weight value of entry */}
                                 <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center'  }}>{entry.weight} lbs</td>
-                                {/* Third column with the weight value and "lbs" unit */}
-                                <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>X</td>
+                                {/* third column with action options of editing or deleting the entry */}
+                                <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }} className = {styles['actionButtons']}>
+                                    
+                                        <button className = {styles['actionButton']}>
+                                            <EditIcon></EditIcon>
+                                        </button>
+                                        <button 
+                                        className = {styles['actionButton']}
+                                        onClick = {() => deleteEntry(index)}
+                                        >
+                                            <DeleteIcon></DeleteIcon>
+                                        </button>
+                                        
+                                </td>
                             </tr>
                         ))}
 

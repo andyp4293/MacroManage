@@ -62,3 +62,28 @@ input[type="number"] {
 .weight-entry-table {
     margin-top: 20px; 
 }
+
+.weight-entry-table .actionButton{
+    padding: 8px 24px; 
+    margin: 4px 0; 
+    font-size: 18px; 
+    font-weight: 100; 
+    text-transform: uppercase; 
+    border:none; 
+    background: rgba(0, 198, 145, 1); 
+    color: white; 
+    cursor: pointer; 
+    margin-bottom: 0px; 
+    border-radius: 10px; 
+}
+
+.weight-entry-table .actionButton:hover{
+    background: rgb(3, 152, 112);
+}
+
+.actionButtons {
+    display: flex; 
+    justify-content: center; 
+    gap: 10px; 
+    max-height: 50%;
+}
