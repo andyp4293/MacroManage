@@ -8,7 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/dateSelector.css';
 
 
-function DateSelector(){
+function DateSelector({onDateChange}){
     // state for the selected date
     const [date, setDate] = useState(new Date()); // starts off with the current date
 
@@ -17,12 +17,16 @@ function DateSelector(){
 
     // function to go to the previous day
     const prevDay = () => {
-        setDate(subDays(date, 1)); 
+        const newDate = subDays(date, 1);
+        setDate(newDate); 
+        onDateChange(newDate); // pass the changed date
     };
 
     // function go to to the next day
     const nextDay = () => {
-        setDate(addDays(date, 1)); 
+        const newDate = addDays(date, 1);
+        setDate(newDate); 
+        onDateChange(newDate); // pass the changed date
     };
 
     // function to change the status of the calender open or closed
@@ -113,6 +117,7 @@ function DateSelector(){
                     onChange={(newDate) => {
                         setDate(newDate);
                         setOpenCal(false); // closes calendar when a day date is picked
+                        onDateChange(newDate); 
         
                     }}
                     inline
