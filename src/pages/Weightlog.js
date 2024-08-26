@@ -5,6 +5,7 @@ import styles from '../styles/Weightlog.module.css';
 function WeightLog() {
     const [weight, setWeight] = useState('');
 
+    const [entries, setEntries] = useState([]);
     // function to handle whenever the user inputs anything
     const handleInput = (event) => {
         let value = event.target.value; // Get the current value of the input
@@ -14,8 +15,27 @@ function WeightLog() {
         if (value < 1000 && value.length < 8){ // if the current value is 999, if a user tries typing another 9 the value won't change
             setWeight(value);
         }
-        
+
     };
+
+    const addEntry = () => {
+        if (weight !== '') {
+            const newEntry = {
+                weight: parseFloat(weight),
+                date: new Date().toLocaleDateString(), // Get current date in a readable format
+            };
+
+            setEntries([...entries, newEntry]); // Add the new entry to the entries array
+            setWeight(''); // Clear the input field after adding the entry
+        }
+    };
+
+    // Function to delete an entry
+    const deleteEntry = (index) => {
+        const updatedEntries = entries.filter((_, i) => i !== index);
+        setEntries(updatedEntries);
+    };
+
 
 
 
@@ -46,6 +66,40 @@ function WeightLog() {
                     >
                         Save
                     </button>
+
+                    <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                    <thead>
+                        <tr style={{ backgroundColor: '#007bff', color: 'white' }}>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Measurement</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Date</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Amount</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Delete?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {entries.map((entry, index) => (
+                            <tr key={index}>
+                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>Weight</td>
+                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{entry.date}</td>
+                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{entry.weight} lbs</td>
+                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                                    <button
+                                        onClick={() => deleteEntry(index)}
+                                        style={{
+                                            backgroundColor: 'transparent',
+                                            color: '#007bff',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            textDecoration: 'underline'
+                                        }}
+                                    >
+                                        Delete?
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
                 </div>
                 
             </div>

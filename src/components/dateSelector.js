@@ -41,7 +41,8 @@ function DateSelector(){
                 justifyContent: 'space-between', 
                 borderRadius: '10px', 
                 padding: '0px 0px',
-                width: '300px',
+                width: '350px',
+                height: '45px'
             }}
             >
             
@@ -53,6 +54,8 @@ function DateSelector(){
                     color: 'white', 
                     borderRadius: '10px 0 0 10px',
                     borderRight: '3px solid white', 
+                    height: '45px', 
+                    width: '45px',  
                     '&:hover':{
                     backgroundColor: '#00a67e',
                 },
@@ -70,6 +73,7 @@ function DateSelector(){
                 textAlign: 'center', 
                 flexGrow: 1,
                 cursor: 'pointer',
+                fontSize: '20px',
             }}
             onClick = {dateClick}
             >
@@ -83,7 +87,9 @@ function DateSelector(){
             sx={{ 
                 color: 'white',
                 borderRadius: '0 10px 10px 0',
-                borderLeft: '3px solid white', 
+                borderLeft: '3px solid white',
+                height: '45px', 
+                width: '45px',
                 '&:hover':{
                     backgroundColor: '#00a67e',
                 },
@@ -107,9 +113,10 @@ function DateSelector(){
                     onChange={(newDate) => {
                         setDate(newDate);
                         setOpenCal(false); // closes calendar when a day date is picked
-            }}
-                inline
-                onClickOutside={() => setOpenCal(false)} // closes calender if user clicks anywhere outside of i
+        
+                    }}
+                    inline
+                    onClickOutside={() => setOpenCal(false)} // closes calender if user clicks anywhere outside of i
             />
             </Box>
         )}

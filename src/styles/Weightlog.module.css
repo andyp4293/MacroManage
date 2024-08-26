@@ -3,8 +3,7 @@
     align-items: center;
     gap: 10px; 
     margin-left: 10px; 
-    margin-top: -15px; 
-    margin-bottom: -5px; 
+    margin-top: -3px; 
 }
 
 /*removes the increment and decrement arrows of the weight input box*/
@@ -57,5 +56,5 @@ input[type="number"] {
 }
 
 .weight .save-button:hover {
-    background: rgb(3, 152, 112)
+    background: rgb(3, 152, 112);
 }
