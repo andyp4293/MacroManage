@@ -4,6 +4,7 @@ import styles from '../styles/Weightlog.module.css';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
+import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
 
 function WeightLog() {
     // setting the weight value in the weight input box
@@ -148,10 +149,14 @@ function WeightLog() {
                 </div>
 
                 <div className = {styles['weight-entry-table']}>
-                    <h1>Weight Entries</h1>
+                    <div className = {styles['weight-entry-header']}>
+                    <MonitorWeightIcon style = {{fontSize: '50px', color: '#00c691', marginRight: '-10px'}}/>
+                        <h1>Weight Entries</h1>
+                    </div>
                     <table 
                         style = {{
-                            width: '65%'
+                            minWidth: '600px',
+                            width: '60%',
                         }}
                     >
                         <thead>
