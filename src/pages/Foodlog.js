@@ -3,35 +3,51 @@ import DateSelector from '../components/dateSelector';
 import styles from '../styles/Foodlog.module.css';
 import {Accordion, AccordionSummary, AccordionDetails, Typography, Box} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
+import RiceBowlIcon from '@mui/icons-material/RiceBowl';
+import AddIcon from '@mui/icons-material/Add';
 
 function MealAccordion({title, items, nutrition}){
     return(
-        <Accordion style = {{width: '75%', minWidth: '550px'}}> 
+        <Accordion style = {{width: '60%', minWidth: '550px', margin: '0'}}> 
             {/*header/title on the accordian component */}
             <AccordionSummary 
                 expandIcon = {<ExpandMoreIcon/>}
                 aria-controls = {`${title}-log`} // name for each expandable body of each meal accordian
                 id = {`${title}-header`} // name/id for each header
+                sx = {{
+                    backgroundColor: '#00c691',
+                    color: 'white',
+                }}
             > 
-                <Typography style = {{justifyContent: 'space-between'}}>
-                    {title} {nutrition} {/* displays meal name and its total nutritional macros */}
-                </Typography>
+                {/* displays meal name and its total nutritional macros */}
+                <Box style = {{display: 'flex', justifyContent:'space-between', width: '97%'}}>
+                <Typography style = {{display: 'flex', justifyContent: 'space-between', fontFamily: '"Roboto", sans-serif', fontSize: '17px', alignItems: 'center'}}>
+                            {title} 
+                    </Typography>
+                    <Typography style = {{display: 'flex', justifyContent: 'space-between', fontFamily: '"Roboto", sans-serif', fontSize: '17px', alignItems: 'center'}}>
+                            {nutrition}
+                    </Typography>
+                </Box>
             </AccordionSummary>
 
-            <AccordionDetails> {/* For showing the foods loggeds and their nutrition when accordion is expanded*/}
-                {items.map((item, index) => (
-                    <Box
-                    key = {index}
-                    display = 'flex' // arrange items horizontally
-                    justifyContent = 'space-between' 
-                    alignItems = 'center'
-                    padding = '8px 0'
-                    borderBottom = '1 px solid #ddd' // border to separate items 
-                    >
-                        <Typography>{`${item.name}, ${item.quantity}`}</Typography> {/* display the name of the food item followed by quanitty */}
-                        <Typography>{item.calories} kcal</Typography> {/* display the calorie content */}
-                    </Box>
-                ))}
+            <AccordionDetails style = {{margin: '0', padding: '0'}}> {/* For showing the foods loggeds and their nutrition when accordion is expanded*/}
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr>
+                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}><DinnerDiningIcon style = {{fontSize: '25px'}}/></th>
+                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Calories</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items.map((item, index) => (
+                            <tr key={index}>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{`${item.name}, ${item.quantity}`}</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.calories} kcal</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </AccordionDetails>
 
         </Accordion>
@@ -81,6 +97,35 @@ function FoodLog() {
             <div className = {styles['date-container']}>
                 <h3>Food Log For:</h3>
                 <DateSelector onDateChange={updateDate}/>
+                <button style = {{display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                    <Box // Stack an add icon to the bottom right of food icon
+                        sx={{
+                            position: 'relative',   
+                            display: 'inline-block', 
+                            width: '35px',          
+                            height: '35px',         
+                        }}
+                    >
+                        <RiceBowlIcon 
+                            sx={{ 
+                                fontSize: '35px', 
+                            }} 
+                        />
+                        <AddIcon
+                            sx={{
+                                position: 'absolute',
+                                bottom: '0px',          
+                                right: '0px',          
+                                fontSize: '13.5px',       
+                                backgroundColor: 'white', 
+                                borderRadius: '50%',    
+                                color: 'black',         
+                                border: '1px solid white', 
+                            }}
+                        />
+                    </Box>
+                    <h3>FOOD</h3>
+                </button>
             </div> 
             <hr></hr>
 
