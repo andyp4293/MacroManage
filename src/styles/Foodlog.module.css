@@ -5,3 +5,17 @@
     margin-left: 10px; 
     margin-top: -3px; 
 }
+
+.add-food {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    background: #00c691;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+}
+.add-food:hover{
+    background: #00a67e;
+}
+
