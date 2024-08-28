@@ -110,7 +110,7 @@ function FoodLog() {
             ))}
             </div>
             <div>
-                {/* Modal is displayed immediately when the component renders */}
+                {/* modal is displayed when FOOD button is clicked */}
                 <FoodSearch
                     open={isModalOpen}
                     onClose={handleCloseModal}
