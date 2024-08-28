@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DateSelector from '../components/dateSelector'; 
+import DateSelector from '../components/DateSelector'; 
 import styles from '../styles/Weightlog.module.css';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';

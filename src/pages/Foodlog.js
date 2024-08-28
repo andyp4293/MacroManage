@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import DateSelector from '../components/dateSelector'; 
+import DateSelector from '../components/DateSelector'; 
 import styles from '../styles/Foodlog.module.css';
-import {Accordion, AccordionSummary, AccordionDetails, Typography, Box} from '@mui/material';
+import {Box} from '@mui/material';
 import RiceBowlIcon from '@mui/icons-material/RiceBowl';
 import AddIcon from '@mui/icons-material/Add';
-import MealAccordion from '../components/mealAccordion';
-import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton } from '@mui/material';
-
+import MealAccordion from '../components/MealAccordion';
+import FoodSearch from '../components/FoodSearch'; 
 
 function FoodLog() {
     const [, setSelectedDate] = useState(new Date())
@@ -14,8 +13,20 @@ function FoodLog() {
         setSelectedDate(newDate); 
     };
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [searchOpen, setSearch] = useState(false);
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    }
+    const handleSearch = (searchTerm) => {
+        setIsModalOpen(false);
+    };
+
+
 
     const meals = {
         // Each meal category is an object with total nutrition info and a list of food items.
@@ -54,7 +65,7 @@ function FoodLog() {
             <div className = {styles['date-container']}>
                 <h3>Food Log For:</h3>
                 <DateSelector onDateChange={updateDate}/>
-                <button className = {styles['add-food']}>
+                <button className = {styles['add-food']} onClick = {handleOpenModal} >
                     <Box // Stack an add icon to the bottom right of food icon
                         sx={{
                             position: 'relative',   
@@ -97,6 +108,14 @@ function FoodLog() {
                   nutrition={meals[meal].totalNutrition} // Total nutrition info for the meal.
                 />
             ))}
+            </div>
+            <div>
+                {/* Modal is displayed immediately when the component renders */}
+                <FoodSearch
+                    open={isModalOpen}
+                    onClose={handleCloseModal}
+                    onSearch={handleSearch}
+                />
             </div>
         </div>
     );
