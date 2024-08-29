@@ -142,7 +142,7 @@ function FoodSearchModal({ open, onClose }) {
                                         'No Image'
                                     )}
                                 </td>
-                                <td style={{ padding: '8px' }}>{item.food_name}</td>
+                                <td style={{ padding: '8px' }}>{`${item.food_name}, ${item.serving_qty} ${item.serving_unit}`}</td>
                             </tr>
                         ))}
                     </tbody>
