@@ -1,0 +1,8 @@
+.food-results-row {
+    /* Default styles */
+}
+
+.food-results-row:hover {
+    background-color: #D3D3D3; 
+    cursor: pointer;
+}
