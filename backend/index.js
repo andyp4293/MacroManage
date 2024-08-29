@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const NUTRITIONIX_APP_ID = 'bb3b5396';
-const NUTRITIONIX_API_KEY = 'c698ad16874f68c0a8c20b857cae7233';
+const NUTRITIONIX_APP_ID = 'e2b1bbec';
+const NUTRITIONIX_API_KEY = '8155a4c4fc479970663169aa9348a0e5';
 
 
 app.post('/api/nutrition', async (req, res) => { // to get search results when the user sends a search query for a food item 
@@ -79,7 +79,7 @@ app.get('/api/nutrition/nutrients', async (req, res) => {
         console.log(response.data); 
         res.json(response.data); // Send the Nutritionix API response data back to the frontend
     } catch (error) {
-        console.error('Error fetching nutrition data from Nutritionix:', error.message);
+        console.error('Error fetching nutrition data from Nutritionix: ', error.message);
         res.status(500).send('Server error');
     }
 });

@@ -78,65 +78,65 @@ function FoodSearchModal({ open, onClose }) {
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-            <div style = {{position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px'}}>
-            {foodPopup && (
-                <div>
-                    <Box>
-                        
-                        {itemData != '' && 
-                        <>
-                            <p>Calories: {itemData[0].nf_calories}</p>
-                            <p>Protein: {itemData[0].nf_protein}</p>
-                            <p>Fats: {itemData[0].nf_total_fat}</p>
-                            <p>Carbs: {itemData[0].nf_total_carbohydrate}</p>
-                        </>
-                        }
-                    </Box>
-                    <Box>
-
-                    </Box>
-                </div>
-                )}
-                
-                <TextField
-                    autoFocus
-                    margin = 'dense'
-                    id="search"
-                    label="Search foods"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={query} 
-                    onChange={(e) => setQuery(e.target.value)} 
-                    sx={{
-                    '& .MuiInputLabel-root.Mui-focused': {
-                      color: '#00c691', // Label color when focused
-                    },
-                    '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': {
-                            borderColor: '#00c691', // Border color when focused
+            <div style = {{display: 'flex', justifyContent: 'space-between'}}>
+                <div style = {{position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px', maxWidth: '50%'}}>
+                    <TextField
+                        autoFocus
+                        margin = 'dense'
+                        id="search"
+                        label="Search foods"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={query} 
+                        onChange={(e) => setQuery(e.target.value)} 
+                        sx={{
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: '#00c691', // Label color when focused
                         },
-                    },
-                }}
-                    
-                />
-                <Button
-                    disableRipple
-                    variant="contained"
-                    onClick={handleSearch}
-                    startIcon={<SearchIcon />}
-                    sx={{
-                        background: '#00c691',
-                        marginBottom: '10px',
-                        marginTop: "3px",
-                        '&:hover': {
-                            backgroundColor: '#00a67e'
-                        }
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: '#00c691', // Border color when focused
+                            },
+                        },
                     }}
-                >
-                    Search
-                </Button>
-                </div>
+                    
+                    />
+                    <Button
+                        disableRipple
+                        variant="contained"
+                        onClick={handleSearch}
+                        startIcon={<SearchIcon />}
+                        sx={{
+                            background: '#00c691',
+                            marginBottom: '10px',
+                            marginTop: "3px",
+                            '&:hover': {
+                                backgroundColor: '#00a67e'
+                            }
+                        }}
+                    >
+                        Search
+                    </Button>
+                    </div>
+                    <div>
+                        {foodPopup && (
+                            <div style = {{marginRight: '30px'}}>
+                                <Box>
+                                    {itemData !== '' && 
+                                    <>
+                                        <h4 style = {{fontSize: '10px'}}>Calories: {itemData[0].nf_calories}</h4>
+                                        <p style = {{fontSize: '10px'}}>Protein: {itemData[0].nf_protein}</p>
+                                        <p style = {{fontSize: '10px'}}>Fats: {itemData[0].nf_total_fat}</p>
+                                        <p style = {{fontSize: '10px'}}>Carbs: {itemData[0].nf_total_carbohydrate}</p>
+                                    </>
+                                    }
+                                </Box>
+                            </div>
+                            )}
+                        </div>
+                    </div>
+
                 <div>
                 {/* display foods if available*/}
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
@@ -147,7 +147,7 @@ function FoodSearchModal({ open, onClose }) {
                                 style={{ borderBottom: '1px solid #ddd' }}
                                 onClick={() => handleFoodSelect(item)}
                             >
-                                <td style={{ padding: '8px', textAlign: 'center' }}>
+                                <td style={{ padding: '8px' }}>
                                     {item.photo && item.photo.thumb ? (
                                         <img
                                             src={item.photo.thumb}
