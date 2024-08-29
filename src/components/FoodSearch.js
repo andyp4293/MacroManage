@@ -14,6 +14,7 @@ function FoodSearchModal({ open, onClose }) {
     const handleClose = () => {
         setNutritionData([]); // Optionally reset other states as well
         setQuery('');
+        setItemData(''); 
     };
 
     const handleSearch = () => {
@@ -77,11 +78,24 @@ function FoodSearchModal({ open, onClose }) {
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-            <div style = {{position: 'sticky', top: 0, backgroundColor: 'white'}}>
+            <div style = {{position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px'}}>
             {foodPopup && (
-                <Box>
-                <p>Calories: {itemData[0].nf_calories}</p>
-            </Box>
+                <div>
+                    <Box>
+                        
+                        {itemData != '' && 
+                        <>
+                            <p>Calories: {itemData[0].nf_calories}</p>
+                            <p>Protein: {itemData[0].nf_protein}</p>
+                            <p>Fats: {itemData[0].nf_total_fat}</p>
+                            <p>Carbs: {itemData[0].nf_total_carbohydrate}</p>
+                        </>
+                        }
+                    </Box>
+                    <Box>
+
+                    </Box>
+                </div>
                 )}
                 
                 <TextField
@@ -113,6 +127,7 @@ function FoodSearchModal({ open, onClose }) {
                     startIcon={<SearchIcon />}
                     sx={{
                         background: '#00c691',
+                        marginBottom: '10px',
                         marginTop: "3px",
                         '&:hover': {
                             backgroundColor: '#00a67e'
