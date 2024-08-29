@@ -77,12 +77,13 @@ function FoodSearchModal({ open, onClose }) {
                 </IconButton>
             </DialogTitle>
             <DialogContent>
+            <div style = {{position: 'sticky', top: 0, backgroundColor: 'white'}}>
             {foodPopup && (
                 <Box>
                 <p>Calories: {itemData[0].nf_calories}</p>
             </Box>
                 )}
-                <div>
+                
                 <TextField
                     autoFocus
                     margin = 'dense'
@@ -121,7 +122,7 @@ function FoodSearchModal({ open, onClose }) {
                     Search
                 </Button>
                 </div>
-
+                <div>
                 {/* display foods if available*/}
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
                     <tbody>
@@ -147,6 +148,7 @@ function FoodSearchModal({ open, onClose }) {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </DialogContent>
         </Dialog>
         </div>
