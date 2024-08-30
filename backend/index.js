@@ -10,7 +10,7 @@ app.use(express.json());
 const NUTRITIONIX_APP_ID = 'e2b1bbec';
 const NUTRITIONIX_API_KEY = '8155a4c4fc479970663169aa9348a0e5';
 
-
+// queries for search results
 app.post('/api/nutrition', async (req, res) => { // to get search results when the user sends a search query for a food item 
     const { query } = req.body; 
     try {
@@ -26,7 +26,6 @@ app.post('/api/nutrition', async (req, res) => { // to get search results when t
                 }
             }
         );
-
         res.json(response.data); // sends the Nutritionix API response data back to the frontend
         } catch (error) {
         console.error('Error fetching data from Nutritionix:', error);
@@ -34,12 +33,12 @@ app.post('/api/nutrition', async (req, res) => { // to get search results when t
     }
 });
 
+// to get the nutrients of branded items
 app.get('/api/nutrition/item', async (req, res) => {
-    console.log('Endpoint hit');
     const { nix_item_id } = req.query; // Extracting the item ID from the query parameters
     console.log(nix_item_id);
     try {
-        const response = await axios.get(`https://trackapi.nutritionix.com/v2/search/item?food_name=${nix_item_id}`, 
+        const response = await axios.get(`https://trackapi.nutritionix.com/v2/search/item?nix_item_id=${nix_item_id}`, 
             {
                 headers: {
                     'x-app-id': NUTRITIONIX_APP_ID,
@@ -50,13 +49,14 @@ app.get('/api/nutrition/item', async (req, res) => {
         );
         
         res.json(response.data); // sends the Nutritionix API response data back to the frontend
-        console.log(response.data);
     } catch (error) {
         console.error('Error fetching item data from Nutritionix', error);
         res.status(500).send('Server error');
     }
 });
 
+
+// to get nutrients of common foods
 app.get('/api/nutrition/nutrients', async (req, res) => {
     const foodQuery = req.query.query;  // Extract the query parameter from the GET request
     if (!foodQuery) {
@@ -76,7 +76,6 @@ app.get('/api/nutrition/nutrients', async (req, res) => {
                 }
             }
         );
-        console.log(response.data); 
         res.json(response.data); // Send the Nutritionix API response data back to the frontend
     } catch (error) {
         console.error('Error fetching nutrition data from Nutritionix: ', error.message);
