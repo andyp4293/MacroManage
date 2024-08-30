@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, Box} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, Box, Typography} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from '../styles/FoodSearch.module.css';
+import { PieChart } from '@mui/x-charts/PieChart';
+
 
 function FoodSearchModal({ open, onClose }) {
     // state for the search query that will be used for a post request to the nutritionix api
@@ -49,7 +51,7 @@ function FoodSearchModal({ open, onClose }) {
             .catch(error => console.error('Error fetching item data:', error)); // Handle errors
         }
         else {
-            fetch(`http://localhost:5000/api/nutrition/nutrients?query=${item.food_name}`)
+            fetch(`http://localhost:5000/api/nutrition/nutrients?query=${item.food_name.replace(/%/g, '')}`)
                 .then(response => response.json()) // Parse the JSON response
                 .then(data => {
                     setItemData(data.foods);  // Store the fetched data in state
@@ -62,7 +64,7 @@ function FoodSearchModal({ open, onClose }) {
     return (
         <div>
 
-        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
             <DialogTitle>
                 Add Food to Log
                 <IconButton // close button to close modal
@@ -122,22 +124,30 @@ function FoodSearchModal({ open, onClose }) {
                     <div>
                         {foodPopup && (
                             <div style = {{marginRight: '30px'}}>
-                                <Box>
-                                    {itemData !== '' && 
-                                    <>
-                                        <h4 style = {{fontSize: '10px'}}>Calories: {itemData[0].nf_calories}</h4>
-                                        <p style = {{fontSize: '10px'}}>Protein: {itemData[0].nf_protein}</p>
-                                        <p style = {{fontSize: '10px'}}>Fats: {itemData[0].nf_total_fat}</p>
-                                        <p style = {{fontSize: '10px'}}>Carbs: {itemData[0].nf_total_carbohydrate}</p>
-                                    </>
-                                    }
-                                </Box>
+                                {foodPopup && <Box>
+                                <Typography variant="h6" component="div" gutterBottom sx = {{textAlign: 'center'}}>
+                                    {itemData[0].nf_calories} kcal
+                                </Typography>
+                                <PieChart
+                                    series={[
+                                        {
+                                        data: [
+                                            { id: 0, value: 10, label: `Protein: ${itemData[0].nf_protein}g` },
+                                            { id: 1, value: 15, label: `Fats: ${itemData[0].nf_total_fat}g` },
+                                            { id: 2, value: 20, label: `Carbs: ${itemData[0].nf_total_carbohydrate}g` },
+                                        ],
+                                        },
+                                    ]}
+                                    width={300}
+                                    height={100}
+                                    />
+                                </Box>}
                             </div>
                             )}
                         </div>
                     </div>
 
-                <div>
+                <div style = {{maxHeight: '270px', overflowY: 'auto'}}>
                 {/* display foods if available*/}
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
                     <tbody>
