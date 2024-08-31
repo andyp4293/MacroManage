@@ -121,7 +121,7 @@ function FoodSearchModal({ open, onClose }) {
                             startIcon={<SearchIcon />}
                             sx={{
                                 background: '#00c691',
-                                marginBottom: '10px',
+                                marginBottom: '5px',
                                 marginTop: "3px",
                                 '&:hover': {
                                     backgroundColor: '#00a67e'
@@ -156,7 +156,7 @@ function FoodSearchModal({ open, onClose }) {
                     <div style = {{width: '50%'}}>
                         {foodPopup && itemData !== '' && (
                             <div>
-                                <Box>
+                                <Box className = 'macro and calorie container'>
                                 <Typography variant="h6" component="div" gutterBottom sx = {{textAlign: 'center'}}>
                                     {itemData[0].nf_calories} kcal
                                 </Typography>
@@ -191,13 +191,49 @@ function FoodSearchModal({ open, onClose }) {
                                     style = {{width: '50px', height: '50px'}}
                                 />
                                 </div>
-                                <div style = {{marginTop: '-15px'}}>
-                                    <p>Protein: {itemData[0].nf_protein}g</p>
-                                    <p>Fats: {itemData[0].nf_total_fat}g</p>
-                                    <p>Carbs: {itemData[0].nf_total_carbohydrate}g</p>
-                                </div>  
+                                <div style={{ marginTop: '-15px' }}>
+                                    <p>
+                                        <span style={{
+                                            display: 'inline-block',
+                                            width: '10px',
+                                            height: '10px',
+                                            backgroundColor: '#FF6384', 
+                                            borderRadius: '50%',
+                                            marginRight: '8px',
+                                        }}></span>
+                                        Protein: {itemData[0].nf_protein}g
+                                    </p>
+                                    <p>
+                                        <span style={{
+                                            display: 'inline-block',
+                                            width: '10px',
+                                            height: '10px',
+                                            backgroundColor: '#36A2EB',
+                                            borderRadius: '50%',
+                                            marginRight: '8px',
+                                        }}></span>
+                                        Fats: {itemData[0].nf_total_fat}g
+                                    </p>
+                                    <p>
+                                        <span style={{
+                                            display: 'inline-block',
+                                            width: '10px',
+                                            height: '10px',
+                                            backgroundColor: '#FFCE56', 
+                                            borderRadius: '50%',
+                                            marginRight: '8px',
+                                        }}></span>
+                                        Carbs: {itemData[0].nf_total_carbohydrate}g
+                                    </p>
+                                    </div>
                                 </div>
-                                </Box>
+                            </Box>
+                            <Box sx = {{backgroundColor: 'black', width: '100%'}}>
+                                <div className = 'quantity selection'>
+
+                                </div>
+
+                            </Box>
 
                             </div>
                             )}
