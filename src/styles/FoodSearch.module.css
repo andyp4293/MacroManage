@@ -12,7 +12,7 @@
     border-radius: 8px; 
     border-collapse: collapse;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    outline: black solid 1px; 
+    outline: #D3D3D3 solid 1px; 
 }
 
 .food-table-container::-webkit-scrollbar{

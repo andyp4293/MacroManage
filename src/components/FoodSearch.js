@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, Box, Typography} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, Box, Typography, Select, MenuItem, InputLabel} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from '../styles/FoodSearch.module.css';
@@ -43,6 +43,7 @@ function FoodSearchModal({ open, onClose }) {
     };
 
     const [itemData, setItemData] = useState(null);
+    const [selectedItem, setSelectedItem] = useState('')
     const [foodPopup, setFoodPopup] = useState(false); 
 
     const handleFoodSelect = (item) => {
@@ -51,6 +52,7 @@ function FoodSearchModal({ open, onClose }) {
             fetch(`http://localhost:5000/api/nutrition/item?nix_item_id=${item.nix_item_id}`)
             .then(response => response.json()) // Parse the JSON response
             .then(data => {
+                setSelectedItem(item); 
                 setItemData(data);  // Store the fetched data in state
                 setFoodPopup(true); // Open the food popup after data is fetched
             })
@@ -60,6 +62,7 @@ function FoodSearchModal({ open, onClose }) {
             fetch(`http://localhost:5000/api/nutrition/nutrients?query=${item.food_name.replace(/%/g, '')}`)
                 .then(response => response.json()) // Parse the JSON response
                 .then(data => {
+                    setSelectedItem(item); 
                     setItemData(data.foods);  // Store the fetched data in state
                     setFoodPopup(true); // Open the food popup after data is fetched
                 })
@@ -155,12 +158,13 @@ function FoodSearchModal({ open, onClose }) {
 
                     <div style = {{width: '50%'}}>
                         {foodPopup && itemData !== '' && (
-                            <div>
+                            <div style = {{width: '100%'}}>
+                                <Box style = {{display: 'flex', justifyContent: 'center', width: '100%', backgroundColor: 'white'}}>
                                 <Box className = 'macro and calorie container'>
                                 <Typography variant="h6" component="div" gutterBottom sx = {{textAlign: 'center'}}>
                                     {itemData[0].nf_calories} kcal
                                 </Typography>
-                                <div style = {{display: 'flex'}}>
+                                <div style = {{display: 'flex', width: '100%'}}>
                                 <div style = {{height: '100px', width: '100px'}}>
                                 <Pie 
                                     data = {{
@@ -179,13 +183,7 @@ function FoodSearchModal({ open, onClose }) {
                                     options = {{
                                         responsive: true,
                                         plugins: {
-                                            tooltip: {
-                                            callbacks: {
-                                                label: function (tooltipItem) {
-                                                return tooltipItem.label + ': ' + tooltipItem.raw + ' calories';
-                                                },
-                                            },
-                                            },
+                                            tooltip:  false
                                         },
                                     }}
                                     style = {{width: '50px', height: '50px'}}
@@ -228,9 +226,52 @@ function FoodSearchModal({ open, onClose }) {
                                     </div>
                                 </div>
                             </Box>
-                            <Box sx = {{backgroundColor: 'black', width: '100%'}}>
-                                <div className = 'quantity selection'>
+                            <Box sx = {{width: "40%", backgroundColor: 'white', display: 'flex', justifyContent: 'center'}}>
+                                <Button variant="contained" disableRipple style = {{width: '50%', height: '35px', backgroundColor: '#00c691', color: 'white', position: 'relative', top: '63%'}}>
+                                    ADD
+                                </Button>
+                            </Box>
+                            </Box>
 
+
+
+                            <Box sx = {{backgroundColor: 'white', width: '100%', height: '240px', borderRadius: '10px', outline: '1px solid #D3D3D3', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}>
+                                <div className = 'quantity selection' style = {{}}>
+                                            <Box sx = {{display: 'flex', justifyContent: 'center', width: '100%'}}>
+                                                <label>
+                                                    {selectedItem.food_name}
+                                                </label>
+                                            </Box>
+                                            <Box style = {{height: '100px', width: '100%', position: 'relative'}}>
+                                                <img
+                                                    src={selectedItem.photo.thumb}
+                                                    alt={selectedItem.food_name}
+                                                    style={{ maxHeight: '100px', maxWidth: '100px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}
+                                                />
+                                            </Box>
+                                            <Box sx = {{display: 'flex', height: '30px', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', top: '20px', position: 'relative'}}>
+                                                <InputLabel sx = {{color: 'black', width: '30%', backgroundColor: 'white', marginLeft: '10px', marginRight: '-30px', fontFamily: '"Roboto", sans-serif'}}>Meal</InputLabel>
+                                                <Select sx = {{width: '70%', height: '100%', marginRight: '10px'}} defaultValue = {'Breakfast'} height = '30%' >
+                                                    <MenuItem value={'Breakfast'}>Breakfast</MenuItem>
+                                                    <MenuItem value={'Lunch'}>Lunch</MenuItem>
+                                                    <MenuItem value={'Dinner'}>Dinner</MenuItem>
+                                                    <MenuItem value={'Snacks'}>Snacks</MenuItem>
+                                                </Select>
+                                            </Box>
+                                            <Box sx = {{display: 'flex', height: '30px', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', top: '40px', position: 'relative'}}>
+                                                <input // input for the food quantity
+                                                    name = 'weight' 
+                                                    type = 'number' 
+                                                    min = '0' 
+                                                    defaultValue = {selectedItem.serving_qty}
+                                                    style = {{width: '18%', position: 'relative', left: '5px'}}
+
+                                                />
+                                                <Select sx = {{width: '70%', height: '100%', marginRight: '10px'}} defaultValue = {'unit1'} height = '30%' >
+                                                    <MenuItem value={'unit1'}>{selectedItem.serving_unit}</MenuItem>
+                                                    {selectedItem.nf_sugars && <MenuItem value={'unit2'}>{selectedItem.serving_weight_grams}</MenuItem>}
+                                                </Select>
+                                            </Box>
                                 </div>
 
                             </Box>
