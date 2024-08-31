@@ -1,8 +1,30 @@
-.food-results-row {
 
-}
 
 .food-results-row:hover {
     background-color: #D3D3D3; 
     cursor: pointer;
+}
+
+.food-table-container{
+    max-height: 270px; 
+    overflow-y: auto; 
+    max-width: 95%;
+    border-radius: 8px; 
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    outline: black solid 1px; 
+}
+
+.food-table-container::-webkit-scrollbar{
+    width: 12px; 
+}
+.food-table-container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background color of the track */
+    border-radius: 40px;
+}
+
+.food-table-container::-webkit-scrollbar-thumb {
+    background-color: #00c691; /* Scrollbar color */
+    border-radius: 10px; /* Roundness of the scrollbar */
+    border: 3px solid #f1f1f1; /* Padding around the thumb */
 }

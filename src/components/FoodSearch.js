@@ -3,8 +3,9 @@ import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, Box,
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from '../styles/FoodSearch.module.css';
-import { PieChart } from '@mui/x-charts/PieChart';
-
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip,Legend, } from 'chart.js';
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 function FoodSearchModal({ open, onClose }) {
     // state for the search query that will be used for a post request to the nutritionix api
@@ -13,10 +14,13 @@ function FoodSearchModal({ open, onClose }) {
     // state to store the data from the response delivered from the nutritionix api
     const [nutritionData, setNutritionData] = useState([]);
 
+    const [searched, setSearched] = useState(false); 
+
     const handleClose = () => {
         setNutritionData([]); // Optionally reset other states as well
         setQuery('');
         setItemData(''); 
+        setSearched(false); 
     };
 
     const handleSearch = () => {
@@ -30,10 +34,12 @@ function FoodSearchModal({ open, onClose }) {
         .then(response => response.json()) // parses the json from the api's response
         .then(data => {
             setNutritionData(data.common || []); // store the fetched nutrition data in state
+            setSearched(true); 
         }) 
         .catch(error => { // handles if an error occurs
             console.error('Error fetching nutrition data:', error);
         });
+
     };
 
     const [itemData, setItemData] = useState(null);
@@ -80,100 +86,126 @@ function FoodSearchModal({ open, onClose }) {
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-            <div style = {{display: 'flex', justifyContent: 'space-between'}}>
-                <div style = {{position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px', maxWidth: '50%'}}>
-                    <TextField
-                        autoFocus
-                        margin = 'dense'
-                        id="search"
-                        label="Search foods"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={query} 
-                        onChange={(e) => setQuery(e.target.value)} 
-                        sx={{
-                        '& .MuiInputLabel-root.Mui-focused': {
-                          color: '#00c691', // Label color when focused
-                        },
-                        '& .MuiOutlinedInput-root': {
-                            '&.Mui-focused fieldset': {
-                                borderColor: '#00c691', // Border color when focused
+                <div style = {{display: 'flex'}}>
+
+
+                <div>
+                <div style = {{display: 'flex', justifyContent: 'space-between', width: '95%'}}>
+                    <div style = {{position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px'}}>
+                        <TextField
+                            autoFocus
+                            margin = 'dense'
+                            id="search"
+                            label="Search foods"
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            value={query} 
+                            onChange={(e) => setQuery(e.target.value)} 
+                            sx={{
+                            '& .MuiInputLabel-root.Mui-focused': {
+                            color: '#00c691', // Label color when focused
                             },
-                        },
-                    }}
-                    
-                    />
-                    <Button
-                        disableRipple
-                        variant="contained"
-                        onClick={handleSearch}
-                        startIcon={<SearchIcon />}
-                        sx={{
-                            background: '#00c691',
-                            marginBottom: '10px',
-                            marginTop: "3px",
-                            '&:hover': {
-                                backgroundColor: '#00a67e'
-                            }
+                            '& .MuiOutlinedInput-root': {
+                                '&.Mui-focused fieldset': {
+                                    borderColor: '#00c691', // Border color when focused
+                                },
+                            },
                         }}
-                    >
-                        Search
-                    </Button>
+                        
+                        />
+                        <Button
+                            disableRipple
+                            variant="contained"
+                            onClick={handleSearch}
+                            startIcon={<SearchIcon />}
+                            sx={{
+                                background: '#00c691',
+                                marginBottom: '10px',
+                                marginTop: "3px",
+                                '&:hover': {
+                                    backgroundColor: '#00a67e'
+                                }
+                            }}
+                        >
+                            Search
+                        </Button>
+                        </div>
+                        </div>
+                    
+                    {searched &&
+                        <div className = {styles['food-table-container']}>
+                        {/* display foods if available*/}
+                        <table style={{ width: '100%', borderCollapse: 'collapse', borderRadius: '10px', overflow: 'hidden'}}>
+                            <tbody>
+                                {nutritionData.map((item, index) => ( // makes a table row for every food item returns with its label and its picture if it is included in the json
+                                    <tr className = {styles['food-results-row'] }
+                                        key={index} 
+                                        style={{ borderBottom: '1px solid #ddd' }}
+                                        onClick={() => handleFoodSelect(item)}
+                                    >
+                                        <td style={{ padding: '8px' }}>{`${item.food_name}, ${item.serving_qty} ${item.serving_unit}`}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        </div>
+                    }
                     </div>
-                    <div>
-                        {foodPopup && (
-                            <div style = {{marginRight: '30px'}}>
-                                {foodPopup && <Box>
+
+                    <div style = {{width: '50%'}}>
+                        {foodPopup && itemData !== '' && (
+                            <div>
+                                <Box>
                                 <Typography variant="h6" component="div" gutterBottom sx = {{textAlign: 'center'}}>
                                     {itemData[0].nf_calories} kcal
                                 </Typography>
-                                <PieChart
-                                    series={[
-                                        {
-                                        data: [
-                                            { id: 0, value: 10, label: `Protein: ${itemData[0].nf_protein}g` },
-                                            { id: 1, value: 15, label: `Fats: ${itemData[0].nf_total_fat}g` },
-                                            { id: 2, value: 20, label: `Carbs: ${itemData[0].nf_total_carbohydrate}g` },
+                                <div style = {{display: 'flex'}}>
+                                <div style = {{height: '100px', width: '100px'}}>
+                                <Pie 
+                                    data = {{
+                                        datasets: [
+                                            {
+                                            data: [
+                                              itemData[0].nf_protein * 4,
+                                              itemData[0].nf_total_fat * 9,
+                                              itemData[0].nf_total_carbohydrate * 4,
+                                            ],
+                                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                                            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                                            },
                                         ],
+                                        }}
+                                    options = {{
+                                        responsive: true,
+                                        plugins: {
+                                            tooltip: {
+                                            callbacks: {
+                                                label: function (tooltipItem) {
+                                                return tooltipItem.label + ': ' + tooltipItem.raw + ' calories';
+                                                },
+                                            },
+                                            },
                                         },
-                                    ]}
-                                    width={300}
-                                    height={100}
-                                    />
-                                </Box>}
+                                    }}
+                                    style = {{width: '50px', height: '50px'}}
+                                />
+                                </div>
+                                <div style = {{marginTop: '-15px'}}>
+                                    <p>Protein: {itemData[0].nf_protein}g</p>
+                                    <p>Fats: {itemData[0].nf_total_fat}g</p>
+                                    <p>Carbs: {itemData[0].nf_total_carbohydrate}g</p>
+                                </div>  
+                                </div>
+                                </Box>
+
                             </div>
                             )}
                         </div>
-                    </div>
 
-                <div style = {{maxHeight: '270px', overflowY: 'auto'}}>
-                {/* display foods if available*/}
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
-                    <tbody>
-                        {nutritionData.map((item, index) => ( // makes a table row for every food item returns with its label and its picture if it is included in the json
-                            <tr className = {styles['food-results-row']}
-                                key={index} 
-                                style={{ borderBottom: '1px solid #ddd' }}
-                                onClick={() => handleFoodSelect(item)}
-                            >
-                                <td style={{ padding: '8px' }}>
-                                    {item.photo && item.photo.thumb ? (
-                                        <img
-                                            src={item.photo.thumb}
-                                            alt={item.food_name}
-                                            style={{ maxHeight: '50px', maxWidth: '50px' }}
-                                        />
-                                    ) : (
-                                        'No Image'
-                                    )}
-                                </td>
-                                <td style={{ padding: '8px' }}>{`${item.food_name}, ${item.serving_qty} ${item.serving_unit}`}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                </div>
+                    </div>
+                    
+
             </DialogContent>
         </Dialog>
         </div>
