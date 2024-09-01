@@ -79,7 +79,6 @@ app.get('/api/nutrition/nutrients', async (req, res) => {
             }
         );
         res.json(response.data); // Send the Nutritionix API response data back to the frontend
-        console.log(response.data);
     } catch (error) {
         console.error('Error fetching nutrition data from Nutritionix: ', error.message);
         res.status(500).send('Server error');

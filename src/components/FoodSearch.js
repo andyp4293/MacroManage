@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, Box, Typography, Select, MenuItem, InputLabel} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, Box, Typography, Select, MenuItem, InputLabel } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from '../styles/FoodSearch.module.css';
 import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip,Legend, } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function FoodSearchModal({ open, onClose }) {
@@ -25,7 +26,7 @@ function FoodSearchModal({ open, onClose }) {
 
     const handleSearch = () => {
         fetch('http://localhost:5000/api/nutrition', { // fetch initiates a request to the nutritionix api
-            method: 'post', 
+            method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -39,252 +40,235 @@ function FoodSearchModal({ open, onClose }) {
         .catch(error => { // handles if an error occurs
             console.error('Error fetching nutrition data:', error);
         });
-
     };
 
+    // state to store the selected item data and its details
     const [itemData, setItemData] = useState(null);
-    const [selectedItem, setSelectedItem] = useState('')
+    const [selectedItem, setSelectedItem] = useState('');
     const [foodPopup, setFoodPopup] = useState(false); 
 
     const handleFoodSelect = (item) => {
-        if (item.nix_item_id != null)
-        {
-            fetch(`http://localhost:5000/api/nutrition/item?nix_item_id=${item.nix_item_id}`)
+        const fetchData = item.nix_item_id 
+            ? fetch(`http://localhost:5000/api/nutrition/item?nix_item_id=${item.nix_item_id}`)
+            : fetch(`http://localhost:5000/api/nutrition/nutrients?query=${item.food_name.replace(/%/g, '')}`);
+        
+        fetchData
             .then(response => response.json()) // Parse the JSON response
             .then(data => {
-                setSelectedItem(item); 
-                setItemData(data);  // Store the fetched data in state
+                const fetchedItemData = item.nix_item_id ? data : data.foods[0];
+                const servingWeightGrams = fetchedItemData.serving_weight_grams || 0;
+
+                setSelectedItem({
+                    ...item,
+                    serving_weight_grams: servingWeightGrams
+                });
+
+                setItemData(fetchedItemData);
                 setFoodPopup(true); // Open the food popup after data is fetched
             })
             .catch(error => console.error('Error fetching item data:', error)); // Handle errors
-        }
-        else {
-            fetch(`http://localhost:5000/api/nutrition/nutrients?query=${item.food_name.replace(/%/g, '')}`)
-                .then(response => response.json()) // Parse the JSON response
-                .then(data => {
-                    setSelectedItem(item); 
-                    setItemData(data.foods);  // Store the fetched data in state
-                    setFoodPopup(true); // Open the food popup after data is fetched
-                })
-                .catch(error => console.error('Error fetching item data:', error)); // Handle errors
-            }
-    }
+    };
 
     return (
         <div>
-
-        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogTitle>
-                Add Food to Log
-                <IconButton // close button to close modal
-                    aria-label="close"
-                    onClick={() => { onClose(); handleClose(); }} // when button is clicked, the modal will be closed
-                    sx={{
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                    }}
-                >
-                    <CloseIcon />
-                </IconButton>
-            </DialogTitle>
-            <DialogContent>
-                <div style = {{display: 'flex'}}>
-
-
-                <div>
-                <div style = {{display: 'flex', justifyContent: 'space-between', width: '95%'}}>
-                    <div style = {{position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px'}}>
-                        <TextField
-                            autoFocus
-                            margin = 'dense'
-                            id="search"
-                            label="Search foods"
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            value={query} 
-                            onChange={(e) => setQuery(e.target.value)} 
-                            sx={{
-                            '& .MuiInputLabel-root.Mui-focused': {
-                            color: '#00c691', // Label color when focused
-                            },
-                            '& .MuiOutlinedInput-root': {
-                                '&.Mui-focused fieldset': {
-                                    borderColor: '#00c691', // Border color when focused
-                                },
-                            },
+            <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+                <DialogTitle>
+                    Add Food to Log
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => { onClose(); handleClose(); }}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
                         }}
-                        
-                        />
-                        <Button
-                            disableRipple
-                            variant="contained"
-                            onClick={handleSearch}
-                            startIcon={<SearchIcon />}
-                            sx={{
-                                background: '#00c691',
-                                marginBottom: '5px',
-                                marginTop: "3px",
-                                '&:hover': {
-                                    backgroundColor: '#00a67e'
-                                }
-                            }}
-                        >
-                            Search
-                        </Button>
-                        </div>
-                        </div>
-                    
-                    {searched &&
-                        <div className = {styles['food-table-container']}>
-                        {/* display foods if available*/}
-                        <table style={{ width: '100%', borderCollapse: 'collapse', borderRadius: '10px', overflow: 'hidden'}}>
-                            <tbody>
-                                {nutritionData.map((item, index) => ( // makes a table row for every food item returns with its label and its picture if it is included in the json
-                                    <tr className = {styles['food-results-row'] }
-                                        key={index} 
-                                        style={{ borderBottom: '1px solid #ddd' }}
-                                        onClick={() => handleFoodSelect(item)}
-                                    >
-                                        <td style={{ padding: '8px' }}>{`${item.food_name}, ${item.serving_qty} ${item.serving_unit}`}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        </div>
-                    }
-                    </div>
-
-                    <div style = {{width: '50%'}}>
-                        {foodPopup && itemData !== '' && (
-                            <div style = {{width: '100%'}}>
-                                <Box style = {{display: 'flex', justifyContent: 'center', width: '100%', backgroundColor: 'white'}}>
-                                <Box className = 'macro and calorie container'>
-                                <Typography variant="h6" component="div" gutterBottom sx = {{textAlign: 'center'}}>
-                                    {itemData[0].nf_calories} kcal
-                                </Typography>
-                                <div style = {{display: 'flex', width: '100%'}}>
-                                <div style = {{height: '100px', width: '100px'}}>
-                                <Pie 
-                                    data = {{
-                                        datasets: [
-                                            {
-                                            data: [
-                                              itemData[0].nf_protein * 4,
-                                              itemData[0].nf_total_fat * 9,
-                                              itemData[0].nf_total_carbohydrate * 4,
-                                            ],
-                                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                                            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <div style={{ display: 'flex' }}>
+                        <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '95%' }}>
+                                <div style={{ position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px' }}>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="search"
+                                        label="Search foods"
+                                        type="text"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={query}
+                                        onChange={(e) => setQuery(e.target.value)}
+                                        sx={{
+                                            '& .MuiInputLabel-root.Mui-focused': {
+                                                color: '#00c691',
                                             },
-                                        ],
+                                            '& .MuiOutlinedInput-root': {
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: '#00c691',
+                                                },
+                                            },
                                         }}
-                                    options = {{
-                                        responsive: true,
-                                        plugins: {
-                                            tooltip:  false
-                                        },
-                                    }}
-                                    style = {{width: '50px', height: '50px'}}
-                                />
+                                    />
+                                    <Button
+                                        disableRipple
+                                        variant="contained"
+                                        onClick={handleSearch}
+                                        startIcon={<SearchIcon />}
+                                        sx={{
+                                            background: '#00c691',
+                                            marginBottom: '5px',
+                                            marginTop: "3px",
+                                            '&:hover': {
+                                                backgroundColor: '#00a67e'
+                                            }
+                                        }}
+                                    >
+                                        Search
+                                    </Button>
                                 </div>
-                                <div style={{ marginTop: '-15px' }}>
-                                    <p>
-                                        <span style={{
-                                            display: 'inline-block',
-                                            width: '10px',
-                                            height: '10px',
-                                            backgroundColor: '#FF6384', 
-                                            borderRadius: '50%',
-                                            marginRight: '8px',
-                                        }}></span>
-                                        Protein: {itemData[0].nf_protein}g
-                                    </p>
-                                    <p>
-                                        <span style={{
-                                            display: 'inline-block',
-                                            width: '10px',
-                                            height: '10px',
-                                            backgroundColor: '#36A2EB',
-                                            borderRadius: '50%',
-                                            marginRight: '8px',
-                                        }}></span>
-                                        Fats: {itemData[0].nf_total_fat}g
-                                    </p>
-                                    <p>
-                                        <span style={{
-                                            display: 'inline-block',
-                                            width: '10px',
-                                            height: '10px',
-                                            backgroundColor: '#FFCE56', 
-                                            borderRadius: '50%',
-                                            marginRight: '8px',
-                                        }}></span>
-                                        Carbs: {itemData[0].nf_total_carbohydrate}g
-                                    </p>
-                                    </div>
+                            </div>
+                            {searched &&
+                                <div className={styles['food-table-container']}>
+                                    <table style={{ width: '100%', borderCollapse: 'collapse', borderRadius: '10px', overflow: 'hidden' }}>
+                                        <tbody>
+                                            {nutritionData.map((item, index) => (
+                                                <tr
+                                                    className={styles['food-results-row']}
+                                                    key={index}
+                                                    style={{ borderBottom: '1px solid #ddd' }}
+                                                    onClick={() => handleFoodSelect(item)}
+                                                >
+                                                    <td style={{ padding: '8px' }}>{`${item.food_name}, ${item.serving_qty} ${item.serving_unit}`}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </Box>
-                            <Box sx = {{width: "40%", backgroundColor: 'white', display: 'flex', justifyContent: 'center'}}>
-                                <Button variant="contained" disableRipple style = {{width: '50%', height: '35px', backgroundColor: '#00c691', color: 'white', position: 'relative', top: '63%'}}>
-                                    ADD
-                                </Button>
-                            </Box>
-                            </Box>
-
-
-
-                            <Box sx = {{backgroundColor: 'white', width: '100%', height: '240px', borderRadius: '10px', outline: '1px solid #D3D3D3', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}>
-                                <div className = 'quantity selection' style = {{}}>
-                                            <Box sx = {{display: 'flex', justifyContent: 'center', width: '100%'}}>
+                            }
+                        </div>
+                        <div style={{ width: '50%' }}>
+                            {foodPopup && itemData && (
+                                <div style={{ width: '100%' }}>
+                                    <Box style={{ display: 'flex', justifyContent: 'center', width: '100%', backgroundColor: 'white' }}>
+                                        <Box className='macro and calorie container'>
+                                            <Typography variant="h6" component="div" gutterBottom sx={{ textAlign: 'center' }}>
+                                                {itemData.nf_calories} kcal
+                                            </Typography>
+                                            <div style={{ display: 'flex', width: '100%' }}>
+                                                <div style={{ height: '100px', width: '100px' }}>
+                                                    <Pie
+                                                        data={{
+                                                            datasets: [
+                                                                {
+                                                                    data: [
+                                                                        itemData.nf_protein * 4,
+                                                                        itemData.nf_total_fat * 9,
+                                                                        itemData.nf_total_carbohydrate * 4,
+                                                                    ],
+                                                                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                                                                    hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                                                                },
+                                                            ],
+                                                        }}
+                                                        options={{
+                                                            responsive: true,
+                                                            plugins: {
+                                                                tooltip: false
+                                                            },
+                                                        }}
+                                                        style={{ width: '50px', height: '50px' }}
+                                                    />
+                                                </div>
+                                                <div style={{ marginTop: '-15px' }}>
+                                                    <p>
+                                                        <span style={{
+                                                            display: 'inline-block',
+                                                            width: '10px',
+                                                            height: '10px',
+                                                            backgroundColor: '#FF6384',
+                                                            borderRadius: '50%',
+                                                            marginRight: '8px',
+                                                        }}></span>
+                                                        Protein: {itemData.nf_protein}g
+                                                    </p>
+                                                    <p>
+                                                        <span style={{
+                                                            display: 'inline-block',
+                                                            width: '10px',
+                                                            height: '10px',
+                                                            backgroundColor: '#36A2EB',
+                                                            borderRadius: '50%',
+                                                            marginRight: '8px',
+                                                        }}></span>
+                                                        Fats: {itemData.nf_total_fat}g
+                                                    </p>
+                                                    <p>
+                                                        <span style={{
+                                                            display: 'inline-block',
+                                                            width: '10px',
+                                                            height: '10px',
+                                                            backgroundColor: '#FFCE56',
+                                                            borderRadius: '50%',
+                                                            marginRight: '8px',
+                                                        }}></span>
+                                                        Carbs: {itemData.nf_total_carbohydrate}g
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </Box>
+                                        <Box sx={{ width: "40%", backgroundColor: 'white', display: 'flex', justifyContent: 'center' }}>
+                                            <Button variant="contained" disableRipple style={{ width: '50%', height: '35px', backgroundColor: '#00c691', color: 'white', position: 'relative', top: '63%' }}>
+                                                ADD
+                                            </Button>
+                                        </Box>
+                                    </Box>
+                                    <Box sx={{ backgroundColor: 'white', width: '100%', height: '240px', borderRadius: '10px', outline: '1px solid #D3D3D3', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                                        <div className='quantity selection'>
+                                            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                                                 <label>
                                                     {selectedItem.food_name}
                                                 </label>
                                             </Box>
-                                            <Box style = {{height: '100px', width: '100%', position: 'relative'}}>
+                                            <Box style={{ height: '100px', width: '100%', position: 'relative' }}>
                                                 <img
                                                     src={selectedItem.photo.thumb}
                                                     alt={selectedItem.food_name}
-                                                    style={{ maxHeight: '100px', maxWidth: '100px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}
+                                                    style={{ maxHeight: '100px', maxWidth: '100px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
                                                 />
                                             </Box>
-                                            <Box sx = {{display: 'flex', height: '30px', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', top: '20px', position: 'relative'}}>
-                                                <InputLabel sx = {{color: 'black', width: '30%', backgroundColor: 'white', marginLeft: '10px', marginRight: '-30px', fontFamily: '"Roboto", sans-serif'}}>Meal</InputLabel>
-                                                <Select sx = {{width: '70%', height: '100%', marginRight: '10px'}} defaultValue = {'Breakfast'} height = '30%' >
+                                            <Box sx={{ display: 'flex', height: '30px', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', top: '20px', position: 'relative' }}>
+                                                <InputLabel sx={{ color: 'black', width: '30%', backgroundColor: 'white', marginLeft: '10px', marginRight: '-30px', fontFamily: '"Roboto", sans-serif' }}>Meal</InputLabel>
+                                                <Select sx={{ width: '70%', height: '100%', marginRight: '10px' }} defaultValue={'Breakfast'}>
                                                     <MenuItem value={'Breakfast'}>Breakfast</MenuItem>
                                                     <MenuItem value={'Lunch'}>Lunch</MenuItem>
                                                     <MenuItem value={'Dinner'}>Dinner</MenuItem>
                                                     <MenuItem value={'Snacks'}>Snacks</MenuItem>
                                                 </Select>
                                             </Box>
-                                            <Box sx = {{display: 'flex', height: '30px', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', top: '40px', position: 'relative'}}>
-                                                <input // input for the food quantity
-                                                    name = 'weight' 
-                                                    type = 'number' 
-                                                    min = '0' 
-                                                    defaultValue = {selectedItem.serving_qty}
-                                                    style = {{width: '18%', position: 'relative', left: '5px'}}
-
+                                            <Box sx={{ display: 'flex', height: '30px', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', top: '40px', position: 'relative' }}>
+                                                <input
+                                                    name='weight'
+                                                    type='number'
+                                                    min='0'
+                                                    defaultValue={selectedItem.serving_qty}
+                                                    style={{ width: '18%', position: 'relative', left: '5px' }}
                                                 />
-                                                <Select sx = {{width: '70%', height: '100%', marginRight: '10px'}} defaultValue = {'unit1'} height = '30%' >
+                                                <Select sx={{ width: '70%', height: '100%', marginRight: '10px' }} defaultValue={'unit1'}>
                                                     <MenuItem value={'unit1'}>{selectedItem.serving_unit}</MenuItem>
-                                                    {selectedItem.nf_sugars && <MenuItem value={'unit2'}>{selectedItem.serving_weight_grams}</MenuItem>}
+                                                    <MenuItem value={'unit2'}>{selectedItem.serving_weight_grams}g</MenuItem>
                                                 </Select>
                                             </Box>
+                                        </div>
+                                    </Box>
                                 </div>
-
-                            </Box>
-
-                            </div>
                             )}
                         </div>
-
                     </div>
-                    
-
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
