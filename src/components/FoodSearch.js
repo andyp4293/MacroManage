@@ -46,6 +46,7 @@ function FoodSearchModal({ open, onClose }) {
     const [itemData, setItemData] = useState(null);
     const [selectedItem, setSelectedItem] = useState('');
     const [foodPopup, setFoodPopup] = useState(false); 
+    const [servingQty, setServingQty] = useState(''); // for the default serving quantity
 
     const handleFoodSelect = (item) => {
         const fetchData = item.nix_item_id 
@@ -62,12 +63,57 @@ function FoodSearchModal({ open, onClose }) {
                     ...item,
                     serving_weight_grams: servingWeightGrams
                 });
-
+                
                 setItemData(fetchedItemData);
+                setServingQty(itemData.serving_qty); // serving amount that will be changed by the user
+                setDefaultServingQty(fetchedItemData.serving_qty); // default serving amount
+                setCalories(fetchedItemData.nf_calories);
+                setProtein(fetchedItemData.nf_protein); 
+                setFats(fetchedItemData.nf_total_fat);
+                setCarbs(fetchedItemData.nf_total_carbohydrate); 
                 setFoodPopup(true); // Open the food popup after data is fetched
             })
             .catch(error => console.error('Error fetching item data:', error)); // Handle errors
     };
+
+    const [defaultServingQty, setDefaultServingQty] = useState('');
+    const [servingUnit, setServingUnit] = useState('unit1')
+
+    const handleServingSelect = (e) => {
+        if (e.target.value.length < 15)
+        {
+            setServingQty(e.target.value); 
+        }
+
+        // multiply the default calories and macro amounts found in 1 serving by (default serving size/selected serving size)
+        switch (servingUnit) {
+            case 'unit1': // whatever the default serving unit is
+                setCalories(Number((itemData.nf_calories * (e.target.value / defaultServingQty)).toFixed(1)));
+                setProtein(Number((itemData.nf_protein * (e.target.value / defaultServingQty)).toFixed(1)));
+                setFats(Number((itemData.nf_total_fat * (e.target.value / defaultServingQty)).toFixed(1)));
+                setCarbs(Number((itemData.nf_total_carbohydrate * (e.target.value / defaultServingQty)).toFixed(1)));
+            break; 
+
+            case 'unit2': // the default serving amount but in grams, ie if the serving size of 1 oz, this will be 28g
+                setCalories(Number((itemData.nf_calories * (e.target.value / defaultServingQty)).toFixed(1)));
+                setProtein(Number((itemData.nf_protein * (e.target.value / defaultServingQty)).toFixed(1)));
+                setFats(Number((itemData.nf_total_fat * (e.target.value / defaultServingQty)).toFixed(1)));
+                setCarbs(Number((itemData.nf_total_carbohydrate * (e.target.value / defaultServingQty)).toFixed(1)));
+            break; 
+
+            case 'unit3': // grams
+
+            break; 
+            default:
+
+        }
+    }
+
+    const [calories, setCalories] = useState('');
+    const [protein, setProtein] = useState('');
+    const [fats, setFats] = useState(''); 
+    const [carbs, setCarbs] = useState(''); 
+
 
     return (
         <div>
@@ -155,7 +201,7 @@ function FoodSearchModal({ open, onClose }) {
                                     <Box style={{ display: 'flex', justifyContent: 'center', width: '100%', backgroundColor: 'white' }}>
                                         <Box className='macro and calorie container'>
                                             <Typography variant="h6" component="div" gutterBottom sx={{ textAlign: 'center' }}>
-                                                {itemData.nf_calories} kcal
+                                                {calories} kcal
                                             </Typography>
                                             <div style={{ display: 'flex', width: '100%' }}>
                                                 <div style={{ height: '100px', width: '100px' }}>
@@ -164,9 +210,9 @@ function FoodSearchModal({ open, onClose }) {
                                                             datasets: [
                                                                 {
                                                                     data: [
-                                                                        itemData.nf_protein * 4,
-                                                                        itemData.nf_total_fat * 9,
-                                                                        itemData.nf_total_carbohydrate * 4,
+                                                                        protein * 4,
+                                                                        fats * 9,
+                                                                        carbs * 4,
                                                                     ],
                                                                     backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
                                                                     hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
@@ -192,7 +238,7 @@ function FoodSearchModal({ open, onClose }) {
                                                             borderRadius: '50%',
                                                             marginRight: '8px',
                                                         }}></span>
-                                                        Protein: {itemData.nf_protein}g
+                                                        Protein: {protein}g
                                                     </p>
                                                     <p>
                                                         <span style={{
@@ -203,7 +249,7 @@ function FoodSearchModal({ open, onClose }) {
                                                             borderRadius: '50%',
                                                             marginRight: '8px',
                                                         }}></span>
-                                                        Fats: {itemData.nf_total_fat}g
+                                                        Fats: {fats}g
                                                     </p>
                                                     <p>
                                                         <span style={{
@@ -214,7 +260,7 @@ function FoodSearchModal({ open, onClose }) {
                                                             borderRadius: '50%',
                                                             marginRight: '8px',
                                                         }}></span>
-                                                        Carbs: {itemData.nf_total_carbohydrate}g
+                                                        Carbs: {carbs}g
                                                     </p>
                                                 </div>
                                             </div>
@@ -253,12 +299,14 @@ function FoodSearchModal({ open, onClose }) {
                                                     name='weight'
                                                     type='number'
                                                     min='0'
-                                                    defaultValue={selectedItem.serving_qty}
+                                                    value ={servingQty}
+                                                    onChange = {handleServingSelect} 
                                                     style={{ width: '18%', position: 'relative', left: '5px' }}
                                                 />
-                                                <Select sx={{ width: '70%', height: '100%', marginRight: '10px' }} defaultValue={'unit1'}>
+                                                <Select sx={{ width: '70%', height: '100%', marginRight: '10px' }} defaultValue={'unit1'} value = {servingUnit} onChange = {(e) => setServingUnit(e.target.value)} >
                                                     <MenuItem value={'unit1'}>{selectedItem.serving_unit}</MenuItem>
                                                     <MenuItem value={'unit2'}>{selectedItem.serving_weight_grams}g</MenuItem>
+                                                    <MenuItem value={'unit3'}>g</MenuItem>
                                                 </Select>
                                             </Box>
                                         </div>
