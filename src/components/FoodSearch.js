@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import styles from '../styles/FoodSearch.module.css';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import AddIcon from '@mui/icons-material/Add';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -67,6 +68,7 @@ function FoodSearchModal({ open, onClose }) {
                 setItemData(fetchedItemData);
                 setServingQty(itemData.serving_qty); // serving amount that will be changed by the user
                 setDefaultServingQty(fetchedItemData.serving_qty); // default serving amount
+                setDefaultServingQtyGrams(servingWeightGrams); // default serving amount in grams
                 setCalories(fetchedItemData.nf_calories);
                 setProtein(fetchedItemData.nf_protein); 
                 setFats(fetchedItemData.nf_total_fat);
@@ -77,6 +79,8 @@ function FoodSearchModal({ open, onClose }) {
     };
 
     const [defaultServingQty, setDefaultServingQty] = useState('');
+    const [defaultServingQtyGrams, setDefaultServingQtyGrams] = useState('');
+
     const [servingUnit, setServingUnit] = useState('unit1')
 
     const handleServingSelect = (e) => {
@@ -95,13 +99,17 @@ function FoodSearchModal({ open, onClose }) {
             break; 
 
             case 'unit2': // the default serving amount but in grams, ie if the serving size of 1 oz, this will be 28g
-                setCalories(Number((itemData.nf_calories * (e.target.value / defaultServingQty)).toFixed(1)));
-                setProtein(Number((itemData.nf_protein * (e.target.value / defaultServingQty)).toFixed(1)));
-                setFats(Number((itemData.nf_total_fat * (e.target.value / defaultServingQty)).toFixed(1)));
-                setCarbs(Number((itemData.nf_total_carbohydrate * (e.target.value / defaultServingQty)).toFixed(1)));
+                setCalories(Number((itemData.nf_calories * (e.target.value)).toFixed(1)));
+                setProtein(Number((itemData.nf_protein * (e.target.value)).toFixed(1)));
+                setFats(Number((itemData.nf_total_fat * (e.target.value)).toFixed(1)));
+                setCarbs(Number((itemData.nf_total_carbohydrate * (e.target.value)).toFixed(1)));
             break; 
 
             case 'unit3': // grams
+                setCalories(Number((itemData.nf_calories * (e.target.value/ defaultServingQtyGrams)).toFixed(1)));
+                setProtein(Number((itemData.nf_protein * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
+                setFats(Number((itemData.nf_total_fat * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
+                setCarbs(Number((itemData.nf_total_carbohydrate * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
 
             break; 
             default:
@@ -266,7 +274,10 @@ function FoodSearchModal({ open, onClose }) {
                                             </div>
                                         </Box>
                                         <Box sx={{ width: "40%", backgroundColor: 'white', display: 'flex', justifyContent: 'center' }}>
-                                            <Button variant="contained" disableRipple style={{ width: '50%', height: '35px', backgroundColor: '#00c691', color: 'white', position: 'relative', top: '63%' }}>
+                                            <Button variant="contained" startIcon = {<AddIcon/>} disableRipple 
+                                            style={{ width: '50%', height: '35px', backgroundColor: '#00c691', color: 'white', position: 'relative', top: '63%'}}
+                                            
+                                            >
                                                 ADD
                                             </Button>
                                         </Box>
