@@ -41,7 +41,7 @@ function MealAccordion({title, items, nutrition}){
                     <tbody>
                         {items.map((item, index) => (
                             <tr key={index}>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{`${item.name}, ${item.quantity}`}</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{`${item.foodName}, ${item.passedServingQty} ${item.servingUnit}`}</td>
                                 <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.calories} kcal</td>
                             </tr>
                         ))}

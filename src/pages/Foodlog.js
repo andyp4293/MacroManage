@@ -21,41 +21,54 @@ function FoodLog() {
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
-    }
-    const handleSearch = (searchTerm) => {
+    };
+    const handleSearch = () => {
         setIsModalOpen(false);
     };
 
+    const handleAddFood = (foodDetails) => { 
+        switch (foodDetails.selectedMeal) {
+            case 'Breakfast':
+                setBreakfastItems((prevItems) => [...prevItems, foodDetails]);
+                break;
+            case 'Lunch':
+                setLunchItems((prevItems) => [...prevItems, foodDetails]);
+                break;
+            case 'Dinner':
+                setDinnerItems((prevItems) => [...prevItems, foodDetails]);
+                break;
+            case 'Snacks': 
+                setSnackItems((prevItems) => [...prevItems, foodDetails])
+                break;
+            default:
+                console.error("Invalid meal selection");
+                break;
+        }
+    };
 
+    const [BreakfastItems, setBreakfastItems] = useState([]);
+    const [LunchItems, setLunchItems] = useState([]);
+    const [DinnerItems, setDinnerItems] = useState([]);
+    const [SnackItems, setSnackItems] = useState([]); 
 
+        
     const meals = {
         // Each meal category is an object with total nutrition info and a list of food items.
         Breakfast: {
-            totalNutrition: '180 kcal • 2 g protein • 41 g carbs • 1 g fat',
-            items: [
-                {
-                    name: 'Banana',
-                    quantity: '1',
-                    calories: 89.89,
-                },
-                {
-                    name: 'man',
-                    quantity: '1',
-                    calories: 1000000000000000,
-                },
-            ],
+            totalNutrition: '',
+            items: BreakfastItems,
         },
         Lunch: {
             totalNutrition: '',
-            items: [],
+            items: LunchItems,
         },
         Dinner: {
             totalNutrition: '',
-            items: [],
+            items: DinnerItems,
         },
         Snacks: {
             totalNutrition: '',
-            items: [],
+            items: SnackItems,
         },
     };
 
@@ -105,7 +118,6 @@ function FoodLog() {
                   key={meal} // A unique key for each meal category.
                   title={meal} // The meal name (e.g., Breakfast, Lunch).
                   items={meals[meal].items} // The list of food items for this meal.
-                  nutrition={meals[meal].totalNutrition} // Total nutrition info for the meal.
                 />
             ))}
             </div>
@@ -115,6 +127,7 @@ function FoodLog() {
                     open={isModalOpen}
                     onClose={handleCloseModal}
                     onSearch={handleSearch}
+                    addFood={handleAddFood}
                 />
             </div>
         </div>
