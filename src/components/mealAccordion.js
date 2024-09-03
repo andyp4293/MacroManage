@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // accordion component for every meal, with the accordion details being the foods logged
 function MealAccordion({title, items, nutrition}){
     return(
-        <Accordion style = {{width: '60%', minWidth: '550px', margin: '0'}}> 
+        <Accordion style = {{width: '60%', minWidth: '550px', margin: '0 auto'}}> 
             {/*header/title on the accordian component */}
             <AccordionSummary 
                 expandIcon = {<ExpandMoreIcon/>}
@@ -17,14 +17,19 @@ function MealAccordion({title, items, nutrition}){
                 sx = {{
                     backgroundColor: '#00c691',
                     color: 'white',
+                    height: '48px', // Fixed height
+                    minHeight: '48px', // Ensures it doesn't shrink below this height
+                    '&.Mui-expanded': {
+                        minHeight: '48px', // Keeps height consistent when expanded
+                    },
                 }}
             > 
                 {/* displays meal name and its total nutritional macros */}
-                <Box style = {{display: 'flex', justifyContent:'space-between', width: '97%'}}>
-                <Typography style = {{display: 'flex', justifyContent: 'space-between', fontFamily: '"Roboto", sans-serif', fontSize: '17px', alignItems: 'center'}}>
+                <Box style = {{display: 'flex', justifyContent:'space-between', width: '100%'}}>
+                <Typography style = {{display: 'flex', justifyContent: 'space-between', fontFamily: '"Roboto", sans-serif', fontSize: '17px', alignItems: 'center', whiteSpace: 'nowrap'}}>
                             {title} 
                     </Typography>
-                    <Typography style = {{display: 'flex', justifyContent: 'space-between', fontFamily: '"Roboto", sans-serif', fontSize: '17px', alignItems: 'center'}}>
+                    <Typography style = {{display: 'flex', justifyContent: 'space-between', fontFamily: '"Roboto", sans-serif', fontSize: '17px', alignItems: 'center', whiteSpace: 'nowrap'}}>
                             {nutrition}
                     </Typography>
                 </Box>
@@ -34,7 +39,10 @@ function MealAccordion({title, items, nutrition}){
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr>
-                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}><DinnerDiningIcon style = {{fontSize: '25px'}}/></th>
+                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd', width: '25%'}}><DinnerDiningIcon style = {{fontSize: '25px'}}/></th>
+                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Protein</th>
+                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Fats</th>
+                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Carbs</th>
                             <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Calories</th>
                         </tr>
                     </thead>
@@ -42,6 +50,9 @@ function MealAccordion({title, items, nutrition}){
                         {items.map((item, index) => (
                             <tr key={index}>
                                 <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{`${item.foodName}, ${item.passedServingQty} ${item.servingUnit}`}</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.protein} g</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.fats} g</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.carbs} g</td>
                                 <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.calories} kcal</td>
                             </tr>
                         ))}

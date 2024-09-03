@@ -78,7 +78,7 @@ function FoodLog() {
     };
 
         
-    const mealLogForSelectedDate = mealLogs[selectedDate] || { // 
+    const mealLogForSelectedDate = mealLogs[selectedDate] || { // specific food log for the date selected
         Breakfast: { totalNutrition: '', items: {} },
         Lunch: { totalNutrition: '', items: {} },
         Dinner: { totalNutrition: '', items: {} },
@@ -124,13 +124,14 @@ function FoodLog() {
             </div> 
             <hr></hr>
 
-            <div>
+            <div style = {{}}>
             {/*Object.keys(meals) makes an array of the keys, ie ['Breakfast, 'Lunch", 'Dinner'...]*/}
             {Object.keys(mealLogForSelectedDate).map((meal) => ( // .map makes a meal accordian for each meal key
                 <MealAccordion 
                 key={meal} // A unique key for each meal category.
                 title={meal} // The meal name (e.g., Breakfast, Lunch).
                 items={Object.values(mealLogForSelectedDate[meal].items)} // Convert items object to an array of food items
+                
                 />
             ))}
             </div>
