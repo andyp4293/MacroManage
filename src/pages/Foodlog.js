@@ -8,12 +8,13 @@ import MealAccordion from '../components/MealAccordion';
 import FoodSearch from '../components/FoodSearch'; 
 
 function FoodLog() {
-    const [, setSelectedDate] = useState(new Date())
-    const updateDate = (newDate) => {
+    const [selectedDate, setSelectedDate] = useState(new Date()) // state to keep track of the date 
+
+    const updateDate = (newDate) => { // wheneveer the date selector is changed, the state is assigned its value
         setSelectedDate(newDate); 
     };
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false); // state to open or close the modal 
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
@@ -22,54 +23,66 @@ function FoodLog() {
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
-    const handleSearch = () => {
-        setIsModalOpen(false);
-    };
 
+    const [mealLogs, setMealLogs] = useState({}); 
+    // function to handle when the user adds a food item from the food search modal 
     const handleAddFood = (foodDetails) => { 
+        const dateKey = selectedDate; 
+        
+        const prevMeals = mealLogs[dateKey] || { // makes an object of the previously logged meals of the specific day, if no meals have been made before for that day, it's just blank meals
+            Breakfast: { totalNutrition: '', items: {} },
+            Lunch: { totalNutrition: '', items: {} },
+            Dinner: { totalNutrition: '', items: {} },
+            Snacks: { totalNutrition: '', items: {} },
+        }
+
         switch (foodDetails.selectedMeal) {
             case 'Breakfast':
-                setBreakfastItems((prevItems) => [...prevItems, foodDetails]);
+                prevMeals.Breakfast.items = {
+                    ...prevMeals.Breakfast.items,
+                    [Date.now().toString()]: foodDetails, // adds the food item details to the breakfast property's item proprty, with the time in ms as a unique key for the item 
+                    // it makes a copy of the meals for the selected date before adding the new item's details
+                };
                 break;
             case 'Lunch':
-                setLunchItems((prevItems) => [...prevItems, foodDetails]);
+                prevMeals.Lunch.items = {
+                    ...prevMeals.Lunch.items,
+                    [Date.now().toString()]: foodDetails, // adds the food item details to the lunch property's item proprty, with the time in ms as a unique key for the item 
+                    // it makes a copy of the meals for the selected date before adding the new item's details
+                };
                 break;
             case 'Dinner':
-                setDinnerItems((prevItems) => [...prevItems, foodDetails]);
+                prevMeals.Dinner.items = {
+                    ...prevMeals.Dinner.items,
+                    [Date.now().toString()]: foodDetails, // adds the food item details to the dinner property's item proprty, with the time in ms as a unique key for the item 
+                    // it makes a copy of the meals for the selected date before adding the new item's details
+                };
                 break;
             case 'Snacks': 
-                setSnackItems((prevItems) => [...prevItems, foodDetails])
+                prevMeals.Snacks.items = {
+                    ...prevMeals.Snacks.items,
+                    [Date.now().toString()]: foodDetails, // adds the food item details to the snacks property's item proprty, with the time in ms as a unique key for the item 
+                    // it makes a copy of the meals for the selected date before adding the new item's details
+                };
                 break;
             default:
                 console.error("Invalid meal selection");
                 break;
         }
+        
+        // for a the selected date by the date selected, copy the previous meal logs, and add any meal updates for the date
+        setMealLogs({
+            ...mealLogs, 
+            [dateKey]: prevMeals, 
+        })
     };
 
-    const [BreakfastItems, setBreakfastItems] = useState([]);
-    const [LunchItems, setLunchItems] = useState([]);
-    const [DinnerItems, setDinnerItems] = useState([]);
-    const [SnackItems, setSnackItems] = useState([]); 
-
         
-    const meals = {
-        // Each meal category is an object with total nutrition info and a list of food items.
-        Breakfast: {
-            totalNutrition: '',
-            items: BreakfastItems,
-        },
-        Lunch: {
-            totalNutrition: '',
-            items: LunchItems,
-        },
-        Dinner: {
-            totalNutrition: '',
-            items: DinnerItems,
-        },
-        Snacks: {
-            totalNutrition: '',
-            items: SnackItems,
-        },
+    const mealLogForSelectedDate = mealLogs[selectedDate] || { // 
+        Breakfast: { totalNutrition: '', items: {} },
+        Lunch: { totalNutrition: '', items: {} },
+        Dinner: { totalNutrition: '', items: {} },
+        Snacks: { totalNutrition: '', items: {} },
     };
 
 
@@ -113,11 +126,11 @@ function FoodLog() {
 
             <div>
             {/*Object.keys(meals) makes an array of the keys, ie ['Breakfast, 'Lunch", 'Dinner'...]*/}
-            {Object.keys(meals).map((meal) => ( // .map makes a meal accordian for each meal key
+            {Object.keys(mealLogForSelectedDate).map((meal) => ( // .map makes a meal accordian for each meal key
                 <MealAccordion 
-                  key={meal} // A unique key for each meal category.
-                  title={meal} // The meal name (e.g., Breakfast, Lunch).
-                  items={meals[meal].items} // The list of food items for this meal.
+                key={meal} // A unique key for each meal category.
+                title={meal} // The meal name (e.g., Breakfast, Lunch).
+                items={Object.values(mealLogForSelectedDate[meal].items)} // Convert items object to an array of food items
                 />
             ))}
             </div>
@@ -126,7 +139,6 @@ function FoodLog() {
                 <FoodSearch
                     open={isModalOpen}
                     onClose={handleCloseModal}
-                    onSearch={handleSearch}
                     addFood={handleAddFood}
                 />
             </div>
