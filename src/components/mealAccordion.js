@@ -1,59 +1,128 @@
-import {Accordion, AccordionSummary, AccordionDetails, Typography, Box, Button} from '@mui/material';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, Button } from '@mui/material';
 import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+function MealAccordion({ title, selectedDate }) {
+    const [items, setItems] = useState([]);
 
+    useEffect(() => {
+        // fetches the meal_items associated with the correct meal (title) and selected date
+        const fetchMealItems = async () => {
+            try {
+                const mealDate = selectedDate.toISOString().split('T')[0]; // formats the date
 
-// accordion component for every meal, with the accordion details being the foods logged
-function MealAccordion({title, items}){ 
-    const totals = items.reduce( // this goals through every single item in the items array
+                // 1.) fetches meal_log_id of the meal_log with the associated selected date
+                const logResponse = await fetch('http://localhost:5000/api/meals/get_log_id', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        meal_date: mealDate,
+                    }),
+                });
+
+                const logData = await logResponse.json();
+                const meal_log_id = logData.meal_log_id;
+
+                if (!meal_log_id) {
+                    throw new Error('Meal log not found for the specified date and meal type.');
+                }
+
+                // 2.) fetches meal_items based on meal_log_id and title (which is the meal_type)
+                const itemsResponse = await fetch(`http://localhost:5000/api/meals/get_items?meal_log_id=${meal_log_id}&meal_type=${title}`);
+                const itemsData = await itemsResponse.json();
+                setItems(itemsData); // update the item state
+
+            } catch (error) {
+                console.error('Error fetching meal items:', error);
+            }
+        };
+
+        fetchMealItems();
+    }, [selectedDate, title, items]); // re-fetches the meal_items every time there is a change to the date, a change to items state, or a change to the title
+
+    // goes through all of the items within the items array and sums up the total macros and calories 
+    const totals = items.reduce(
         (totals, item) => {
-            // progressively adds up the totals for macros and calories 
             totals.calories += item.calories;
             totals.protein += item.protein;
             totals.fats += item.fats;
             totals.carbs += item.carbs;
             return totals;
         },
-        { calories: 0, protein: 0, fats: 0, carbs: 0 } // initial values for totals 
+        { calories: 0, protein: 0, fats: 0, carbs: 0 }
     );
 
 
-    return(
-        <Accordion style = {{width: '75%', minWidth: '550px', margin: '0 auto'}}> 
-            {/*header/title on the accordian component */}
-            <AccordionSummary 
-                expandIcon = {<ExpandMoreIcon/>}
-                aria-controls = {`${title}-log`} // name for each expandable body of each meal accordian
-                id = {`${title}-header`} // name/id for each header
-                sx = {{
+    // function to delete a food_items row based on the item's id 
+    const deleteEntry = async (itemId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/meals/delete_item/${itemId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete meal item');
+            }
+
+        } catch (error) {
+            console.error('Error deleting meal item:', error);
+        }
+    };
+
+
+    return (
+        <Accordion style={{ width: '75%', minWidth: '550px', margin: '0 auto' }}>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`${title}-log`} // name for each expandable body of each meal accordion
+                id={`${title}-header`} // name/id for each header
+                sx={{
                     backgroundColor: '#00c691',
                     color: 'white',
-                    height: '48px', // Fixed height
-                    minHeight: '48px', // Ensures it doesn't shrink below this height
-                    '&.Mui-expanded': {
-                        minHeight: '48px', // Keeps height consistent when expanded
-                    },
+                    height: '48px',
+                    minHeight: '48px',
+                    '&.Mui-expanded': { minHeight: '48px' },
                 }}
-            > 
-                {/* displays meal name and its total nutritional macros */}
-                <Box style = {{display: 'flex', justifyContent:'space-between', width: '100%'}}>
-                <Typography style = {{display: 'flex', justifyContent: 'space-between', fontFamily: '"Roboto", sans-serif', fontSize: '17px', alignItems: 'center', whiteSpace: 'nowrap'}}>
-                            {title} 
+            >
+                <Box style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                    <Typography
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            fontFamily: '"Roboto", sans-serif',
+                            fontSize: '17px',
+                            alignItems: 'center',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        {title}
                     </Typography>
-                    <Typography style = {{display: 'flex', justifyContent: 'space-between', fontFamily: '"Roboto", sans-serif', fontSize: '17px', alignItems: 'center', whiteSpace: 'nowrap'}}>
+                    <Typography
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            fontFamily: '"Roboto", sans-serif',
+                            fontSize: '17px',
+                            alignItems: 'center',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >   
                         {`Calories: ${totals.calories.toFixed(1)} kcal, Protein: ${totals.protein.toFixed(1)} g, Fats: ${totals.fats.toFixed(1)} g, Carbs: ${totals.carbs.toFixed(1)} g`}
                     </Typography>
                 </Box>
             </AccordionSummary>
 
-            <AccordionDetails style = {{margin: '0', padding: '0'}}> {/* For showing the foods loggeds and their nutrition when accordion is expanded*/}
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <AccordionDetails style={{ margin: '0', padding: '0' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr>
-                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd', width: '25%'}}><DinnerDiningIcon style = {{fontSize: '25px'}}/></th>
+                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd', width: '25%' }}>
+                                <DinnerDiningIcon style={{ fontSize: '25px' }} />
+                            </th>
                             <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Protein</th>
                             <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Fats</th>
                             <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Carbs</th>
@@ -63,13 +132,16 @@ function MealAccordion({title, items}){
                     <tbody>
                         {items.map((item, index) => (
                             <tr key={index}>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{`${item.foodName}, ${item.passedServingQty} ${item.servingUnit}`}</td>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.protein} g</td>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.fats} g</td>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.carbs} g</td>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.calories} kcal</td>
                                 <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
-                                    <Button 
+                                    <p style = {{fontSize: '15px'}}>{`${item.food_name}`}</p>
+                                    <p style = {{fontSize: '15px'}}>{`${item.quantity} ${item.unit}`}</p>
+                                </td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.protein || 0} g</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.fats || 0} g</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.carbs || 0} g</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.calories || 0} kcal</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
+                                    <Button
                                         disableRipple
                                         sx={{
                                             padding: '8px 24px',
@@ -82,15 +154,13 @@ function MealAccordion({title, items}){
                                             color: 'white',
                                             cursor: 'pointer',
                                             marginBottom: '0px',
-                                            borderRadius: '10px', 
+                                            borderRadius: '10px',
                                             backgroundColor: '#00c691',
-                                            '&:hover': {
-                                                backgroundColor: '#00a67e', 
-                                            }
+                                            '&:hover': { backgroundColor: '#00a67e' },
                                         }}
-                                        onClick 
+                                        onClick={() => deleteEntry(item.id)}
                                     >
-                                        <DeleteIcon></DeleteIcon>
+                                        <DeleteIcon />
                                     </Button>
                                 </td>
                             </tr>
@@ -98,9 +168,8 @@ function MealAccordion({title, items}){
                     </tbody>
                 </table>
             </AccordionDetails>
-
         </Accordion>
-    )
+    );
 }
 
-export default MealAccordion
+export default MealAccordion;

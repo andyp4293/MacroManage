@@ -10,56 +10,55 @@ import AddIcon from '@mui/icons-material/Add';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function FoodSearchModal({ open, onClose, addFood }) {
-    // state for the search query that will be used for a post request to the nutritionix api
+    // state for the search query
     const [query, setQuery] = useState('');
     
-    // state to store the data from the response delivered from the nutritionix api
+    // state for holding the nutritional data from the database
     const [nutritionData, setNutritionData] = useState([]);
 
+    // state so that only certain components will be shown after the first search
     const [searched, setSearched] = useState(false); 
 
     const handleClose = () => {
-        setNutritionData([]); // Optionally reset other states as well
+        setNutritionData([]);
         setQuery('');
         setItemData(''); 
         setSearched(false); 
     };
 
+    // search for food results based on the search query 
     const handleSearch = () => {
-        fetch('http://localhost:5000/api/nutrition', { // fetch initiates a request to the nutritionix api
+        fetch('http://localhost:5000/api/nutrition', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ query: query }) // sends a request where the search query (ie "banana") is sent 
+            body: JSON.stringify({ query: query }) // sends a post request of the search query
         })
-        .then(response => response.json()) // parses the json from the api's response
+        .then(response => response.json())
         .then(data => {
-            setNutritionData(data.common || []); // store the fetched nutrition data in state
+            setNutritionData(data); // store data from the backend to the nutritionData state
             setSearched(true); 
         }) 
-        .catch(error => { // handles if an error occurs
+        .catch(error => { 
             console.error('Error fetching nutrition data:', error);
         });
     };
 
-    // state to store the selected item data and its details
+    // State to store the selected item data and its details
     const [itemData, setItemData] = useState(null);
     const [selectedItem, setSelectedItem] = useState('');
     const [foodPopup, setFoodPopup] = useState(false); 
-    const [servingQty, setServingQty] = useState(''); // for the default serving quantity
+    const [servingQty, setServingQty] = useState(''); // For the default serving quantity
     const [foodName, setFoodName] = useState(''); 
 
+    // select food and fetch nutritional details from the backend
     const handleFoodSelect = (item) => {
-        const fetchData = item.nix_item_id 
-            ? fetch(`http://localhost:5000/api/nutrition/item?nix_item_id=${item.nix_item_id}`)
-            : fetch(`http://localhost:5000/api/nutrition/nutrients?query=${item.food_name.replace(/%/g, '')}`);
-        
-        fetchData
-            .then(response => response.json()) // Parse the JSON response
+        fetch(`http://localhost:5000/api/nutrition/item?item_id=${item.id}`) // fetches nutrition details based on the food's id
+            .then(response => response.json()) // parses the backend's returninto json
             .then(data => {
-                const fetchedItemData = item.nix_item_id ? data : data.foods[0];
-                const servingWeightGrams = fetchedItemData.serving_weight_grams || 0;
+                const fetchedItemData = data;
+                const servingWeightGrams = fetchedItemData.serving_size || 0;
 
                 setSelectedItem({
                     ...item,
@@ -67,17 +66,18 @@ function FoodSearchModal({ open, onClose, addFood }) {
                 }); 
                 
                 setItemData(fetchedItemData);
-                setServingQty(fetchedItemData.serving_qty); // serving amount that will be changed by the user
-                setDefaultServingQty(fetchedItemData.serving_qty); // default serving amount
-                setDefaultServingQtyGrams(servingWeightGrams); // default serving amount in grams
-                setCalories(fetchedItemData.nf_calories);
-                setProtein(fetchedItemData.nf_protein); 
-                setFats(fetchedItemData.nf_total_fat);
-                setCarbs(fetchedItemData.nf_total_carbohydrate); 
-                setFoodName(item.food_name); 
-                setServingUnit(item.serving_unit)
+                setServingQty(fetchedItemData.serving_size); // Serving amount that will be changed by the user
+                setDefaultServingQty(fetchedItemData.serving_size || 100); // Default serving amount
+                setDefaultServingQtyGrams(servingWeightGrams); // Default serving amount in grams
+                setCalories(fetchedItemData.kcal);
+                setProtein(fetchedItemData.protein); 
+                setFats(fetchedItemData.total_fat);
+                setCarbs(fetchedItemData.total_carb); 
+                setFoodName(fetchedItemData.name); 
+                setServingUnit(fetchedItemData.serving_size_unit);
                 setFoodPopup(true); // Open the food popup after data is fetched
-                setPassedServingQty(fetchedItemData.serving_qty);
+                setPassedServingQty(fetchedItemData.serving_size);
+                setFoodId(fetchedItemData.id)
             })
             .catch(error => console.error('Error fetching item data:', error)); // Handle errors
     };
@@ -86,53 +86,51 @@ function FoodSearchModal({ open, onClose, addFood }) {
     const [defaultServingQtyGrams, setDefaultServingQtyGrams] = useState('');
     const [passedServingQty, setPassedServingQty] = useState('');
 
-    const [selectedServingUnit, setSelectedServingUnit] = useState('unit1')
+    const [selectedServingUnit, setSelectedServingUnit] = useState('unit1');
 
     const handleServingSelect = (e) => {
-        if (e.target.value.length < 15)
-        {
+        if (e.target.value.length < 15) {
             setServingQty(e.target.value); 
         }
 
         // multiply the default calories and macro amounts found in 1 serving by (default serving size/selected serving size)
         switch (selectedServingUnit) {
-            case 'unit1': // whatever the default serving unit is
-                setPassedServingQty(e.target.value); 
-                setCalories(Number((itemData.nf_calories * (e.target.value / defaultServingQty)).toFixed(1)));
-                setProtein(Number((itemData.nf_protein * (e.target.value / defaultServingQty)).toFixed(1)));
-                setFats(Number((itemData.nf_total_fat * (e.target.value / defaultServingQty)).toFixed(1)));
-                setCarbs(Number((itemData.nf_total_carbohydrate * (e.target.value / defaultServingQty)).toFixed(1)));
+            case 'unit1': // default serving unit
+                setPassedServingQty(e.target.value || 100); 
+                setCalories(Number((itemData.kcal * (e.target.value / defaultServingQty)).toFixed(1)));
+                setProtein(Number((itemData.protein * (e.target.value / defaultServingQty)).toFixed(1)));
+                setFats(Number((itemData.total_fat * (e.target.value / defaultServingQty)).toFixed(1)));
+                setCarbs(Number((itemData.total_carb * (e.target.value / defaultServingQty)).toFixed(1)));
             break; 
 
-            case 'unit2': // the default serving amount but in grams, ie if the serving size of 1 oz, this will be 28g
+            case 'unit2': // default serving amount in grams
                 setServingUnit('g'); 
-                setPassedServingQty(e.target.value*defaultServingQtyGrams);
-                setCalories(Number((itemData.nf_calories * (e.target.value)).toFixed(1)));
-                setProtein(Number((itemData.nf_protein * (e.target.value)).toFixed(1)));
-                setFats(Number((itemData.nf_total_fat * (e.target.value)).toFixed(1)));
-                setCarbs(Number((itemData.nf_total_carbohydrate * (e.target.value)).toFixed(1)));
+                setPassedServingQty(e.target.value * defaultServingQtyGrams);
+                setCalories(Number((itemData.kcal * (e.target.value)).toFixed(1)));
+                setProtein(Number((itemData.protein * (e.target.value)).toFixed(1)));
+                setFats(Number((itemData.total_fat * (e.target.value)).toFixed(1)));
+                setCarbs(Number((itemData.total_carb * (e.target.value)).toFixed(1)));
             break; 
 
             case 'unit3': // grams
                 setServingUnit('g');
                 setPassedServingQty(e.target.value); 
-                setCalories(Number((itemData.nf_calories * (e.target.value/ defaultServingQtyGrams)).toFixed(1)));
-                setProtein(Number((itemData.nf_protein * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
-                setFats(Number((itemData.nf_total_fat * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
-                setCarbs(Number((itemData.nf_total_carbohydrate * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
-
+                setCalories(Number((itemData.kcal * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
+                setProtein(Number((itemData.protein * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
+                setFats(Number((itemData.total_fat * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
+                setCarbs(Number((itemData.total_carb * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
             break; 
             default:
-
         }
-    }
+    };
 
     const [selectedMeal, setSelectedMeal] = useState('Breakfast'); 
     const [servingUnit, setServingUnit] = useState('');
-    const [calories, setCalories] = useState(''); // for calories of the selected ittem
-    const [protein, setProtein] = useState(''); // for the protein in grams of the selected item
-    const [fats, setFats] = useState(''); // for the fats in grams of the selected item 
-    const [carbs, setCarbs] = useState(''); // for the carbs in grams of the selected item
+    const [calories, setCalories] = useState(''); // For calories of the selected item
+    const [protein, setProtein] = useState(''); // For the protein in grams of the selected item
+    const [fats, setFats] = useState(''); // For the fats in grams of the selected item 
+    const [carbs, setCarbs] = useState(''); // For the carbs in grams of the selected item
+    const [foodId, setFoodId] = useState('');
 
     const handleAdd = () => {
         const foodDetails = {
@@ -143,15 +141,13 @@ function FoodSearchModal({ open, onClose, addFood }) {
             servingUnit, 
             passedServingQty, 
             foodName, 
-            selectedMeal
-        }
+            selectedMeal, 
+            foodId, 
+        };
         addFood(foodDetails); 
-        // close the modal after adding food item
         handleClose(); 
         onClose(); 
-
-    }
-
+    };
 
     return (
         <div>
@@ -171,9 +167,9 @@ function FoodSearchModal({ open, onClose, addFood }) {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <div style={{ display: 'flex' }}>
+                    <div style={{ display: 'flex', width: '80%',}}>
                         <div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '95%' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '95%'}}>
                                 <div style={{ position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px' }}>
                                     <TextField
                                         autoFocus
@@ -230,7 +226,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                     style={{ borderBottom: '1px solid #ddd' }}
                                                     onClick={() => handleFoodSelect(item)}
                                                 >
-                                                    <td style={{ padding: '8px' }}>{`${item.food_name}, ${item.serving_qty} ${item.serving_unit}`}</td>
+                                                    <td style={{ padding: '8px' }}>{`${item.name}, ${item.serving_size} ${item.serving_size_unit}`}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -324,13 +320,6 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                     {foodName}
                                                 </label>
                                             </Box>
-                                            <Box style={{ height: '100px', width: '100%', position: 'relative' }}>
-                                                <img
-                                                    src={selectedItem.photo.thumb}
-                                                    alt={selectedItem.food_name}
-                                                    style={{ maxHeight: '100px', maxWidth: '100px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
-                                                />
-                                            </Box>
                                             <Box sx={{ display: 'flex', height: '30px', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', top: '20px', position: 'relative' }}>
                                                 <InputLabel sx={{ color: 'black', width: '30%', backgroundColor: 'white', marginLeft: '10px', marginRight: '-30px', fontFamily: '"Roboto", sans-serif' }}>Meal</InputLabel>
                                                 <Select sx={{ width: '70%', height: '100%', marginRight: '10px' }} defaultValue={'Breakfast'} value = {selectedMeal} onChange = {(e) => setSelectedMeal(e.target.value)}>
@@ -350,7 +339,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                     style={{ width: '18%', position: 'relative', left: '5px' }}
                                                 />
                                                 <Select sx={{ width: '70%', height: '100%', marginRight: '10px' }} defaultValue={'unit1'} value = {selectedServingUnit} onChange = {(e) => setSelectedServingUnit(e.target.value)} >
-                                                    <MenuItem value={'unit1'}>{selectedItem.serving_unit}</MenuItem>
+                                                    <MenuItem value={'unit1'}>{selectedItem.serving_size_unit}</MenuItem>
                                                     <MenuItem value={'unit2'}>{selectedItem.serving_weight_grams}g</MenuItem>
                                                     <MenuItem value={'unit3'}>g</MenuItem>
                                                 </Select>

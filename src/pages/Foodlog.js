@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DateSelector from '../components/DateSelector'; 
 import styles from '../styles/Foodlog.module.css';
 import {Box} from '@mui/material';
@@ -10,9 +10,6 @@ import FoodSearch from '../components/FoodSearch';
 function FoodLog() {
     const [selectedDate, setSelectedDate] = useState(new Date()) // state to keep track of the date 
 
-    const updateDate = (newDate) => { // wheneveer the date selector is changed, the state is assigned its value
-        setSelectedDate(newDate); 
-    };
 
     const [isModalOpen, setIsModalOpen] = useState(false); // state to open or close the modal 
 
@@ -24,65 +21,85 @@ function FoodLog() {
         setIsModalOpen(true);
     };
 
-    const [mealLogs, setMealLogs] = useState({}); 
     // function to handle when the user adds a food item from the food search modal 
-    const handleAddFood = (foodDetails) => { 
-        const dateKey = selectedDate; 
-        
-        const prevMeals = mealLogs[dateKey] || { // makes an object of the previously logged meals of the specific day, if no meals have been made before for that day, it's just blank meals
-            Breakfast: { totalNutrition: '', items: {} },
-            Lunch: { totalNutrition: '', items: {} },
-            Dinner: { totalNutrition: '', items: {} },
-            Snacks: { totalNutrition: '', items: {} },
-        }
+    const handleAddFood = async (foodDetails) => { 
+        const mealType = foodDetails.selectedMeal;
+        const mealDate = selectedDate.toISOString().split('T')[0]; // format the selected date as YYYY-MM-DD
 
-        switch (foodDetails.selectedMeal) {
-            case 'Breakfast':
-                prevMeals.Breakfast.items = {
-                    ...prevMeals.Breakfast.items,
-                    [Date.now().toString()]: foodDetails, // adds the food item details to the breakfast property's item proprty, with the time in ms as a unique key for the item 
-                    // it makes a copy of the meals for the selected date before adding the new item's details
-                };
-                break;
-            case 'Lunch':
-                prevMeals.Lunch.items = {
-                    ...prevMeals.Lunch.items,
-                    [Date.now().toString()]: foodDetails, // adds the food item details to the lunch property's item proprty, with the time in ms as a unique key for the item 
-                    // it makes a copy of the meals for the selected date before adding the new item's details
-                };
-                break;
-            case 'Dinner':
-                prevMeals.Dinner.items = {
-                    ...prevMeals.Dinner.items,
-                    [Date.now().toString()]: foodDetails, // adds the food item details to the dinner property's item proprty, with the time in ms as a unique key for the item 
-                    // it makes a copy of the meals for the selected date before adding the new item's details
-                };
-                break;
-            case 'Snacks': 
-                prevMeals.Snacks.items = {
-                    ...prevMeals.Snacks.items,
-                    [Date.now().toString()]: foodDetails, // adds the food item details to the snacks property's item proprty, with the time in ms as a unique key for the item 
-                    // it makes a copy of the meals for the selected date before adding the new item's details
-                };
-                break;
-            default:
-                console.error("Invalid meal selection");
-                break;
+        try {
+            // based the current selected date, fetch the id of meal_log associated with the selected date
+            const logResponse = await fetch('http://localhost:5000/api/meals/get_log_id', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    meal_date: mealDate,
+                })
+            });
+
+            const logData = await logResponse.json();
+            const meal_log_id = logData.meal_log_id;
+
+            if (!meal_log_id) { // if no meal_log is founded
+                throw new Error('Meal log not found for the specified date');
+            }
+
+            // insert the food details from the food search modal into the meal_items table, with the associated meal_log id
+            await fetch('http://localhost:5000/api/meals/add_food_item', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    meal_log_id: meal_log_id,
+                    food_id: foodDetails.foodId,
+                    food_name: foodDetails.foodName,
+                    calories: foodDetails.calories,
+                    protein: foodDetails.protein,
+                    fats: foodDetails.fats,
+                    carbs: foodDetails.carbs,
+                    quantity: foodDetails.passedServingQty,
+                    unit: foodDetails.servingUnit,
+                    meal_type: mealType,
+                })
+            });
+
+
+        } catch (error) {
+            console.error('Error adding food item:', error);
         }
-        
-        // for a the selected date by the date selected, copy the previous meal logs, and add any meal updates for the date
-        setMealLogs({
-            ...mealLogs, 
-            [dateKey]: prevMeals, 
-        })
+    };
+    
+    // function to check if there's already been a meal_log row with the current selected date, and if there isn't make one
+    const checkMealLogs = async (mealDate) => {
+        try {
+            const response = await fetch('http://localhost:5000/api/meals/check_meal_log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ meal_date: mealDate }), // sends the selected date to the backend to be checked
+            });
+
+            if (!response.ok) {
+                throw new Error('Error checking/creating meal logs'); 
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
-        
-    const mealLogForSelectedDate = mealLogs[selectedDate] || { // specific food log for the date selected
-        Breakfast: { totalNutrition: '', items: {} },
-        Lunch: { totalNutrition: '', items: {} },
-        Dinner: { totalNutrition: '', items: {} },
-        Snacks: { totalNutrition: '', items: {} },
+
+    useEffect(() => {
+        const today = new Date().toISOString().split('T')[0]; // get the current
+        checkMealLogs(today); // check if today's date already has a meal_log associated with it 
+    }, []); // empty dependency array so that it this only runs on the mount
+
+    const updateDate = (newDate) => { // triggers every time there is a change to the selected date
+        setSelectedDate(newDate); // changes the selected date to the current date displayed on the date selector
+        checkMealLogs(newDate); // checks if a meal_log has already been created with the selected date, makes a new one if it hasn't 
     };
 
 
@@ -125,15 +142,10 @@ function FoodLog() {
             <hr></hr>
 
             <div style = {{}}>
-            {/*Object.keys(meals) makes an array of the keys, ie ['Breakfast, 'Lunch", 'Dinner'...]*/}
-            {Object.keys(mealLogForSelectedDate).map((meal) => ( // .map makes a meal accordian for each meal key
-                <MealAccordion 
-                key={meal} // A unique key for each meal category.
-                title={meal} // The meal name (e.g., Breakfast, Lunch).
-                items={Object.values(mealLogForSelectedDate[meal].items)} // Convert items object to an array of food items
-                
-                />
-            ))}
+                <MealAccordion title="Breakfast" selectedDate = {selectedDate} />
+                <MealAccordion title="Lunch" selectedDate = {selectedDate} />
+                <MealAccordion title="Dinner" selectedDate = {selectedDate} />
+                <MealAccordion title="Snacks" selectedDate = {selectedDate} />
             </div>
             <div>
                 {/* modal is displayed when FOOD button is clicked */}
