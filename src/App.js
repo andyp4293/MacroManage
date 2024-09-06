@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Calculator from './pages/Calculator';
 import WeightLog from './pages/Weightlog';
 import FoodLog from './pages/Foodlog';
+import Login from './pages/Login'; 
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                     <Route path="/calculator" element={<Calculator />} />
                     <Route path="/food-log" element={<FoodLog />} />
                     <Route path="/weight-log" element={<WeightLog />} />
+                    <Route path ='/login' element = {<Login/>} />
                 </Routes>
             </div>
         </Router>

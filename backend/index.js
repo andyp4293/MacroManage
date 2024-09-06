@@ -11,6 +11,7 @@ const mealsRoutes = require('./routes/meals');
 
 app.use('/api/nutrition', nutritionRoutes); 
 app.use('/api/meals', mealsRoutes); 
+app.use('/api/users', usersRoutes);
 
 
 
