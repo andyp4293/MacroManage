@@ -82,7 +82,7 @@ function FoodLog() {
                 body: JSON.stringify({ meal_date: mealDate }), // sends the selected date to the backend to be checked
             });
 
-            if (!response.ok) {
+            if (!response.ok) { // triggers if the status response is not 200-299
                 throw new Error('Error checking/creating meal logs'); 
             }
 

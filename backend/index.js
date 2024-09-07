@@ -8,6 +8,7 @@ app.use(express.json());
 
 const nutritionRoutes = require('./routes/nutrition');
 const mealsRoutes = require('./routes/meals'); 
+const usersRoutes = require('./routes/users')
 
 app.use('/api/nutrition', nutritionRoutes); 
 app.use('/api/meals', mealsRoutes); 
