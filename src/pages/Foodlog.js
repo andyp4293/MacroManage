@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import DateSelector from '../components/DateSelector'; 
 import styles from '../styles/Foodlog.module.css';
 import {Box} from '@mui/material';
@@ -74,7 +74,7 @@ function FoodLog() {
     };
     
     // function to check if there's already been a meal_log row with the current selected date, and if there isn't make one
-    const checkMealLogs = async (mealDate) => {
+    const checkMealLogs = useCallback(async (mealDate) => {
         try {
             const response = await fetch('http://localhost:5000/api/meals/check_meal_log', {
                 method: 'POST',
@@ -82,23 +82,22 @@ function FoodLog() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`, // jwt authorization
                 },
-                body: JSON.stringify({ meal_date: mealDate }), // sends the selected date to the backend to be checked
+                body: JSON.stringify({ meal_date: mealDate }), // sends the selected date to the backend
             });
 
             if (!response.ok) { // triggers if the status response is not 200-299
-                throw new Error('Error checking/creating meal logs'); 
+                throw new Error('Error checking/creating meal logs');
             }
 
         } catch (error) {
             console.error('Error:', error);
         }
-    };
-
+    }, [token]); // token should be included in the dependency array
 
     useEffect(() => {
-        const today = new Date().toISOString().split('T')[0]; // get the current
-        checkMealLogs(today); // check if today's date already has a meal_log associated with it 
-    }, []); // empty dependency array so that it this only runs on the mount
+        const today = new Date().toISOString().split('T')[0]; // get the current date
+        checkMealLogs(today); // check if today's date already has a meal_log associated with it
+    }, [checkMealLogs]); // useCallback ensures checkMealLogs doesn't change unnecessarily
 
     const updateDate = (newDate) => { // triggers every time there is a change to the selected date
         setSelectedDate(newDate); // changes the selected date to the current date displayed on the date selector

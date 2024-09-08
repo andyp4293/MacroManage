@@ -9,7 +9,7 @@ require('dotenv').config();  // load .env file
 
 // route for a user to sign up for an account
 router.post('/signup', async (req, res) => {
-    const {email, password} = req.body; 
+    const {email, password, username} = req.body; 
 
     try {
         // checks to see if there already has been an account made with the inputted email
@@ -28,8 +28,8 @@ router.post('/signup', async (req, res) => {
 
         // insert new row into the users table with the inputted email and hashed password
         await pool.query(
-            'INSERT INTO users (email, password) VALUES ($1, $2)',
-            [email, hashedPassword]
+            'INSERT INTO users (email, password, username) VALUES ($1, $2, $3)',
+            [email, hashedPassword, username]
         );
         return res.status(200).json({message: 'Account signed up successfully'}); 
 
@@ -68,7 +68,7 @@ router.post('/signin', async (req, res) => {
 
         // If the login is successful, generate a JWT token
         const token = jwt.sign(
-            { id: user.id, email: user.email }, // user data
+            { id: user.id, email: user.email, username: user.username}, // user data
             process.env.JWT_SECRET, // 
             { expiresIn: '1h' } // token expires in 1 hour 
         );

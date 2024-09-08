@@ -21,6 +21,7 @@ function Login() {
             const data = await response.json(); 
             if (response.ok) { // triggers if the status response is not 200-299, 
                 localStorage.setItem('token', data.token);  // Save the JWT token in localStorage
+                console.log('Logged in'); 
             }
             else {
                 throw new Error(data.message); 
