@@ -73,7 +73,6 @@ router.post('/signin', async (req, res) => {
             { expiresIn: '1h' } // token expires in 1 hour 
         );
 
-        console.log('dubs');
         // send the token in the response
         return res.status(200).json({
             message: 'Login successful',

@@ -1,28 +1,30 @@
 const express = require('express');
 const pool = require('../db'); // Import the shared pool
 const router = express.Router();
+const authenticateToken = require('./authToken');
 
 // checks to see if a meal_log row has already been made with the selected date on the front end
-router.post('/check_meal_log', async (req, res) => {
+router.post('/check_meal_log', authenticateToken, async (req, res) => {
     const { meal_date } = req.body;
+    const user_id = req.user.id;  // extra the user ID from the authorization token
 
     try {
-        // Check how many logs already exist for the given meal date
+        // check if a meal log already exists for the logged in user and selected date
         const logResult = await pool.query(`
-            SELECT COUNT(*) FROM meal_logs WHERE meal_date = $1
-        `, [meal_date]);
+            SELECT COUNT(*) FROM meal_logs WHERE meal_date = $1 AND user_id = $2
+        `, [meal_date, user_id]);
 
         const logCount = parseInt(logResult.rows[0].count, 10);
 
-        if (logCount > 0) { // if there already exists a log, don't do anything
+        if (logCount > 0) { // if there already exists a log with the date and user, don't do anything
             return res.status(200).json({ message: 'Meal log already exists for this date and user' });
         }
 
         // if a log doesn't exist with the selected date, add a log with the date
         const insertLogResult = await pool.query(`
-            INSERT INTO meal_logs (meal_date)
-            VALUES ($1) RETURNING id
-        `, [meal_date]);
+            INSERT INTO meal_logs (meal_date, user_id)
+            VALUES ($1, $2) RETURNING id
+        `, [meal_date, user_id]);
 
         return res.status(201).json({ 
             message: 'Meal log created', 
@@ -37,7 +39,7 @@ router.post('/check_meal_log', async (req, res) => {
 });
 
 // route to get the id of the meal_log with the the selected date
-router.post('/get_log_id', async (req, res) => {
+router.post('/get_log_id', authenticateToken,  async (req, res) => {
     const { meal_date } = req.body;
 
     try {
@@ -62,7 +64,7 @@ router.post('/get_log_id', async (req, res) => {
 });
 
 // route to make a new food_items row with given food nutritiion details
-router.post('/add_food_item', async (req, res) => {
+router.post('/add_food_item', authenticateToken, async (req, res) => {
     const { meal_log_id, food_id, quantity, unit, calories, food_name, meal_type, protein, fats, carbs} = req.body;
 
     try {
@@ -82,7 +84,7 @@ router.post('/add_food_item', async (req, res) => {
 });
 
 // route to get meal items based on its meal_log_id and meal_type
-router.get('/get_items', async (req, res) => {
+router.get('/get_items', authenticateToken,  async (req, res) => {
     const { meal_log_id, meal_type } = req.query; // get both meal_log_id and meal_type
     try {
         const result = await pool.query(`
@@ -90,7 +92,15 @@ router.get('/get_items', async (req, res) => {
             WHERE meal_log_id = $1 AND meal_type = $2
         `, [meal_log_id, meal_type]);
         
-        res.json(result.rows);
+        // if meal items are not found, return empty array
+        if (result.rowCount === 0) {
+            return res.status(200).json({ message: 'No meal items found', items: [] });
+        }
+
+
+        // If meal items are found, return them in the response
+        return res.status(200).json({ message: 'Success', items: result.rows });
+
     } catch (error) {
         console.error('Error fetching meal items:', error);
         res.status(500).send('Server error');
@@ -98,15 +108,12 @@ router.get('/get_items', async (req, res) => {
 });
 
 // Route to delete a meal_item based on its id
-router.delete('/delete_item/:id', async (req, res) => {
+router.delete('/delete_item/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
 
     try {
-        // Perform the DELETE query
-        const result = await pool.query(
-            'DELETE FROM meal_items WHERE id = $1 RETURNING *',
-            [id]
-        );
+        // perform delete on row with the matching id
+        const result = await pool.query('DELETE FROM meal_items WHERE id = $1 AND user_id = $2 RETURNING *', [itemId, userId]);
 
         if (result.rowCount === 0) {
             // No rows were deleted, meaning no item with that id was found

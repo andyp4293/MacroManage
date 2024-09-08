@@ -7,6 +7,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 function MealAccordion({ title, selectedDate }) {
     const [items, setItems] = useState([]);
 
+    const token = localStorage.getItem('token'); // json web token
+
     useEffect(() => {
         // fetches the meal_items associated with the correct meal (title) and selected date
         const fetchMealItems = async () => {
@@ -18,6 +20,7 @@ function MealAccordion({ title, selectedDate }) {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`, // jwt authorization
                     },
                     body: JSON.stringify({
                         meal_date: mealDate,
@@ -32,9 +35,15 @@ function MealAccordion({ title, selectedDate }) {
                 }
 
                 // 2.) fetches meal_items based on meal_log_id and title (which is the meal_type)
-                const itemsResponse = await fetch(`http://localhost:5000/api/meals/get_items?meal_log_id=${meal_log_id}&meal_type=${title}`);
+                const itemsResponse = await fetch(`http://localhost:5000/api/meals/get_items?meal_log_id=${meal_log_id}&meal_type=${title}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,  // jwt authorization
+                        'Content-Type': 'application/json',  
+                    }
+                });
                 const itemsData = await itemsResponse.json();
-                setItems(itemsData); // update the item state
+                setItems(itemsData.items); // update the item state
 
             } catch (error) {
                 console.error('Error fetching meal items:', error);
@@ -42,7 +51,7 @@ function MealAccordion({ title, selectedDate }) {
         };
 
         fetchMealItems();
-    }, [selectedDate, title, items]); // re-fetches the meal_items every time there is a change to the date, a change to items state, or a change to the title
+    }, [selectedDate, title, items, token]); // re-fetches the meal_items every time there is a change to the date, a change to items state, or a change to the title
 
     // goes through all of the items within the items array and sums up the total macros and calories 
     const totals = items.reduce(
@@ -62,6 +71,10 @@ function MealAccordion({ title, selectedDate }) {
         try {
             const response = await fetch(`http://localhost:5000/api/meals/delete_item/${itemId}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,  // jwt authorization
+                    'Content-Type': 'application/json',  
+                }
             });
 
             if (!response.ok) {

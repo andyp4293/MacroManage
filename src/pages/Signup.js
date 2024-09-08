@@ -4,6 +4,7 @@ import {Box, Button, Typography} from '@mui/material';
 function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
 
     const handleSignup = async () => {
         try {
