@@ -10,7 +10,7 @@ import FoodSearch from '../components/FoodSearch';
 function FoodLog() {
     const [selectedDate, setSelectedDate] = useState(new Date()) // state to keep track of the date 
 
-
+    const token = localStorage.getItem('token');
     const [isModalOpen, setIsModalOpen] = useState(false); // state to open or close the modal 
 
     const handleCloseModal = () => {
@@ -32,6 +32,7 @@ function FoodLog() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt authorization
                 },
                 body: JSON.stringify({
                     meal_date: mealDate,
@@ -50,6 +51,7 @@ function FoodLog() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt authorization
                 },
                 body: JSON.stringify({
                     meal_log_id: meal_log_id,

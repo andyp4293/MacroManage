@@ -18,8 +18,12 @@ function Login() {
                 })
             });
 
-            if (!response.ok) { // triggers if the status response is not 200-299, 
-                throw new Error(response.json().message); 
+            const data = await response.json(); 
+            if (response.ok) { // triggers if the status response is not 200-299, 
+                localStorage.setItem('token', data.token);  // Save the JWT token in localStorage
+            }
+            else {
+                throw new Error(data.message); 
             }
         }
         catch(error){
