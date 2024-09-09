@@ -1,29 +1,48 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, MenuItem } from '@mui/material';
 import '../styles/Navbar.css';
-import {jwtDecode} from 'jwt-decode'; // Correct import
+import {jwtDecode} from 'jwt-decode'; 
 
 function Navbar() {
     const token = localStorage.getItem('token');
     let username = null;
+    
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    // handle logout button open
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    // handle logout button close
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    // handle logging out
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Remove the token
+        window.location.href = '/login';  // Redirect to the login page
+        handleClose();
+    };
+
 
     if (token) {
         try {
             const decodedToken = jwtDecode(token);
-            console.log('Decoded Token:', decodedToken);  // Check token structure
-            const currentTime = Date.now() / 1000; // Current time in seconds
+            const currentTime = Date.now() / 1000; 
 
-            // Check if the token is expired
+            // checks if token is expired
             if (decodedToken.exp > currentTime) {
-                username = decodedToken.username || decodedToken.user || null; // Adjust based on token structure
-                console.log('Token is valid, username:', username);
+                username = decodedToken.username || decodedToken.user || null;
             } else {
-                localStorage.removeItem('token'); // Remove token if expired
-                console.log('Token expired');
+                localStorage.removeItem('token'); // remove token is invalid
             }
         } catch (error) {
             console.error('Error decoding token:', error);
-            localStorage.removeItem('token'); // Remove token if invalid
+            localStorage.removeItem('token'); // remove token if invalid
         }
     }
 
@@ -38,14 +57,15 @@ function Navbar() {
                 </ul>
                 <ul>
                     {username ? (
-                        // If token is valid, show a circle with the first letter of the username
+                        // if token is is valid, display profile picture rather than login button
                         <li style={{ marginRight: '10px', marginBottom: '-15px' }}>
                             <div
+                                onClick={handleClick}
                                 style={{
                                     width: '50px',
                                     height: '50px',
                                     borderRadius: '50%',
-                                    backgroundColor: 'white', // Adjust the color as needed
+                                    backgroundColor: 'white', 
                                     color: 'black',
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -53,11 +73,28 @@ function Navbar() {
                                     fontSize: '30px',
                                     fontWeight: 'bold',
                                     marginTop: '-25px',
-                                    marginBottm: '-20px'
+                                    marginBottm: '-20px',
+                                    cursor: 'pointer'
                                 }}
                             >
                                 {username.charAt(0).toUpperCase()}
                             </div>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                            >
+                                <MenuItem onClick={handleLogout}>Log out</MenuItem>
+                            </Menu>
+
                         </li>
                     ) : (
                         // If no token, show login button

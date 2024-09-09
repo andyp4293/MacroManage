@@ -23,6 +23,7 @@ function Signup() {
             if (!response.ok) { // triggers if the status response is not 200-299, 
                 throw new Error(response.json().message); 
             }
+            window.location.href = '/login'; // redirects to login page
         }
 
         catch(error){

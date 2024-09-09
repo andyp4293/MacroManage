@@ -20,8 +20,8 @@ function Login() {
 
             const data = await response.json(); 
             if (response.ok) { // triggers if the status response is not 200-299, 
-                localStorage.setItem('token', data.token);  // Save the JWT token in localStorage
-                console.log('Logged in'); 
+                localStorage.setItem('token', data.token);  // save the jwt token in local storage
+                window.location.href = '/home'; // redirects to home page
             }
             else {
                 throw new Error(data.message); 

@@ -6,7 +6,7 @@ const authenticateToken = require('./authToken');
 // checks to see if a meal_log row has already been made with the selected date on the front end
 router.post('/check_meal_log', authenticateToken, async (req, res) => {
     const { meal_date } = req.body;
-    const user_id = req.user.id;  // extra the user ID from the authorization token
+    const user_id = req.user.id;  // the user ID from the authorization token
 
     try {
         // check if a meal log already exists for the logged in user and selected date
@@ -41,12 +41,13 @@ router.post('/check_meal_log', authenticateToken, async (req, res) => {
 // route to get the id of the meal_log with the the selected date
 router.post('/get_log_id', authenticateToken,  async (req, res) => {
     const { meal_date } = req.body;
+    const userId = req.user.id;  // get user id from the decoded jwt token
 
     try {
-        // Query to get the meal log ID for the provided date 
+        // query database for meal_log with selected date the user_id
         const result = await pool.query(`
-            SELECT id FROM meal_logs WHERE meal_date = $1 
-        `, [meal_date]);
+            SELECT id FROM meal_logs WHERE meal_date = $1 AND user_id = $2
+        `, [meal_date, userId]);
 
         // If no result is found, return an error
         if (result.rows.length === 0) {
@@ -109,11 +110,11 @@ router.get('/get_items', authenticateToken,  async (req, res) => {
 
 // Route to delete a meal_item based on its id
 router.delete('/delete_item/:id', authenticateToken, async (req, res) => {
-    const { id } = req.params;
+    const { id: itemId } = req.params;
 
     try {
         // perform delete on row with the matching id
-        const result = await pool.query('DELETE FROM meal_items WHERE id = $1 AND user_id = $2 RETURNING *', [itemId, userId]);
+        const result = await pool.query('DELETE FROM meal_items WHERE id = $1 RETURNING *', [itemId]);
 
         if (result.rowCount === 0) {
             // No rows were deleted, meaning no item with that id was found
