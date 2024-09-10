@@ -6,6 +6,7 @@ import RiceBowlIcon from '@mui/icons-material/RiceBowl';
 import AddIcon from '@mui/icons-material/Add';
 import MealAccordion from '../components/MealAccordion';
 import FoodSearch from '../components/FoodSearch'; 
+import ChatBox from '../components/Chatbox';
 
 function FoodLog() {
     const [selectedDate, setSelectedDate] = useState(new Date()) // state to keep track of the date 
@@ -157,6 +158,7 @@ function FoodLog() {
                     addFood={handleAddFood}
                 />
             </div>
+            <ChatBox open = {true}/>
         </div>
     );
 }

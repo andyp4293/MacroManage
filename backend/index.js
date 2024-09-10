@@ -8,11 +8,13 @@ app.use(express.json());
 
 const nutritionRoutes = require('./routes/nutrition');
 const mealsRoutes = require('./routes/meals'); 
-const usersRoutes = require('./routes/users')
+const usersRoutes = require('./routes/users');
+const chatRoutes = require('./routes/chat');
 
 app.use('/api/nutrition', nutritionRoutes); 
 app.use('/api/meals', mealsRoutes); 
 app.use('/api/users', usersRoutes);
+app.use('/api/chat', chatRoutes);
 
 
 

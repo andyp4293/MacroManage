@@ -88,7 +88,7 @@ function MealAccordion({ title, selectedDate }) {
 
 
     return (
-        <Accordion style={{ width: '75%', minWidth: '550px', margin: '0 auto' }}>
+        <Accordion style={{ width: '50%', minWidth: '550px' }}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`${title}-log`} // name for each expandable body of each meal accordion
