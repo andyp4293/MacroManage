@@ -105,6 +105,8 @@ function FoodLog() {
         checkMealLogs(newDate); // checks if a meal_log has already been created with the selected date, makes a new one if it hasn't 
     };
 
+    const [openChat, ] = useState(false); 
+
 
     return (
         <div>
@@ -143,12 +145,17 @@ function FoodLog() {
                 </button>
             </div> 
             <hr></hr>
-
+            
+            <div style = {{display: 'flex', justifyContent: 'center'}}>
             <div style = {{}}>
                 <MealAccordion title="Breakfast" selectedDate = {selectedDate} />
                 <MealAccordion title="Lunch" selectedDate = {selectedDate} />
                 <MealAccordion title="Dinner" selectedDate = {selectedDate} />
                 <MealAccordion title="Snacks" selectedDate = {selectedDate} />
+            </div>
+            <div>
+            <ChatBox/>
+            </div>
             </div>
             <div>
                 {/* modal is displayed when FOOD button is clicked */}
@@ -158,7 +165,6 @@ function FoodLog() {
                     addFood={handleAddFood}
                 />
             </div>
-            <ChatBox open = {true}/>
         </div>
     );
 }

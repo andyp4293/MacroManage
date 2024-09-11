@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
+import { Box, List, ListItem, ListItemText, TextField, Button} from '@mui/material';
 
 
 const ChatBox = ({open, onClose}) => {
@@ -8,6 +8,7 @@ const ChatBox = ({open, onClose}) => {
 
   const handlePrompt = async () => {
     setMessages((prevMessages) => [...prevMessages, `You: ${prompt}`]);
+    setPrompt(''); 
     try {
       const response = await fetch('http://localhost:5000/api/chat', {
         method: 'POST', 
@@ -19,8 +20,7 @@ const ChatBox = ({open, onClose}) => {
         })
     });
     const data = await response.json(); 
-    setMessages((prevMessages) => [...prevMessages, `Bot: ${data.message}`]);
-    setPrompt(''); 
+    setMessages((prevMessages) => [...prevMessages, `MacroManage: ${data.message}`]);
 
     }
     catch (error) {
@@ -30,29 +30,56 @@ const ChatBox = ({open, onClose}) => {
 
   return (
     <div>
-      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-          <DialogTitle>
-              hello
-          </DialogTitle>
-          <DialogContent sx = {{display: 'flex',  flexDirection: 'column', alignItems: 'center'}}>
-              <div>
+      <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '400px',
+            width: '300px',
+            border: '1px solid #ccc',
+            borderRadius: '8px',
+            overflow: 'hidden',
+          }}>
+          <Box sx={{
+                flexGrow: 1,
+                overflowY: 'auto',
+                padding: '8px',
+                backgroundColor: '#f1f1f1',
+              }}>
+              <List>
               {messages.map((msg, index) => (
-                  <div key={index} style={{ marginBottom: '10px' }}>
-                    {msg}
-                  </div>
+                  <ListItem key={index} sx = {{backgroundColor: '#00c691', marginBottom:'5px', borderRadius: '10px', paddingTop: '0px', paddingBottom: '0px'}}>
+                    <ListItemText primary = {msg}/>
+                  </ListItem>
                 ))}
-              </div>
+              </List>
+              </Box>
 
-              <div style = {{display: 'flex', justifyContent: 'center', width: '70%'}}>
-              <input style = {{width: '100%', overflow: 'hidden', display: 'flex', justifyContent: 'center'}} value = {prompt} onChange ={(e) => setPrompt(e.target.value)} placeholder="Type a message...">
+              <Box sx={{
+                display: 'flex',
+                padding: '8px',
+                borderTop: '1px solid #ccc',
+                backgroundColor: '#fff',
+              }}>
+                
+              <TextField placeholder="Type a message"
+                variant = "outlined"
+                fullWidth
+                size = "small"
+                value = {prompt}
+                onChange = {(e) => setPrompt(e.target.value)}
+                onKeyDown = {(e) => {
+                  if (e.key === "Enter"){
+                      handlePrompt();
+                  }
+                }}
+                sx={{ marginRight: '8px' }}>
 
-              </input>
-              <Button onClick = {handlePrompt}>
+              </TextField>
+              <Button onClick = {handlePrompt} variant="contained" color="primary">
                 Send
               </Button>
-              </div>
-          </DialogContent>
-      </Dialog>
+            </Box>
+        </Box>
     </div>
   );
 };
