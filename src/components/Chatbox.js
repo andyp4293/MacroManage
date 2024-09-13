@@ -38,10 +38,10 @@ const ChatBox = () => {
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: isOpen ? '400px' : '37px',  // Closed height to show only the "Chat" tab
+        height: isOpen ? '400px' : '37px', // changes height of the box based on whether or not the chatbox is closed
         width: '300px',
         border: '1px solid #ccc',
-        borderRadius: '8px 8px 0 0',  // Round top corners only
+        borderRadius: '8px 8px 0 0',  
         overflow: 'hidden',
         position: 'fixed', 
         bottom: 0,  
@@ -60,7 +60,7 @@ const ChatBox = () => {
             <Box>Chat</Box>
           </Box>
 
-          {/* Conditionally render the chat content when the box is open */}
+          {/* conditionally render the chat content when the box is open */}
           {isOpen && (
             <>
               <Box sx={{
@@ -104,7 +104,9 @@ const ChatBox = () => {
                   }}
                   sx={{ marginRight: '8px' }}
                 />
-                <Button onClick={handlePrompt} variant="contained" sx={{ backgroundColor: '#00c691' }}>
+                <Button onClick={handlePrompt} variant="contained" sx={{ backgroundColor: '#00c691', '&:hover': {
+                      backgroundColor: '#00a67e'
+                  }}}>
                   Send
                 </Button>
               </Box>
