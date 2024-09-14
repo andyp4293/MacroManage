@@ -3,8 +3,15 @@ import {Box, Button, Typography} from '@mui/material';
 
 function Signup() {
     const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState(false);
+
     const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState(false); 
+    const [confirmPassword, setConfirmPassword] = useState('')
+
     const [username, setUsername] = useState('');
+
+    const [error, setError] = useState(''); 
 
     const handleSignup = async () => {
         try {
@@ -31,42 +38,143 @@ function Signup() {
         }
     }
 
+
+
+
     return (
-        <Box sx = {{display: 'flex', justifyContent: 'center'}}>
-            <div style = {{width: '35%', height: '275px', backgroundColor: "white", minWidth: '450px', borderRadius: '20px', outline: 'solid 1px black', padding: '40px'}}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f4f4f4' }}>
+      <div style={{
+        width: '35%', 
+        minHeight: 'auto', 
+        backgroundColor: "white", 
+        minWidth: '450px', 
+        borderRadius: '20px', 
+        border: '1px solid #ddd', 
+        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
+        padding: '40px',
+        fontFamily: 'Arial, sans-serif'
+      }}>
 
-                <h3 style = {{marginBottom: '0px'}}>Username</h3>
-                <input style = {{marginBottom: '10px', height: '30px', width: '98%'}} value = {username} onChange = {(e) => setUsername(e.target.value)}>
+        <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Username</h3>
+        <input style={{
+          marginBottom: '20px', 
+          height: '35px', 
+          width: '100%', 
+          padding: '8px', 
+          fontSize: '16px', 
+          border: '1px solid #ccc', 
+          borderRadius: '5px',
+          boxSizing: 'border-box',
+          transition: 'all 0.2s ease',
+          outline: 'none'
+        }} 
+        value={username} 
+        onChange={(e) => setUsername(e.target.value)} 
+        />
 
-                </input>
 
-                <h3 style = {{marginBottom: '0px', marginTop: '-15px'}}>Email</h3>
-                <input style = {{marginBottom: '20px', height: '30px', width: '98%'}} value = {email} onChange = {(e) => setEmail(e.target.value)}>
+        <div className = 'email-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Email</h3>
+          {emailError && <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Please enter a valid email address.</h4>}
+        </div>
+        <input style={{
+          marginBottom: '20px',
+          height: '35px', 
+          width: '100%', 
+          padding: '8px', 
+          fontSize: '16px', 
+          border: `1px solid ${emailError ? 'red' : '#ccc'}`, 
+          borderRadius: '5px',
+          boxSizing: 'border-box',
+          transition: 'all 0.2s ease',
+          outline: 'none'
+        }} 
+        value={email} 
+        onChange={(e) => {
+          const emailInput = e.target.value;
+          const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput) || e.target.value === '';
+          setEmail(emailInput);
+          setEmailError(!isValidEmail);
+          e.target.style.boxShadow = `0 0 3px ${!isValidEmail ? 'red' : '#66afe9'}`;
+        }}
+        onFocus={(e) => {
+          const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.value) || email === '';
+          e.target.style.boxShadow = `0 0 3px ${!isValidEmail ? 'red' : '#66afe9'}`;
+        }}
+        onBlur={(e) => (e.target.style.boxShadow = 'none')} 
+        />
 
-                </input>
-                <h3 style = {{marginBottom: '0px'}}>Password</h3>
-                <input style = {{marginBottom: '10px', height: '30px', width: '98%'}} value = {password} onChange = {(e) => setPassword(e.target.value)}>
 
-                </input>
-                <h3 style = {{marginBottom: '0px'}}>Confirm Password</h3>
-                <input style = {{marginBottom: '10px', height: '30px', width: '98%'}}>
-                </input>
 
-                <div>
-                <p>Already have an account? <a href="/login">Sign in</a></p>
-                <Button sx = {{width: '100%', backgroundColor: '#00c691', '&:hover': {
-                            backgroundColor: '#00a67e'
-                        }}}
-                        disableRipple
-                        onClick = {handleSignup}
-                        >
-                        <Typography sx = {{textTransform: 'none', color: "white", fontSize: '20px'}}>
-                            Sign up
-                        </Typography>
-                </Button>
-                </div>
-            </div>
-        </Box>
+        <div className = 'password-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Password</h3>
+          {passwordError && <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Password must be at least 8 characters long.</h4>}
+        </div>
+        <input style={{
+          marginBottom: '20px', 
+          height: '35px', 
+          width: '100%', 
+          padding: '8px', 
+          fontSize: '16px', 
+          border: `1px solid ${passwordError ? 'red' : '#ccc'}`, 
+          borderRadius: '5px',
+          boxSizing: 'border-box',
+          transition: 'all 0.2s ease',
+          outline: 'none'
+        }} 
+        value={password} 
+        onChange={(e) => {
+          const passwordInput = e.target.value;
+          const isValidPassword = passwordInput.length >= 8 || passwordInput === '';
+          setPassword(passwordInput);
+          setPasswordError(!isValidPassword);
+          e.target.style.boxShadow = `0 0 3px ${!isValidPassword ? 'red' : '#66afe9'}`;
+        }}
+        onFocus={(e) => {
+          const isValidPassword = password.length >= 8 || password === '';
+          e.target.style.boxShadow = `0 0 3px ${!isValidPassword ? 'red' : '#66afe9'}`;
+        }}
+        onBlur={(e) => (e.target.style.boxShadow = 'none')} 
+        />
+
+        <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Confirm Password</h3>
+        <input style={{
+          marginBottom: '20px', 
+          height: '35px', 
+          width: '100%', 
+          padding: '8px', 
+          fontSize: '16px', 
+          border: '1px solid #ccc', 
+          borderRadius: '5px',
+          boxSizing: 'border-box',
+          transition: 'all 0.2s ease',
+          outline: 'none'
+        }} />
+
+        <div>
+          <p style={{ fontSize: '14px', textAlign: 'center' }}>Already have an account? <a href="/login" style={{ color: '#007bff' }}>Sign in</a></p>
+        </div>
+
+        <Button 
+          sx={{
+            width: '100%', 
+            backgroundColor: '#00c691', 
+            '&:hover': { backgroundColor: '#00a67e' },
+            borderRadius: '5px',
+            transition: 'all 0.2s ease',
+            padding: '10px'
+          }}
+          disableRipple
+          onClick={(emailError || passwordError) ? handleSignup : error}
+        >
+          <Typography sx={{ textTransform: 'none', color: "white", fontSize: '18px', fontWeight: '500' }}>
+            Sign up
+          </Typography>
+        </Button>
+      </div>
+    </Box>
+
+  
 
     );
 }

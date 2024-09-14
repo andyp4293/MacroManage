@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, Button } from '@mui/material';
-import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-function MealAccordion({ title, selectedDate }) {
+function MealAccordion({ title, selectedDate, isFirst, isLast }) {
     const [items, setItems] = useState([]);
 
     const token = localStorage.getItem('token'); // json web token
@@ -88,17 +87,25 @@ function MealAccordion({ title, selectedDate }) {
 
 
     return (
-        <Accordion style={{ width: '50%', minWidth: '550px' }}>
+        <Accordion style={{
+            width: '100%', 
+            minWidth: '550px', 
+            borderRadius: isFirst ? '12px 12px 0 0' : isLast ? '0 0 12px 12px' : '0',  // top corners for first, bottom corners for last
+            overflow: 'hidden',  
+            border: '1px solid #b0b0b0',
+            borderBottom: isFirst ? '0' : isLast ? '1px solid #b0b0b0':  '0',
+            borderTop: isLast ? '1px solid #b0b0b0' : '1px solid #b0b0b0'
+        }}  disableGutters elevation={0}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`${title}-log`} // name for each expandable body of each meal accordion
                 id={`${title}-header`} // name/id for each header
                 sx={{
-                    backgroundColor: '#00c691',
+                    backgroundColor: '#f1f1f1',
                     color: 'white',
-                    height: '48px',
-                    minHeight: '48px',
-                    '&.Mui-expanded': { minHeight: '48px' },
+                    height: '30px',
+                    minHeight: '30px',
+                    '&.Mui-expanded': { minHeight: '30px' },
                 }}
             >
                 <Box style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
@@ -106,10 +113,11 @@ function MealAccordion({ title, selectedDate }) {
                         style={{
                             display: 'flex',
                             justifyContent: 'space-between',
-                            fontFamily: '"Roboto", sans-serif',
-                            fontSize: '17px',
+                            fontFamily: 'Manrope, sans-serif',
+                            fontSize: '12px',
                             alignItems: 'center',
                             whiteSpace: 'nowrap',
+                            color: '#4A4A4A'
                         }}
                     >
                         {title}
@@ -118,47 +126,32 @@ function MealAccordion({ title, selectedDate }) {
                         style={{
                             display: 'flex',
                             justifyContent: 'space-between',
-                            fontFamily: '"Roboto", sans-serif',
-                            fontSize: '17px',
+                            fontFamily: 'Manrope, sans-serif',
+                            fontSize: '12px',
                             alignItems: 'center',
                             whiteSpace: 'nowrap',
+                            color: '#4A4A4A'
                         }}
                     >   
-                        {`Calories: ${totals.calories.toFixed(1)} kcal, Protein: ${totals.protein.toFixed(1)} g, Fats: ${totals.fats.toFixed(1)} g, Carbs: ${totals.carbs.toFixed(1)} g`}
+                        {`${totals.calories.toFixed(1)} kcal • ${totals.protein.toFixed(1)}g protein • ${totals.fats.toFixed(1)}g fats • ${totals.carbs.toFixed(1)}g carbs`}
                     </Typography>
                 </Box>
             </AccordionSummary>
 
             <AccordionDetails style={{ margin: '0', padding: '0' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                        <tr>
-                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd', width: '25%' }}>
-                                <DinnerDiningIcon style={{ fontSize: '25px' }} />
-                            </th>
-                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Protein</th>
-                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Fats</th>
-                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Carbs</th>
-                            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Calories</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                    <tbody style = {{fontSize: '10px', border: 'none', borderCollapse: 'collapse'}}>
                         {items.map((item, index) => (
-                            <tr key={index}>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
-                                    <p style = {{fontSize: '15px'}}>{`${item.food_name}`}</p>
-                                    <p style = {{fontSize: '15px'}}>{`${item.quantity} ${item.unit}`}</p>
+                            <tr key={index} style = {{justifyContent: 'space-between', display: 'flex', alighItems: 'center',  borderBottom: '1px solid #ddd'}}>
+                                <td style={{ padding: '8px'}}>
+                                    <p style = {{fontSize: '10px'}}>{`${item.food_name}, ${item.quantity ? item.quantity : ''} ${item.unit ? item.unit : ''}`}</p>
                                 </td>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.protein || 0} g</td>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.fats || 0} g</td>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.carbs || 0} g</td>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{item.calories || 0} kcal</td>
-                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
+                                <td style={{ padding: '8px' }}>
                                     <Button
                                         disableRipple
                                         sx={{
-                                            padding: '8px 24px',
-                                            margin: '4px 0',
+                                            padding: '3px',
+                                            margin: '3px 0',
                                             fontSize: '18px',
                                             fontWeight: 100,
                                             textTransform: 'uppercase',
@@ -173,7 +166,7 @@ function MealAccordion({ title, selectedDate }) {
                                         }}
                                         onClick={() => deleteEntry(item.id)}
                                     >
-                                        <DeleteIcon />
+                                        <DeleteIcon style = {{fontSize: '17px'}} />
                                     </Button>
                                 </td>
                             </tr>

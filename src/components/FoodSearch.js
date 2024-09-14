@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, Box, Typography, Select, MenuItem, InputLabel } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
@@ -46,7 +46,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
     };
 
     // State to store the selected item data and its details
-    const [itemData, setItemData] = useState(null);
+    const [itemData, setItemData] = useState({});
     const [selectedItem, setSelectedItem] = useState('');
     const [foodPopup, setFoodPopup] = useState(false); 
     const [servingQty, setServingQty] = useState(''); // For the default serving quantity
@@ -66,7 +66,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                 }); 
                 
                 setItemData(fetchedItemData);
-                setServingQty(fetchedItemData.serving_size); // Serving amount that will be changed by the user
+                setServingQty(fetchedItemData.serving_size ? fetchedItemData.serving_size: 100); // Serving amount that will be changed by the user
                 setDefaultServingQty(fetchedItemData.serving_size || 100); // Default serving amount
                 setDefaultServingQtyGrams(servingWeightGrams); // Default serving amount in grams
                 setCalories(fetchedItemData.kcal);
@@ -93,37 +93,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
             setServingQty(e.target.value); 
         }
 
-        // multiply the default calories and macro amounts found in 1 serving by (default serving size/selected serving size)
-        switch (selectedServingUnit) {
-            case 'unit1': // default serving unit
-                setPassedServingQty(e.target.value || 100); 
-                setCalories(Number((itemData.kcal * (e.target.value / defaultServingQty)).toFixed(1)));
-                setProtein(Number((itemData.protein * (e.target.value / defaultServingQty)).toFixed(1)));
-                setFats(Number((itemData.total_fat * (e.target.value / defaultServingQty)).toFixed(1)));
-                setCarbs(Number((itemData.total_carb * (e.target.value / defaultServingQty)).toFixed(1)));
-            break; 
-
-            case 'unit2': // default serving amount in grams
-                setServingUnit('g'); 
-                setPassedServingQty(e.target.value * defaultServingQtyGrams);
-                setCalories(Number((itemData.kcal * (e.target.value)).toFixed(1)));
-                setProtein(Number((itemData.protein * (e.target.value)).toFixed(1)));
-                setFats(Number((itemData.total_fat * (e.target.value)).toFixed(1)));
-                setCarbs(Number((itemData.total_carb * (e.target.value)).toFixed(1)));
-            break; 
-
-            case 'unit3': // grams
-                setServingUnit('g');
-                setPassedServingQty(e.target.value); 
-                setCalories(Number((itemData.kcal * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
-                setProtein(Number((itemData.protein * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
-                setFats(Number((itemData.total_fat * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
-                setCarbs(Number((itemData.total_carb * (e.target.value / defaultServingQtyGrams)).toFixed(1)));
-            break; 
-            default:
-        }
     };
-
     const [selectedMeal, setSelectedMeal] = useState('Breakfast'); 
     const [servingUnit, setServingUnit] = useState('');
     const [calories, setCalories] = useState(''); // For calories of the selected item
@@ -131,6 +101,31 @@ function FoodSearchModal({ open, onClose, addFood }) {
     const [fats, setFats] = useState(''); // For the fats in grams of the selected item 
     const [carbs, setCarbs] = useState(''); // For the carbs in grams of the selected item
     const [foodId, setFoodId] = useState('');
+
+    // updates the nutition shown on the food search modal if the units or the serving amount changes
+    useEffect(() => {
+        // multiply the default calories and macro amounts found in 1 serving by (default serving size/selected serving size)
+        switch (selectedServingUnit) {
+            case 'unit1': // default serving unit
+                setPassedServingQty(servingQty || 100); 
+                setCalories(Number((itemData.kcal * (servingQty / defaultServingQty)).toFixed(1)));
+                setProtein(Number((itemData.protein * (servingQty / defaultServingQty)).toFixed(1)));
+                setFats(Number((itemData.total_fat * (servingQty / defaultServingQty)).toFixed(1)));
+                setCarbs(Number((itemData.total_carb * (servingQty / defaultServingQty)).toFixed(1)));
+            break; 
+
+            case 'unit2': // default serving amount in grams or ml 
+                setServingUnit((servingUnit === 'g') ? 'g': 'ml'); 
+                setPassedServingQty(servingQty * defaultServingQtyGrams);
+                setCalories(Number((itemData.kcal * (servingQty)).toFixed(1)));
+                setProtein(Number((itemData.protein * (servingQty)).toFixed(1)));
+                setFats(Number((itemData.total_fat * (servingQty)).toFixed(1)));
+                setCarbs(Number((itemData.total_carb * (servingQty)).toFixed(1)));
+            break; 
+            default:
+        }
+    }, [selectedServingUnit, servingQty, itemData.kcal, itemData.protein, itemData.total_carb, itemData.total_fat, defaultServingQty, defaultServingQtyGrams, servingUnit]);
+
 
     const handleAdd = () => {
         const foodDetails = {
@@ -167,9 +162,11 @@ function FoodSearchModal({ open, onClose, addFood }) {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <div style={{ display: 'flex', width: '80%',}}>
-                        <div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '95%'}}>
+                    <div style={{ display: 'flex', width: '100%', height: 'auto', alignItems: 'stretch'}}>
+
+                        {/*left half */}
+                        <div style = {{width: '50%'}}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%'}}>
                                 <div style={{ position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px' }}>
                                     <TextField
                                         autoFocus
@@ -206,6 +203,8 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                             background: '#00c691',
                                             marginBottom: '5px',
                                             marginTop: "3px",
+                                            minWidth: '100px', 
+                                            justifyContent: 'space-between',
                                             '&:hover': {
                                                 backgroundColor: '#00a67e'
                                             }
@@ -216,7 +215,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                 </div>
                             </div>
                             {searched &&
-                                <div className={styles['food-table-container']}>
+                                <div className={styles['food-table-container']} >
                                     <table style={{ width: '100%', borderCollapse: 'collapse', borderRadius: '10px', overflow: 'hidden' }}>
                                         <tbody>
                                             {nutritionData.map((item, index) => (
@@ -226,7 +225,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                     style={{ borderBottom: '1px solid #ddd' }}
                                                     onClick={() => handleFoodSelect(item)}
                                                 >
-                                                    <td style={{ padding: '8px' }}>{`${item.name}, ${item.serving_size} ${item.serving_size_unit}`}</td>
+                                                    <td style={{ padding: '8px' }}>{`${item.name}, ${item.serving_size ? item.serving_size: 100} ${item.serving_size_unit ? item.serving_size_unit: 'g'}`}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -234,10 +233,15 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                 </div>
                             }
                         </div>
-                        <div style={{ width: '50%' }}>
+
+
+
+
+                        {/*right half */}
+                        <div style={{ width: '50%' ,backgroundColor: 'white', }}>
                             {foodPopup && itemData && (
                                 <div style={{ width: '100%' }}>
-                                    <Box style={{ display: 'flex', justifyContent: 'center', width: '100%', backgroundColor: 'white' }}>
+                                    <Box style={{ width: '100%' }}>
                                         <Box className='macro and calorie container'>
                                             <Typography variant="h6" component="div" gutterBottom sx={{ textAlign: 'center' }}>
                                                 {calories} kcal
@@ -304,45 +308,122 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                 </div>
                                             </div>
                                         </Box>
-                                        <Box sx={{ width: "40%", backgroundColor: 'white', display: 'flex', justifyContent: 'center' }}>
-                                            <Button variant="contained" startIcon = {<AddIcon/>} disableRipple 
-                                            style={{ width: '50%', height: '35px', backgroundColor: '#00c691', color: 'white', position: 'relative', top: '63%'}}
-                                            onClick = {handleAdd}
-                                            >
-                                                ADD
-                                            </Button>
-                                        </Box>
                                     </Box>
-                                    <Box sx={{ backgroundColor: 'white', width: '100%', height: '240px', borderRadius: '10px', outline: '1px solid #D3D3D3', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-                                        <div className='quantity selection'>
-                                            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                                                <label>
+                                    <Box sx={{
+                                        backgroundColor: 'white',
+                                        width: '90%',
+                                        height: 'auto',
+                                        borderRadius: '10px',
+                                        outline: '1px solid #D3D3D3',
+                                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                                        padding: '20px'
+                                    }}>
+
+                                        {/* quantity selection box */}
+                                        <div className='quantity selection' style = {{marginBottom: '2px'}}>
+                                            <Box sx={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                width: '100%',
+                                                padding: '10px',
+                                                backgroundColor: 'white'
+                                            }}>
+                                                <label style={{
+                                                    fontSize: '14px',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    maxWidth: '100%', 
+                                                    textOverflow: 'ellipsis',
+                                                }}>
                                                     {foodName}
                                                 </label>
                                             </Box>
-                                            <Box sx={{ display: 'flex', height: '30px', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', top: '20px', position: 'relative' }}>
-                                                <InputLabel sx={{ color: 'black', width: '30%', backgroundColor: 'white', marginLeft: '10px', marginRight: '-30px', fontFamily: '"Roboto", sans-serif' }}>Meal</InputLabel>
-                                                <Select sx={{ width: '70%', height: '100%', marginRight: '10px' }} defaultValue={'Breakfast'} value = {selectedMeal} onChange = {(e) => setSelectedMeal(e.target.value)}>
+                                            <Box sx={{
+                                                display: 'flex',
+                                                height: '40px',
+                                                backgroundColor: 'white',
+                                                justifyContent: 'space-evenly',
+                                                alignItems: 'center',
+                                                marginTop: '10px'
+                                            }}>
+                                                <InputLabel sx={{
+                                                    color: 'black',
+                                                    width: '30%',
+                                                    fontFamily: '"Roboto", sans-serif',
+                                                    fontSize: '15px'
+                                                }}>Meal</InputLabel>
+                                                <Select sx={{
+                                                    width: '70%',
+                                                    height: '30px',
+                                                    marginRight: '0px',
+                                                    fontSize: '14px'
+                                                }} defaultValue={'Breakfast'} value={selectedMeal} onChange={(e) => setSelectedMeal(e.target.value)}>
                                                     <MenuItem value={'Breakfast'}>Breakfast</MenuItem>
                                                     <MenuItem value={'Lunch'}>Lunch</MenuItem>
                                                     <MenuItem value={'Dinner'}>Dinner</MenuItem>
                                                     <MenuItem value={'Snacks'}>Snacks</MenuItem>
                                                 </Select>
                                             </Box>
-                                            <Box sx={{ display: 'flex', height: '30px', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center', top: '40px', position: 'relative' }}>
+                                            <Box sx={{
+                                                display: 'flex',
+                                                height: '40px',
+                                                backgroundColor: 'white',
+                                                alignItems: 'center',
+                                                marginTop: '10px'
+                                            }}>
+                                                <InputLabel sx={{
+                                                    color: 'black',
+                                                    width: '30%',
+                                                    backgroundColor: 'white',
+                                                    fontFamily: '"Roboto", sans-serif',
+                                                    fontSize: '15px'
+                                                }}>Serving Size</InputLabel>
+
+                                                <div fullWidth style = {{width: '70%', backgroundColor: 'white', display: 'flex', alignItems: 'center'}}>
                                                 <input
                                                     name='weight'
                                                     type='number'
                                                     min='0'
-                                                    value ={servingQty}
-                                                    onChange = {handleServingSelect} 
-                                                    style={{ width: '18%', position: 'relative', left: '5px' }}
+                                                    value={servingQty}
+                                                    onChange={handleServingSelect}
+                                                    style={{
+                                                        height: '27px', 
+                                                        border: '1px solid #ccc', 
+                                                        borderRadius: '4px',
+                                                        fontSize: '14px', 
+                                                        marginRight: '2%',
+                                                        width: '18%',
+
+                                                    }}
                                                 />
-                                                <Select sx={{ width: '70%', height: '100%', marginRight: '10px' }} defaultValue={'unit1'} value = {selectedServingUnit} onChange = {(e) => setSelectedServingUnit(e.target.value)} >
+                                                <Select sx={{
+                                                    width: '80%',
+                                                    height: '31px',
+                                                    fontSize: '14px'
+                                                }} defaultValue={'unit1'} value={selectedServingUnit} onChange={(e) => setSelectedServingUnit(e.target.value)}>
                                                     <MenuItem value={'unit1'}>{selectedItem.serving_size_unit}</MenuItem>
                                                     <MenuItem value={'unit2'}>{selectedItem.serving_weight_grams}g</MenuItem>
-                                                    <MenuItem value={'unit3'}>g</MenuItem>
                                                 </Select>
+                                                </div>
+                                            </Box>
+                                            <Box sx={{
+                                                display: 'flex',
+                                                justifyContent: 'left',
+                                                width: '100%',
+                                                marginTop: '20px'
+                                            }}>
+                                                <Button variant="contained" startIcon={<AddIcon/>} disableRipple 
+                                                    style={{
+                                                        width: '50%',
+                                                        height: '40px',
+                                                        backgroundColor: '#00c691',
+                                                        color: 'white',
+                                                        fontSize: '16px'
+                                                    }}
+                                                    onClick={handleAdd}
+                                                >
+                                                    ADD
+                                                </Button>
                                             </Box>
                                         </div>
                                     </Box>

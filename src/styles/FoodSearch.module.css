@@ -6,9 +6,10 @@
 }
 
 .food-table-container{
+    flex:'none'; 
     max-height: 270px; 
     overflow-y: auto; 
-    max-width: 95%;
+    width: 95%;
     border-radius: 8px; 
     border-collapse: collapse;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
