@@ -89,7 +89,6 @@ function MealAccordion({ title, selectedDate, isFirst, isLast }) {
     return (
         <Accordion style={{
             width: '100%', 
-            minWidth: '550px', 
             borderRadius: isFirst ? '12px 12px 0 0' : isLast ? '0 0 12px 12px' : '0',  // top corners for first, bottom corners for last
             overflow: 'hidden',  
             border: '1px solid #b0b0b0',

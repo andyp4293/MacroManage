@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import MealAccordion from '../components/MealAccordion';
 import FoodSearch from '../components/FoodSearch'; 
 import ChatBox from '../components/Chatbox';
+import MacroProgressBar from '../components/MacroProgressBar'; 
 
 function FoodLog() {
     const [selectedDate, setSelectedDate] = useState(new Date()) // state to keep track of the date 
@@ -144,29 +145,52 @@ function FoodLog() {
                 </button>
             </div> 
             <hr></hr>
-            
-            <div style = {{width: '100%'}}>
+
+
+            {/* container that holds the nutrition goals and food log */}
+            <div style = {{display: 'flex', justifyContent: 'center'}}>
+
+            <div style = {{width: '100%', backgroundColor: 'white', display: 'flex'}}>
+            {/* container that holds the nutrition goals and food log */}
             <Box style={{ 
-                    width: 'fit-content',  // width adjust based on content
+                    width: '100%',  
                     padding: '10px', 
                     border: '1px solid #f0f0f0',
                     borderRadius: '8px',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',  
                     display: 'flex', 
-                    alignItems: 'center',
-                    marginLeft: '10px'
+                    marginLeft: '10px',
+                    marginRight: '10px',
+                    justifyContent: 'space-between',
                 }} elevation = {10}>
-                <div>
+
+                {/*box that holds the food log */}
+                <div style = {{width: '60%', marginTop: '7px'}}>
                 <MealAccordion title="Breakfast" selectedDate = {selectedDate} isFirst = {true} />
                 <MealAccordion title="Lunch" selectedDate = {selectedDate} />
                 <MealAccordion title="Dinner" selectedDate = {selectedDate} />
                 <MealAccordion title="Snacks" selectedDate = {selectedDate} isLast = {true}/>
                 </div>
+
+
+                <Box sx = {{ width: '40%', marginLeft: '20px', height: '100%'}}>
+                    <MacroProgressBar label="Energy" value={100} color="#4CAF50" />
+                    <MacroProgressBar label="Protein" value={90} color="#2196F3" />
+                    <MacroProgressBar label="Net Carbs" value={75} color="#00BCD4" />
+                    <MacroProgressBar label="Fat" value={60} color="#FF5722" />
+                </Box>
             </Box>
-            <div>
+
+            </div>
+
+
+            </div>
+
+
+
+
+
             <ChatBox/>
-            </div>
-            </div>
             <div>
                 {/* modal is displayed when FOOD button is clicked */}
                 <FoodSearch

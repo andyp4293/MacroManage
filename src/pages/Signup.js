@@ -8,6 +8,7 @@ function Signup() {
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false); 
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false)
 
     const [username, setUsername] = useState('');
 
@@ -137,19 +138,36 @@ function Signup() {
         onBlur={(e) => (e.target.style.boxShadow = 'none')} 
         />
 
-        <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Confirm Password</h3>
+        <div className = 'confirm-password-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Confirm Password</h3>
+          {confirmPasswordError && <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Passwords do not match.</h4>}
+        </div>
         <input style={{
           marginBottom: '20px', 
           height: '35px', 
           width: '100%', 
           padding: '8px', 
           fontSize: '16px', 
-          border: '1px solid #ccc', 
+          border: `1px solid ${confirmPasswordError ? 'red' : '#ccc'}`, 
           borderRadius: '5px',
           boxSizing: 'border-box',
           transition: 'all 0.2s ease',
           outline: 'none'
-        }} />
+        }} 
+        value={confirmPassword} 
+        onChange={(e) => {
+          const passwordInput = e.target.value;
+          const isValidConfirmPassword = passwordInput === password || passwordInput === '';
+          setConfirmPassword(passwordInput);
+          setConfirmPasswordError(!isValidConfirmPassword);
+          e.target.style.boxShadow = `0 0 3px ${!isValidConfirmPassword ? 'red' : '#66afe9'}`;
+        }}
+        onFocus={(e) => {
+          const isValidPassword = password.length >= 8 || password === '';
+          e.target.style.boxShadow = `0 0 3px ${!isValidPassword ? 'red' : '#66afe9'}`;
+        }}
+        onBlur={(e) => (e.target.style.boxShadow = 'none')} 
+        />
 
         <div>
           <p style={{ fontSize: '14px', textAlign: 'center' }}>Already have an account? <a href="/login" style={{ color: '#007bff' }}>Sign in</a></p>
@@ -165,7 +183,7 @@ function Signup() {
             padding: '10px'
           }}
           disableRipple
-          onClick={(emailError || passwordError) ? handleSignup : error}
+          onClick={handleSignup}
         >
           <Typography sx={{ textTransform: 'none', color: "white", fontSize: '18px', fontWeight: '500' }}>
             Sign up
