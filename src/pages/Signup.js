@@ -11,8 +11,9 @@ function Signup() {
     const [confirmPasswordError, setConfirmPasswordError] = useState(false)
 
     const [username, setUsername] = useState('');
+    
 
-    const [error, setError] = useState(''); 
+    const formIsIncomplete = !password || !email || !confirmPassword; // cannot click sign up button if all fields are not filled out
 
     const handleSignup = async () => {
         try {
@@ -43,7 +44,7 @@ function Signup() {
 
 
     return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f4f4f4' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
       <div style={{
         width: '35%', 
         minHeight: 'auto', 
@@ -52,14 +53,14 @@ function Signup() {
         borderRadius: '20px', 
         border: '1px solid #ddd', 
         boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
-        padding: '40px',
+        padding: '30px',
         fontFamily: 'Arial, sans-serif'
       }}>
 
-        <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Username</h3>
+        <h5 style={{ marginBottom: '5px', fontWeight: '500' , marginTop: '-5px'}}>Username</h5>
         <input style={{
-          marginBottom: '20px', 
-          height: '35px', 
+          marginBottom: '0px', 
+          height: '25px', 
           width: '100%', 
           padding: '8px', 
           fontSize: '16px', 
@@ -75,12 +76,12 @@ function Signup() {
 
 
         <div className = 'email-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Email</h3>
-          {emailError && <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Please enter a valid email address.</h4>}
+          <h5 style={{ marginBottom: '5px', fontWeight: '500' }}>Email</h5>
+          {emailError && <h5 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Please enter a valid email address.</h5>}
         </div>
         <input style={{
-          marginBottom: '20px',
-          height: '35px', 
+          marginBottom: '0px',
+          height: '25px', 
           width: '100%', 
           padding: '8px', 
           fontSize: '16px', 
@@ -108,12 +109,12 @@ function Signup() {
 
 
         <div className = 'password-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Password</h3>
-          {passwordError && <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Password must be at least 8 characters long.</h4>}
+          <h5 style={{ marginBottom: '5px', fontWeight: '500' }}>Password</h5>
+          {passwordError && <h5 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Password must be at least 8 characters long.</h5>}
         </div>
         <input style={{
-          marginBottom: '20px', 
-          height: '35px', 
+          marginBottom: '0px', 
+          height: '25px', 
           width: '100%', 
           padding: '8px', 
           fontSize: '16px', 
@@ -139,12 +140,12 @@ function Signup() {
         />
 
         <div className = 'confirm-password-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ marginBottom: '10px', fontWeight: '500' }}>Confirm Password</h3>
+          <h5 style={{ marginBottom: '5px', fontWeight: '500' }}>Confirm Password</h5>
           {confirmPasswordError && <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Passwords do not match.</h4>}
         </div>
         <input style={{
-          marginBottom: '20px', 
-          height: '35px', 
+          marginBottom: '10px', 
+          height: '25px', 
           width: '100%', 
           padding: '8px', 
           fontSize: '16px', 
@@ -180,10 +181,16 @@ function Signup() {
             '&:hover': { backgroundColor: '#00a67e' },
             borderRadius: '5px',
             transition: 'all 0.2s ease',
-            padding: '10px'
+            padding: '10px',
+            cursor: formIsIncomplete ? 'not-allowed' : 'pointer'
           }}
           disableRipple
-          onClick={handleSignup}
+          onClick={() => {
+            if (!passwordError && !confirmPasswordError && !emailError && !formIsIncomplete) { // sign up only goes through if all inputs are valid and none are empty
+
+              handleSignup();
+            }
+          }}
         >
           <Typography sx={{ textTransform: 'none', color: "white", fontSize: '18px', fontWeight: '500' }}>
             Sign up
