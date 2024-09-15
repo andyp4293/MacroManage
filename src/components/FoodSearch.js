@@ -379,7 +379,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                     fontSize: '15px'
                                                 }}>Serving Size</InputLabel>
 
-                                                <div fullWidth style = {{width: '70%', backgroundColor: 'white', display: 'flex', alignItems: 'center'}}>
+                                                <div style = {{width: '70%', backgroundColor: 'white', display: 'flex', alignItems: 'center'}}>
                                                 <input
                                                     name='weight'
                                                     type='number'

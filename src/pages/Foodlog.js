@@ -71,19 +71,19 @@ function FoodLog() {
                 })
             });
             
-            const totals = await fetch('http://localhost:5000/api/nutrition/total_nutrition', {
+            const totalNutritionResponse = await fetch('http://localhost:5000/api/nutrition/total_nutrition', {
                 method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`, // jwt authorization
                 },
                 body: JSON.stringify({
-                    
+                    meal_log_id: meal_log_id
                 })
             });
             
-
-
+            const totals = await totalNutritionResponse.json(); 
+            setTotalNutrition(totals); 
 
         } catch (error) {
             console.error('Error adding food item:', error);

@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db'); // Import the shared pool
 const router = express.Router();
+const authenticateToken = require('./authToken');
 
 // route to get food item search results based on the query 
 router.post('/', async (req, res) => {
@@ -85,23 +86,25 @@ router.get('/nutrients', async (req, res) => {
     }
 });
 
-router.post('/total_nutrition', async (req, res) => {
+router.post('/total_nutrition', authenticateToken, async (req, res) => {
+    const {meal_log_id: mealLogId} = req.body; 
 
     try {
         const totalsResult = await pool.query(
             `SELECT 
                 SUM(calories) AS total_calories,
-                SUM(protein_grams) AS total_protein,
-                SUM(fat_grams) AS total_fats,
-                SUM(carbohydrate_grams) AS total_carbs
+                SUM(protein) AS total_protein,
+                SUM(fats) AS total_fats,
+                SUM(carbs) AS total_carbs
             FROM meal_items
-            WHERE user_id = $1 AND meal_date = $2`,
-            [userId, mealDate]
+            WHERE meal_log_id = $1`,
+            [mealLogId]
         );
-
+        
         return res.status(200).json(totalsResult.rows[0])
     }
-    catch {
+    catch(error) {
+        console.error(error);
         res.status(500).send('Server error');
     }
 })
