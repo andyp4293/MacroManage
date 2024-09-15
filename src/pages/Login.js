@@ -1,5 +1,6 @@
 import React, { useState} from 'react';
 import {Box, Button, Typography} from '@mui/material';
+import ErrorIcon from '@mui/icons-material/Error';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -9,7 +10,7 @@ function Login() {
     const [passwordError, setPasswordError] = useState(false); 
     const formIsIncomplete = !password || !email; // cannot click sign in button if all fields are not filled out
 
-    const [loginError, setLoginError] = useState(false); 
+    const [error, setError] = useState(''); 
 
     const handleSignin = async () => {
         try {
@@ -30,7 +31,7 @@ function Login() {
                 window.location.href = '/home'; // redirects to home page
             }
             else {
-                throw new Error(data.message); 
+                setError(data.message); 
             }
         }
         catch(error){
@@ -88,7 +89,8 @@ function Login() {
                         <h5 style={{ marginBottom: '5px', fontWeight: '500' }}>Password</h5>
                         {passwordError && <h5 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Password must be at least 8 characters long.</h5>}
                     </div>
-                    <input style={{
+                    <input type = 'password'
+                    style={{
                         marginBottom: '0px', 
                         height: '25px', 
                         width: '100%', 
@@ -123,8 +125,8 @@ function Login() {
                                 '&:hover': { backgroundColor: '#00a67e' },
                                 borderRadius: '5px',
                                 transition: 'all 0.2s ease',
-                                padding: '10px',
-                                cursor: formIsIncomplete ? 'not-allowed' : 'pointer'
+                                padding: '5px',
+                                cursor: (formIsIncomplete || passwordError || emailError)  ? 'not-allowed' : 'pointer'
                             }}
                                 disableRipple
                                 onClick={() => {
@@ -138,6 +140,9 @@ function Login() {
                             Sign in
                         </Typography>
                 </Button>
+                    {error && <Box className = 'error-message' style={{width: '100%', borderRadius: '4px', display: 'flex', justifyContent: 'center', height: '30px', border: '', color: 'red'}} >
+                        <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' , display: 'flex', alignItems: "center"}}><ErrorIcon style = {{fontSize: '20px'}}/> {error}</h4>
+                    </Box>}
                 </div>
                 </>
             </div>

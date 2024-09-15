@@ -85,4 +85,25 @@ router.get('/nutrients', async (req, res) => {
     }
 });
 
+router.post('/total_nutrition', async (req, res) => {
+
+    try {
+        const totalsResult = await pool.query(
+            `SELECT 
+                SUM(calories) AS total_calories,
+                SUM(protein_grams) AS total_protein,
+                SUM(fat_grams) AS total_fats,
+                SUM(carbohydrate_grams) AS total_carbs
+            FROM meal_items
+            WHERE user_id = $1 AND meal_date = $2`,
+            [userId, mealDate]
+        );
+
+        return res.status(200).json(totalsResult.rows[0])
+    }
+    catch {
+        res.status(500).send('Server error');
+    }
+})
+
 module.exports = router;

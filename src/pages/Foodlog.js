@@ -15,6 +15,8 @@ function FoodLog() {
     const token = localStorage.getItem('token'); // json web token
     const [isModalOpen, setIsModalOpen] = useState(false); // state to open or close the modal 
 
+    const [totalNutrition, setTotalNutrition] = useState({});
+    
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
@@ -68,6 +70,19 @@ function FoodLog() {
                     meal_type: mealType,
                 })
             });
+            
+            const totals = await fetch('http://localhost:5000/api/nutrition/total_nutrition', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt authorization
+                },
+                body: JSON.stringify({
+                    
+                })
+            });
+            
+
 
 
         } catch (error) {

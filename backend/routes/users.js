@@ -9,17 +9,24 @@ require('dotenv').config();  // load .env file
 
 // route for a user to sign up for an account
 router.post('/signup', async (req, res) => {
-    const {email, password, username} = req.body; 
+    const {password, username} = req.body; 
+    let { email } = req.body;
+    email = email.toLowerCase();
 
     try {
-        // checks to see if there already has been an account made with the inputted email
-        const check = await pool.query(`
-            SELECT * FROM users
-            WHERE email = $1`, 
-            [email]
-        ); 
-        if (check.rows.length > 0) { // if the length is greater than 0 then the email is already in use 
-            return res.status(409).json({message: 'Email is already in use'});  
+        // checks to see if there already has been an account made with the inputted email or username
+        const [checkEmail, checkUsername] = await Promise.all([
+            pool.query('SELECT * FROM users WHERE email = $1', [email]),
+            pool.query('SELECT * FROM users WHERE username = $1', [username])
+        ]);
+
+        if (checkEmail.rows.length > 0) { // if the length is greater than 0 then the email is already in use 
+            return res.status(409).json({message: 'Email is already in use.'});  
+        }
+
+
+        if (checkUsername.rows.length > 0) { // if the length is greater than 0 then the email is already in use 
+            return res.status(409).json({message: 'Username is taken.'});  
         }
 
          // if email is not already in use, hash the password before inserting it
@@ -27,10 +34,16 @@ router.post('/signup', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // insert new row into the users table with the inputted email and hashed password
-        await pool.query(
-            'INSERT INTO users (email, password, username) VALUES ($1, $2, $3)',
+        const user = await pool.query(
+            'INSERT INTO users (email, password, username) VALUES ($1, $2, $3) RETURNING id',
             [email, hashedPassword, username]
         );
+
+        await pool.query(
+            'INSERT INTO nutrition_goals (user_id) VALUES ($1)',
+            [user.rows[0].id] // this ensures that every has a nutrition_goals row
+        );
+
         return res.status(200).json({message: 'Account signed up successfully'}); 
 
     }
@@ -43,7 +56,9 @@ router.post('/signup', async (req, res) => {
 
 // route for a returning user to log in 
 router.post('/signin', async (req, res) => {
-    const {email, password} = req.body; 
+    const { password } = req.body;
+    let { email } = req.body;
+    email = email.toLowerCase();
 
     try {
         // checks to see if an account with this email exists exists 
@@ -53,7 +68,7 @@ router.post('/signin', async (req, res) => {
             [email]
         ); 
         if (check.rows.length == 0) { // if the length is 0 then the account with that email doesn't exist
-            return res.status(404).json({message: 'Email or password is incorrect'});  
+            return res.status(404).json({message: 'Email or password is incorrect.'});  
         }
 
         // if email not already in use, grab the user information
@@ -62,7 +77,6 @@ router.post('/signin', async (req, res) => {
         const validPassword = await bcrypt.compare(password, user.password); 
 
         if (!validPassword) {
-            console.log('L');
             return res.status(404).json({message: 'Email or password is incorrect'});  
         }
 

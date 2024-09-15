@@ -1,6 +1,7 @@
 import React from 'react';
 
-const MacroProgressBar = ({ label, value, color }) => {
+const MacroProgressBar = ({ label, value, color, nutritionTarget, nutritiion}) => {
+
     const progressBarOuterStyle = {
         width: '100%', // Match parent width for outer bar
         backgroundColor: '#f0f0f0', // light gray

@@ -1,5 +1,6 @@
 import React, { useState} from 'react';
 import {Box, Button, Typography} from '@mui/material';
+import ErrorIcon from '@mui/icons-material/Error';
 
 function Signup() {
     const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ function Signup() {
 
     const [username, setUsername] = useState('');
     
+    const [error, setError] = useState(''); 
 
     const formIsIncomplete = !password || !email || !confirmPassword; // cannot click sign up button if all fields are not filled out
 
@@ -30,9 +32,14 @@ function Signup() {
             });
 
             if (!response.ok) { // triggers if the status response is not 200-299, 
-                throw new Error(response.json().message); 
+              response.json().then(data => {
+                  setError(data.message); 
+              });
             }
-            window.location.href = '/login'; // redirects to login page
+            else {
+              setError(''); 
+              window.location.href = '/login'; // redirects to login page if no errors
+            }
         }
 
         catch(error){
@@ -112,7 +119,8 @@ function Signup() {
           <h5 style={{ marginBottom: '5px', fontWeight: '500' }}>Password</h5>
           {passwordError && <h5 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Password must be at least 8 characters long.</h5>}
         </div>
-        <input style={{
+        <input type = 'password'
+        style={{
           marginBottom: '0px', 
           height: '25px', 
           width: '100%', 
@@ -143,7 +151,8 @@ function Signup() {
           <h5 style={{ marginBottom: '5px', fontWeight: '500' }}>Confirm Password</h5>
           {confirmPasswordError && <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Passwords do not match.</h4>}
         </div>
-        <input style={{
+        <input type = 'password'
+        style={{
           marginBottom: '10px', 
           height: '25px', 
           width: '100%', 
@@ -181,8 +190,8 @@ function Signup() {
             '&:hover': { backgroundColor: '#00a67e' },
             borderRadius: '5px',
             transition: 'all 0.2s ease',
-            padding: '10px',
-            cursor: formIsIncomplete ? 'not-allowed' : 'pointer'
+            padding: '5px',
+            cursor: (formIsIncomplete || passwordError || confirmPasswordError || emailError) ? 'not-allowed' : 'pointer'
           }}
           disableRipple
           onClick={() => {
@@ -196,6 +205,9 @@ function Signup() {
             Sign up
           </Typography>
         </Button>
+        {error && <Box className = 'error-message' style={{width: '100%', borderRadius: '4px', display: 'flex', justifyContent: 'center', height: '30px', border: '', color: 'red'}} >
+          <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' , display: 'flex', alignItems: "center"}}><ErrorIcon style = {{fontSize: '20px'}}/> {error}</h4>
+        </Box>}
       </div>
     </Box>
 
