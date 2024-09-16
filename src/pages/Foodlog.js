@@ -84,6 +84,7 @@ function FoodLog() {
             
             const totals = await totalNutritionResponse.json(); 
             setTotalNutrition(totals); 
+            console.log(totals); 
 
         } catch (error) {
             console.error('Error adding food item:', error);
@@ -97,7 +98,6 @@ function FoodLog() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, // jwt authorization
                 },
                 body: JSON.stringify({ meal_date: mealDate }), // sends the selected date to the backend
             });
@@ -110,6 +110,26 @@ function FoodLog() {
             console.error('Error:', error);
         }
     }, [token]); // token should be included in the dependency array
+
+    const fetchNutritionGoals = useCallback(async (mealDate) => {
+        try {
+            const response = await fetch('http://localhost:5000/api/nutrition/get_nutrition_goals', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt authorization
+                },
+            });
+
+            if (!response.ok) { // triggers if the status response is not 200-299
+                throw new Error('Error checking/creating meal logs');
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }, [token]); // token should be included in the dependency array
+
 
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0]; // get the current date

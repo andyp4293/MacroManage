@@ -86,8 +86,31 @@ router.get('/nutrients', async (req, res) => {
     }
 });
 
-router.post('/total_nutrition', authenticateToken, async (req, res) => {
+router.post('/total_nutrition', async (req, res) => {
     const {meal_log_id: mealLogId} = req.body; 
+
+    try {
+        const totalsResult = await pool.query(
+            `SELECT 
+                SUM(calories) AS total_calories,
+                SUM(protein) AS total_protein,
+                SUM(fats) AS total_fats,
+                SUM(carbs) AS total_carbs
+            FROM meal_items
+            WHERE meal_log_id = $1`,
+            [mealLogId]
+        );
+        
+        return res.status(200).json(totalsResult.rows[0])
+    }
+    catch(error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
+
+router.post('/get_nutrition_goals', authenticateToken, async (req, res) => {
+    const user_id = req.user.id;
 
     try {
         const totalsResult = await pool.query(
