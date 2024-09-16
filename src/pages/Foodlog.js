@@ -16,7 +16,9 @@ function FoodLog() {
     const [isModalOpen, setIsModalOpen] = useState(false); // state to open or close the modal 
 
     const [totalNutrition, setTotalNutrition] = useState({});
+
     
+
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
@@ -71,20 +73,8 @@ function FoodLog() {
                 })
             });
             
-            const totalNutritionResponse = await fetch('http://localhost:5000/api/nutrition/total_nutrition', {
-                method: 'POST', 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, // jwt authorization
-                },
-                body: JSON.stringify({
-                    meal_log_id: meal_log_id
-                })
-            });
-            
-            const totals = await totalNutritionResponse.json(); 
-            setTotalNutrition(totals); 
-            console.log(totals); 
+
+
 
         } catch (error) {
             console.error('Error adding food item:', error);
@@ -98,6 +88,7 @@ function FoodLog() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt authorization
                 },
                 body: JSON.stringify({ meal_date: mealDate }), // sends the selected date to the backend
             });
@@ -111,7 +102,9 @@ function FoodLog() {
         }
     }, [token]); // token should be included in the dependency array
 
-    const fetchNutritionGoals = useCallback(async (mealDate) => {
+    const [nutritionGoals, setNutritionGoals] = useState({});
+
+    const fetchNutritionGoals =  useCallback(async () => {
         try {
             const response = await fetch('http://localhost:5000/api/nutrition/get_nutrition_goals', {
                 method: 'POST',
@@ -121,9 +114,9 @@ function FoodLog() {
                 },
             });
 
-            if (!response.ok) { // triggers if the status response is not 200-299
-                throw new Error('Error checking/creating meal logs');
-            }
+
+            const goals = await response.json(); 
+            setNutritionGoals(goals); 
 
         } catch (error) {
             console.error('Error:', error);
@@ -131,10 +124,39 @@ function FoodLog() {
     }, [token]); // token should be included in the dependency array
 
 
+
+    // fetch the current calories and macros of all the food for the date
+    const fetchTotalNutrition = useCallback(async() =>{
+        const mealDate = selectedDate.toISOString().split('T')[0]
+        try{
+            const totalNutritionResponse = await fetch('http://localhost:5000/api/nutrition/total_nutrition', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt authorization
+                },
+                body: JSON.stringify({
+                    meal_date: mealDate
+                })
+            });
+
+            const totals = await totalNutritionResponse.json(); 
+            setTotalNutrition(totals); 
+        }
+        
+        catch (error) {
+            console.error('Error:', error);
+        }
+            
+    }, [token, selectedDate]); 
+
+
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0]; // get the current date
         checkMealLogs(today); // check if today's date already has a meal_log associated with it
-    }, [checkMealLogs]); // useCallback ensures checkMealLogs doesn't change unnecessarily
+        fetchNutritionGoals();
+        fetchTotalNutrition(); 
+    }, [checkMealLogs, fetchNutritionGoals, fetchTotalNutrition]); // useCallback ensures checkMealLogs doesn't change unnecessarily
 
     const updateDate = (newDate) => { // triggers every time there is a change to the selected date
         setSelectedDate(newDate); // changes the selected date to the current date displayed on the date selector
@@ -148,7 +170,7 @@ function FoodLog() {
             <div className = {styles['date-container']}>
                 <h3>Food Log For:</h3>
                 <DateSelector onDateChange={updateDate}/>
-                <button className = {styles['add-food']} onClick = {handleOpenModal} >
+                <button className = {styles['add-food']} onClick = {() => {handleOpenModal()}} >
                     <Box // Stack an add icon to the bottom right of food icon
                         sx={{
                             position: 'relative',   
@@ -156,6 +178,7 @@ function FoodLog() {
                             width: '35px',          
                             height: '35px',         
                         }}
+                        
                     >
                         <RiceBowlIcon 
                             sx={{ 
@@ -209,10 +232,10 @@ function FoodLog() {
 
 
                 <Box sx = {{ width: '40%', marginLeft: '20px', height: '100%'}}>
-                    <MacroProgressBar label="Energy" value={100} color="#4CAF50" />
-                    <MacroProgressBar label="Protein" value={90} color="#2196F3" />
-                    <MacroProgressBar label="Net Carbs" value={75} color="#00BCD4" />
-                    <MacroProgressBar label="Fat" value={60} color="#FF5722" />
+                    <MacroProgressBar label="Energy" color="#4CAF50" nutritionTarget = {nutritionGoals.calories} nutrition = {totalNutrition.total_calories}/>
+                    <MacroProgressBar label="Protein" value={90} color="#2196F3" nutritionTarget = {nutritionGoals.protein_grams} nutrition = {totalNutrition.total_protein} />
+                    <MacroProgressBar label="Net Carbs" value={75} color="#00BCD4" nutritionTarget = {nutritionGoals.fat_grams} nutrition = {totalNutrition.total_fats} />
+                    <MacroProgressBar label="Fat" value={60} color="#FF5722" nutritionTarget = {nutritionGoals.carbohydrate_grams} nutrition = {totalNutrition.total_carbs} />
                 </Box>
             </Box>
 
@@ -220,9 +243,6 @@ function FoodLog() {
 
 
             </div>
-
-
-
 
 
             <ChatBox/>

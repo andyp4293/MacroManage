@@ -86,10 +86,19 @@ router.get('/nutrients', async (req, res) => {
     }
 });
 
-router.post('/total_nutrition', async (req, res) => {
-    const {meal_log_id: mealLogId} = req.body; 
+router.post('/total_nutrition', authenticateToken, async (req, res) => {
+    const { meal_date } = req.body;
+    const user_id = req.user.id;  // get user id from the decoded jwt token
 
     try {
+
+        const getId = await pool.query(`
+            SELECT id FROM meal_logs WHERE meal_date = $1 AND user_id = $2
+        `, [meal_date, user_id]);
+        
+        const mealLogId = getId.rows[0].id;
+
+
         const totalsResult = await pool.query(
             `SELECT 
                 SUM(calories) AS total_calories,
@@ -113,18 +122,18 @@ router.post('/get_nutrition_goals', authenticateToken, async (req, res) => {
     const user_id = req.user.id;
 
     try {
-        const totalsResult = await pool.query(
-            `SELECT 
-                SUM(calories) AS total_calories,
-                SUM(protein) AS total_protein,
-                SUM(fats) AS total_fats,
-                SUM(carbs) AS total_carbs
-            FROM meal_items
-            WHERE meal_log_id = $1`,
-            [mealLogId]
-        );
         
-        return res.status(200).json(totalsResult.rows[0])
+        const query = `
+            SELECT protein_grams, calories, fat_grams, carbohydrate_grams
+            FROM nutrition_goals
+            WHERE user_id = $1;
+        `;
+        const result = await pool.query(query, [user_id]);
+        if (result.rows.length > 0) {
+            return res.status(200).json(result.rows[0]);
+        } else {
+            return res.status(404).json(null)
+        }
     }
     catch(error) {
         console.error(error);
