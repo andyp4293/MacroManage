@@ -63,8 +63,9 @@ function Navbar() {
                                 onClick={handleClick}
                                 style={{
                                     width: '50px',
+                                    height: '50px',  
                                     borderRadius: '50%',
-                                    backgroundColor: 'white', 
+                                    backgroundColor: 'white',
                                     color: 'black',
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -72,7 +73,7 @@ function Navbar() {
                                     fontSize: '30px',
                                     fontWeight: 'bold',
                                     marginTop: '-25px',
-                                    marginBottm: '-20px',
+                                    marginBottom: '-25px', 
                                     cursor: 'pointer'
                                 }}
                             >

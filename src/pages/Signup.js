@@ -56,7 +56,7 @@ function Signup() {
         width: '35vw', 
         backgroundColor: "white",  
         borderRadius: '20px', 
-        height: '65vh',
+        height: 'fit-content',
         border: '1px solid #ddd', 
         boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
         padding: '2vw',

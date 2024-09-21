@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { Box, List, ListItem, TextField, Button} from '@mui/material';
+import React, { useState, useEffect, useRef } from "react";
+import { Box, TextField, Button} from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import { IoSend } from "react-icons/io5";
 
@@ -9,13 +9,18 @@ const ChatBox = () => {
   const [prompt, setPrompt] = useState('');
   const [messages, setMessages] = useState([]); 
   const [isOpen, setIsOpen] = useState(false); 
-  
+  const [loading, setLoading] = useState(false);  // state for whether or not the bot is loading an answer
+  const [dots, setDots] = useState('•'); // state for the dots loading animation 
+
+  const messagesEndRef = useRef(null); 
+
   const toggleChatBox = () => {
     setIsOpen(!isOpen); 
   }
 
   const handlePrompt = async () => {
     setMessages((prevMessages) => [...prevMessages, `You: ${prompt}`]);
+    setLoading(true); 
     setPrompt(''); 
     try {
       const response = await fetch('http://localhost:5000/api/chat', {
@@ -34,7 +39,27 @@ const ChatBox = () => {
     catch (error) {
       console.log('Error sending chat prompt:', error)
     }
+    finally {
+      setLoading(false); 
+    }
   }
+
+  // scroll to the bottom of the conversation when the conversation is updated
+  useEffect(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // loading animation for when the answer is waiting to be returned
+  useEffect(() => {
+      if (loading) {
+          const interval = setInterval(() => {
+              setDots((prevDots) => (prevDots.length < 3 ? prevDots + '•' : '•'));
+          }, 500);
+          return () => clearInterval(interval); 
+      } else {
+          setDots('•'); 
+      }
+  }, [loading]);
 
   return (
     <div>
@@ -70,25 +95,39 @@ const ChatBox = () => {
                 flexGrow: 1,
                 overflowY: 'auto',
                 padding: '8px',
-                backgroundColor: '#f1f1f1',
+                backgroundColor: 'white',
               }}>
-                <List>
                   {messages.map((msg, index) => (
-                    <ListItem key={index} sx={{
-                      backgroundColor: '#00c691',
-                      marginBottom: '1%',
-                      padding: '10px 15px',
+                    <div key={index} style={{
+                      backgroundColor: '#F2F2F2',
                       borderRadius: '10px',
                       display: 'block',
-                      width: '100%', 
-                      paddingTop: '0px',
-                      paddingBottom: '0px',
-                      wordWrap: 'break-word'
+                      width: 'auto', 
+                      marginBottom: '2%', 
+                      padding: '10px', 
+                      paddingTop: '1px',
+                      wordWrap: 'break-word',
+                      color: 'black', 
                     }}>
                       <ReactMarkdown>{msg}</ReactMarkdown>
-                    </ListItem>
+                    </div>
                   ))}
-                </List>
+                {loading && (
+                    <div style={{
+                      backgroundColor: '#F2F2F2',
+                      borderRadius: '10px',
+                      display: 'block',
+                      width: 'auto', 
+                      marginBottom: '2%', 
+                      padding: '10px', 
+                      paddingTop: '1px',
+                      wordWrap: 'break-word',
+                      color: 'black', 
+                    }}>
+                        {dots}
+                    </div>
+                )}
+                <div ref={messagesEndRef} />
               </Box>
 
               <Box sx={{

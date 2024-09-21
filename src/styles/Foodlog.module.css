@@ -3,7 +3,6 @@
     justify-content: left;
     align-items: center;
     gap: 10px; 
-    margin-right: 10px; 
     background-color: #ffffff;
     border-radius: 10px;
     font-family: 'Arial', sans-serif;
@@ -30,3 +29,29 @@
     background: #00a67e;
 }
 
+.foodLogContainer {
+    display: flex;
+    justify-content: space-between;
+}
+.progressBarContainer {
+    margin-left: 20px;
+}
+
+@media (max-width: 768px) {
+    .foodLogContainer {
+        flex-direction: column;
+    }
+
+    .foodLogContainer>.MuiBox-root {
+        margin-top: 3vh;
+    }
+    .progressBarContainer {
+        width: 100%;
+        margin-left: 0; 
+        
+    }
+
+    .mealLog {
+        width: 100%
+    }
+}

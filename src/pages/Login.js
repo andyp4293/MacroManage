@@ -48,7 +48,7 @@ function Login() {
                     border: '1px solid #ddd', 
                     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
                     padding: '2vw',
-                    height: '40vh',
+                    height: 'fit-content',
                     fontFamily: 'Arial, sans-serif'
                 }}>
                 
@@ -117,7 +117,11 @@ function Login() {
                     />
 
                 <div>
-                <p style={{ fontSize: '14px', textAlign: 'center' }}>Don't have an account? <a href="/signup">Sign up</a></p>
+                <div style = {{display: 'flex', justifyContent: 'space-between'}}>
+                    <p style={{ fontSize: '14px', textAlign: 'center' }}>Don't have an account? <a href="/signup">Sign up</a></p>
+                    <p style={{ fontSize: '13px', alignItems: 'center' }}><a href="/signup">Forgot Password</a></p>
+                </div>
+
                 <Button sx={{
                                 width: '100%', 
                                 backgroundColor: '#00c691', 
