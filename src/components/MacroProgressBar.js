@@ -1,7 +1,13 @@
 import React from 'react';
 
-const MacroProgressBar = ({ label, color, nutritionTarget, nutrition }) => {
+const MacroProgressBar = ({ label, color, unit,  nutritionTarget, nutrition }) => {
 
+    // function to round numbers to the nearest tenth
+    const roundToNearestTenth = (num) => {
+        return Math.round(num * 10) / 10;
+    };
+    
+    nutrition = roundToNearestTenth(nutrition); 
     const progressBarOuterStyle = {
         width: '100%', 
         backgroundColor: '#f0f0f0', // light gray
@@ -35,10 +41,7 @@ const MacroProgressBar = ({ label, color, nutritionTarget, nutrition }) => {
         margin: '7px', 
     };
 
-    // function to round numbers to the nearest tenth
-    const roundToNearestTenth = (num) => {
-        return Math.round(num * 10) / 10;
-    };
+
 
     // calculating the percentage and rounding it
     const percentage = roundToNearestTenth((nutrition / nutritionTarget) * 100);
@@ -46,7 +49,7 @@ const MacroProgressBar = ({ label, color, nutritionTarget, nutrition }) => {
     return (
         <div style={progressBarContainerStyle}>
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                <label style={labelStyle}>{label}</label>
+                <label style={labelStyle}>{label} ({nutrition}{unit}/{nutritionTarget}{unit})</label>
                 <span>{percentage}%</span> {/* Updated to use the rounded percentage */}
             </div>
             <div style={progressBarOuterStyle}>

@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
-import { Box, List, ListItem, ListItemText, TextField, Button} from '@mui/material';
+import { Box, List, ListItem, TextField, Button} from '@mui/material';
+import ReactMarkdown from 'react-markdown';
+import { IoSend } from "react-icons/io5";
 
 
 
@@ -74,12 +76,16 @@ const ChatBox = () => {
                   {messages.map((msg, index) => (
                     <ListItem key={index} sx={{
                       backgroundColor: '#00c691',
-                      marginBottom: '5px',
+                      marginBottom: '1%',
+                      padding: '10px 15px',
                       borderRadius: '10px',
+                      display: 'block',
+                      width: '100%', 
                       paddingTop: '0px',
                       paddingBottom: '0px',
+                      wordWrap: 'break-word'
                     }}>
-                      <ListItemText primary={msg} />
+                      <ReactMarkdown>{msg}</ReactMarkdown>
                     </ListItem>
                   ))}
                 </List>
@@ -105,10 +111,10 @@ const ChatBox = () => {
                   }}
                   sx={{ marginRight: '8px' }}
                 />
-                <Button onClick={handlePrompt} variant="contained" sx={{ backgroundColor: '#00c691', '&:hover': {
+                <Button onClick={handlePrompt} variant="contained" sx={{ width: '20%', backgroundColor: '#00c691', '&:hover': {
                       backgroundColor: '#00a67e'
                   }}}>
-                  Send
+                  <IoSend/>
                 </Button>
               </Box>
             </>

@@ -42,14 +42,13 @@ function Login() {
     return (
         <Box sx = {{display: 'flex', justifyContent: 'center'}}>
                 <div style={{
-                    width: '35%', 
-                    minHeight: 'auto', 
+                    width: '35vw', 
                     backgroundColor: "white", 
-                    minWidth: '450px', 
                     borderRadius: '20px', 
                     border: '1px solid #ddd', 
                     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
-                    padding: '30px',
+                    padding: '2vw',
+                    height: '40vh',
                     fontFamily: 'Arial, sans-serif'
                 }}>
                 

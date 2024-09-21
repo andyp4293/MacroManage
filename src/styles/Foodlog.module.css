@@ -3,18 +3,28 @@
     justify-content: left;
     align-items: center;
     gap: 10px; 
-    margin-left: 10px; 
-    margin-top: -3px; 
+    margin-right: 10px; 
+    background-color: #ffffff;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 12px; 
 }
+
 
 .add-food {
     display: flex; 
     justify-content: center;
     align-items: center;
     background: #00c691;
-    border-radius: 10px;
+    border-radius: 30px;
     cursor: pointer;
     border: none;
+    color: white; 
+    padding: 15px; 
+    font-weight: 900; 
+    height: 40px;
+    margin-top: 7px; 
+    font-family: 'Roboto', sans-serif;
 }
 .add-food:hover{
     background: #00a67e;

@@ -3,7 +3,7 @@ import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, Button 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-function MealAccordion({ title, selectedDate, isFirst, isLast }) {
+function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
     const [items, setItems] = useState([]);
 
     const token = localStorage.getItem('token'); // json web token
@@ -75,9 +75,11 @@ function MealAccordion({ title, selectedDate, isFirst, isLast }) {
                     'Content-Type': 'application/json',  
                 }
             });
-
             if (!response.ok) {
                 throw new Error('Failed to delete meal item');
+            }
+            else {
+                onDelete();
             }
 
         } catch (error) {

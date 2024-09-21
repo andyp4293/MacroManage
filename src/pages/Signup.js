@@ -51,16 +51,15 @@ function Signup() {
 
 
     return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
       <div style={{
-        width: '35%', 
-        minHeight: 'auto', 
-        backgroundColor: "white", 
-        minWidth: '450px', 
+        width: '35vw', 
+        backgroundColor: "white",  
         borderRadius: '20px', 
+        height: '65vh',
         border: '1px solid #ddd', 
         boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
-        padding: '30px',
+        padding: '2vw',
         fontFamily: 'Arial, sans-serif'
       }}>
 

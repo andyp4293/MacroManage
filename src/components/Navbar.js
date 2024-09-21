@@ -63,7 +63,6 @@ function Navbar() {
                                 onClick={handleClick}
                                 style={{
                                     width: '50px',
-                                    height: '50px',
                                     borderRadius: '50%',
                                     backgroundColor: 'white', 
                                     color: 'black',

@@ -1,30 +1,29 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import DateSelector from '../components/DateSelector'; 
 import styles from '../styles/Foodlog.module.css';
-import {Box} from '@mui/material';
-import RiceBowlIcon from '@mui/icons-material/RiceBowl';
-import AddIcon from '@mui/icons-material/Add';
+import {Box, Typography} from '@mui/material';
 import MealAccordion from '../components/MealAccordion';
 import FoodSearch from '../components/FoodSearch'; 
 import ChatBox from '../components/Chatbox';
 import MacroProgressBar from '../components/MacroProgressBar'; 
+import GoalSelector from '../components/GoalSelector'; 
 
 function FoodLog() {
     const [selectedDate, setSelectedDate] = useState(new Date()) // state to keep track of the date 
 
     const token = localStorage.getItem('token'); // json web token
-    const [isModalOpen, setIsModalOpen] = useState(false); // state to open or close the modal 
+    const [isFoodSearchOpen, setIsFoodSearchOpen] = useState(false); // state to open or close the modal 
 
     const [totalNutrition, setTotalNutrition] = useState({});
 
-    
+    const [isGoalsOpen, setIsGoalsOpen] = useState(false); 
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
+    const handleCloseFoodSearch = () => {
+        setIsFoodSearchOpen(false);
     };
 
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
+    const handleOpenFoodSearch = () => {
+        setIsFoodSearchOpen(true);
     };
 
     // function to handle when the user adds a food item from the food search modal 
@@ -72,7 +71,9 @@ function FoodLog() {
                     meal_type: mealType,
                 })
             });
-            
+
+            fetchTotalNutrition(); 
+            checkMealLogs(selectedDate.toISOString().split('T')[0])
 
 
 
@@ -166,76 +167,72 @@ function FoodLog() {
 
 
     return (
-        <div>
-            <div className = {styles['date-container']}>
-                <h3>Food Log For:</h3>
-                <DateSelector onDateChange={updateDate}/>
-                <button className = {styles['add-food']} onClick = {() => {handleOpenModal()}} >
-                    <Box // Stack an add icon to the bottom right of food icon
-                        sx={{
-                            position: 'relative',   
-                            display: 'inline-block', 
-                            width: '35px',          
-                            height: '35px',         
-                        }}
-                        
-                    >
-                        <RiceBowlIcon 
-                            sx={{ 
-                                fontSize: '35px', 
-                                color: 'black'
-                            }} 
-                        />
-                        <AddIcon
-                            sx={{
-                                position: 'absolute',
-                                bottom: '0px',          
-                                right: '0px',          
-                                fontSize: '13.5px',       
-                                backgroundColor: 'white', 
-                                borderRadius: '50%',    
-                                color: 'black',         
-                                border: 'none', 
-                            }}
-                        />
-                    </Box>
-                    <h3 style= {{color: 'black'}}>FOOD</h3>
-                </button>
-            </div> 
-            <hr></hr>
+        <div style = {{ display: 'flex', backgroundColor: '#F2F2F2', width: '100vw', flexDirection: 'column', flex: 1, }}>
+
 
 
             {/* container that holds the nutrition goals and food log */}
-            <div style = {{display: 'flex', justifyContent: 'center'}}>
-
-            <div style = {{width: '100%', backgroundColor: 'white', display: 'flex'}}>
+            <div style={{ display: 'flex', justifyContent: 'center', flex: 1 }}>
+            <div style={{ width: '100%', backgroundColor: '#F2F2F2', display: 'flex', flex: 1 }}> 
             {/* container that holds the nutrition goals and food log */}
             <Box style={{ 
                     width: '100%',  
-                    padding: '10px', 
+                    padding: '1%', 
                     border: '1px solid #f0f0f0',
                     borderRadius: '8px',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',  
+                    boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
                     display: 'flex', 
                     marginLeft: '10px',
                     marginRight: '10px',
                     justifyContent: 'space-between',
+                    backgroundColor: 'white',
+                    flex: 1,
+                    marginBottom: '3vh'
+                    
                 }} elevation = {10}>
 
                 {/*box that holds the food log */}
                 <div style = {{width: '60%', marginTop: '7px'}}>
-                <MealAccordion title="Breakfast" selectedDate = {selectedDate} isFirst = {true} />
-                <MealAccordion title="Lunch" selectedDate = {selectedDate} />
-                <MealAccordion title="Dinner" selectedDate = {selectedDate} />
-                <MealAccordion title="Snacks" selectedDate = {selectedDate} isLast = {true}/>
+                    <div className = {styles['date-container']}>
+                        <DateSelector onDateChange={updateDate}/>
+                    </div> 
+                    <MealAccordion title="Breakfast" selectedDate = {selectedDate} isFirst = {true} onDelete = {fetchTotalNutrition} />
+                    <MealAccordion title="Lunch" selectedDate = {selectedDate} onDelete = {fetchTotalNutrition}/>
+                    <MealAccordion title="Dinner" selectedDate = {selectedDate} onDelete = {fetchTotalNutrition}/>
+                    <MealAccordion title="Snacks" selectedDate = {selectedDate} isLast = {true} onDelete = {fetchTotalNutrition}/>
+                    <button className = {styles['add-food']} onClick = {() => {handleOpenFoodSearch()}} >
+                        <Box // Stack an add icon to the bottom right of food icon
+                            sx={{
+                                display: 'fit-content'       
+                            }}
+                        
+                        >
+                            <h5>Add Food Item</h5>
+                        
+                        </Box>
+                    </button>
                 </div>
 
 
                 <Box sx = {{ width: '40%', marginLeft: '20px', height: '100%'}}>
-                    <MacroProgressBar label="Energy" color="#4CAF50" nutritionTarget = {nutritionGoals.calories} nutrition = {totalNutrition.total_calories}/>
-                    <MacroProgressBar label="Protein" value={90} color="#2196F3" nutritionTarget = {nutritionGoals.protein_grams} nutrition = {totalNutrition.total_protein} />
-                    <MacroProgressBar label="Net Carbs" value={75} color="#00BCD4" nutritionTarget = {nutritionGoals.fat_grams} nutrition = {totalNutrition.total_fats} />
-                    <MacroProgressBar label="Fat" value={60} color="#FF5722" nutritionTarget = {nutritionGoals.carbohydrate_grams} nutrition = {totalNutrition.total_carbs} />
+                    <div style = {{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <Typography style = {{marginLeft: '7px'}}>Macronutrient Targets</Typography>
+                        <button className = {styles['add-food']} onClick = {() => {setIsGoalsOpen(true)}} >
+                            <Box // Stack an add icon to the bottom right of food icon
+                                sx={{
+                                    display: 'fit-content'       
+                                }}
+                        
+                            >
+                                <h5>Edit Goals</h5>
+                        
+                            </Box>
+                        </button>
+                    </div>
+                    <MacroProgressBar label="Energy" color="#4CAF50" unit = ' kcal' nutritionTarget = {nutritionGoals.calories} nutrition = {totalNutrition.total_calories}/>
+                    <MacroProgressBar label="Protein" value={90} color="#2196F3" unit = 'g'  nutritionTarget = {nutritionGoals.protein_grams} nutrition = {totalNutrition.total_protein} />
+                    <MacroProgressBar label="Fat" value={75} color="#00BCD4" unit = 'g'  nutritionTarget = {nutritionGoals.fat_grams} nutrition = {totalNutrition.total_fats} />
+                    <MacroProgressBar label="Carbs" value={60} color="#FF5722" unit = 'g' nutritionTarget = {nutritionGoals.carbohydrate_grams} nutrition = {totalNutrition.total_carbs} />
                 </Box>
             </Box>
 
@@ -246,14 +243,15 @@ function FoodLog() {
 
 
             <ChatBox/>
-            <div>
+            <div style = {{backgroundColor: 'black'}}>
                 {/* modal is displayed when FOOD button is clicked */}
                 <FoodSearch
-                    open={isModalOpen}
-                    onClose={handleCloseModal}
+                    open={isFoodSearchOpen}
+                    onClose={handleCloseFoodSearch}
                     addFood={handleAddFood}
                 />
             </div>
+            <GoalSelector open = {isGoalsOpen} onClose = {setIsGoalsOpen}/>
         </div>
     );
 }

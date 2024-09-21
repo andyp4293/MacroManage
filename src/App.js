@@ -12,8 +12,14 @@ function App() {
     return (
         // Uses router react component for page navigation
         <Router>
-            <div>
+            <div style = {{ display: 'flex', width: '100vw', height: '100vh', backgroundColor: '#F2F2F2', flexDirection: 'column'}}>
                 <Navbar />
+                <div style={{
+                    display: 'flex', 
+                    flex: 1,
+                    justifyContent: 'center',  
+                    width: '100%'
+                }}>
                 <Routes>  
                     {/*Displays pages depending on the link */}
                     <Route path="/calculator" element={<Calculator />} />
@@ -22,6 +28,7 @@ function App() {
                     <Route path ='/login' element = {<Login/>} />
                     <Route path="/signup" element={<Signup/>} />
                 </Routes>
+                </div>
             </div>
         </Router>
     );
