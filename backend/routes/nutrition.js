@@ -141,4 +141,34 @@ router.post('/get_nutrition_goals', authenticateToken, async (req, res) => {
     }
 })
 
+router.post('/set_nutrition_goals', authenticateToken, async (req, res) => {
+    const user_id = req.user.id;
+    const { calories, protein, carb, fat } = req.body;
+    try {
+        
+        const query = `
+            UPDATE nutrition_goals
+            SET 
+                calories = $1, 
+                protein_percent = $2,
+                fat_percent = $3,
+                carbohydrate_percent = $4,
+                updated_at = NOW() -- Automatically set the update timestamp if your DB supports it
+            WHERE user_id = $5;
+        `;
+        const result = await pool.query(query, [calories, protein, fat, carb, user_id]);
+        if (result.rowCount > 0) {
+            res.status(200).json({ success: true, message: 'Nutrition goals have been successfully updated.' });
+        } else {
+            res.status(404).json({ success: false, message: 'No records found to update.' });
+        }
+        
+    }
+    catch(error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
+
+
 module.exports = router;

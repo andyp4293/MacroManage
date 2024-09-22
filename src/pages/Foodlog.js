@@ -161,7 +161,7 @@ function FoodLog() {
         checkMealLogs(today); // check if today's date already has a meal_log associated with it
         fetchNutritionGoals();
         fetchTotalNutrition(); 
-    }, [checkMealLogs, fetchNutritionGoals, fetchTotalNutrition]); // useCallback ensures checkMealLogs doesn't change unnecessarily
+    }, [checkMealLogs, fetchNutritionGoals, fetchTotalNutrition, isGoalsOpen]); // useCallback ensures checkMealLogs doesn't change unnecessarily
 
     const updateDate = (newDate) => { // triggers every time there is a change to the selected date
         setSelectedDate(newDate); // changes the selected date to the current date displayed on the date selector

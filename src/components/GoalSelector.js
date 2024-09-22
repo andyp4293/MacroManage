@@ -3,11 +3,13 @@ import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem
 import CloseIcon from '@mui/icons-material/Close';
 
 function GoalSelector({ open, onClose, goals }) {
+    const token = localStorage.getItem('token'); // json web token
     const [calories, setCalories] = useState(null);
     const [carbs, setCarbs] = useState(null);
     const [fat, setFat] = useState(null);
     const [protein, setProtein] = useState(null);
     const [totalPercent, setTotalPercent] = useState(null); 
+    const [message, setMessage] = useState(''); 
 
     useEffect(() => {
         if (goals !== undefined) {
@@ -25,10 +27,40 @@ function GoalSelector({ open, onClose, goals }) {
 
 
 
-    const handleSave = () => {
-        // Implement save logic
-        console.log('Saved:', { calories, carbs, fat, protein });
-        onClose(); 
+    const handleSave = async () => {
+        try{
+            const response = await fetch('http://localhost:5000/api/nutrition/set_nutrition_goals', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}`, // jwt authorization
+                },
+                body: JSON.stringify({
+                    protein: protein,
+                    carb: carbs, 
+                    fat: fat,
+                    calories: calories
+                })
+            });
+
+            if(response.ok){
+                setMessage('Nutrition goals have been successfully updated.');
+            }
+            else {
+                response.json().then(data => {
+                    setMessage(data.message); 
+                })
+            }
+
+
+        }
+
+        catch (error) {
+            console.error(error); 
+        }
+        finally {
+            onClose();
+        }
     };
 
     return (
@@ -63,10 +95,18 @@ function GoalSelector({ open, onClose, goals }) {
                 inputProps={{style: {fontSize: 14}}} 
                 margin="normal"
                 label="Calories"
-                type="number"
+                pattern="[0-9]"
+                onChange={(e) => {
+                    const newCalories = e.target.value;
+                    const regex = /^[0-9\b]+$/;  // only allows digits
+
+                    if (newCalories === '' || regex.test(newCalories)) {
+                        setCalories(newCalories);  
+                    }
+                }}
+                type="text"  
                 fullWidth
                 value={calories}
-                onChange={(e) => setCalories(e.target.value)}
             />
 
 
@@ -77,7 +117,7 @@ function GoalSelector({ open, onClose, goals }) {
             <FormControl style = {{width : '15%'}} margin="normal">
                 <Select
                 style = {{height: '30px', fontSize: '14px'}}
-                value={protein}
+                value={protein || 0}
                 onChange={(e) => setProtein(e.target.value)}
                 >
                     <MenuItem value={0}>0%</MenuItem>
@@ -112,7 +152,7 @@ function GoalSelector({ open, onClose, goals }) {
             </p>
             <FormControl style = {{width : '15%'}} margin="normal">
                 <Select
-                value={fat}
+                value={fat || 0}
                 style = {{height: '30px', fontSize: '14px'}}
                 onChange={(e) => setFat(e.target.value)}
                 >
@@ -148,7 +188,7 @@ function GoalSelector({ open, onClose, goals }) {
             <FormControl style = {{width : '15%'}} margin="normal">
                 <Select
                 style = {{height: '30px', fontSize: '14px'}}
-                value={carbs}
+                value={carbs || 0}
                 onChange={(e) => setCarbs(e.target.value)}
                 >
                     <MenuItem value={0}>0%</MenuItem>
@@ -181,7 +221,7 @@ function GoalSelector({ open, onClose, goals }) {
                     {`${totalPercent}%`}
                 </p> 
             </div>
-            <Button onClick={handleSave} style = {{backgroundColor: '#00c691', color: 'white'}}>
+            <Button onClick={handleSave} style = {{backgroundColor: totalPercent === 100 ? '#00c691': '#808080', color: 'white'}} disabled = {totalPercent !== 100}>
                 Save
             </Button>
             </form>
