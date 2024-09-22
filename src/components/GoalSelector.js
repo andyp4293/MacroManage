@@ -10,6 +10,7 @@ function GoalSelector({ open, onClose, goals }) {
     const [protein, setProtein] = useState(null);
     const [totalPercent, setTotalPercent] = useState(null); 
     const [message, setMessage] = useState(''); 
+    const [changed, setChanged] = useState(false); // for keeping the save button disabled if the user didn't change from their original percentages
 
     useEffect(() => {
         if (goals !== undefined) {
@@ -20,10 +21,16 @@ function GoalSelector({ open, onClose, goals }) {
             setTotalPercent(parseInt(goals.protein_percent, 10) + parseInt(goals.carbohydrate_percent, 10)+ parseInt(goals.fat_percent, 10)); 
         }
     }, [goals]);
-
+// carbs !== parseInt(goals.carbohydrate_percent, 10) || fat !== parseInt(goals.fat_percent, 10) || protein !== parseInt(goals.protein_percent, 10) || 
     useEffect(() => {
         setTotalPercent(carbs + fat + protein); 
-    }, [carbs, fat, protein])
+        if (parseInt(calories, 10) !== parseInt(goals.calories, 10)) {
+            setChanged(true); 
+        }
+        else {
+            setChanged(false); 
+        }
+    }, [calories, carbs, fat, protein, goals])
 
 
 
@@ -221,7 +228,7 @@ function GoalSelector({ open, onClose, goals }) {
                     {`${totalPercent}%`}
                 </p> 
             </div>
-            <Button onClick={handleSave} style = {{backgroundColor: totalPercent === 100 ? '#00c691': '#808080', color: 'white'}} disabled = {totalPercent !== 100}>
+            <Button onClick={handleSave} style = {{backgroundColor: (totalPercent === 100 && changed) ? '#00c691': '#808080', color: 'white'}} disabled = {(totalPercent !== 100 || !changed)}>
                 Save
             </Button>
             </form>
