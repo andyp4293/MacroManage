@@ -29,6 +29,7 @@ const ChatBox = () => {
             'Content-Type': 'application/json', 
         }, 
         body: JSON.stringify({
+            history: messages, 
             prompt: prompt,
         })
     });

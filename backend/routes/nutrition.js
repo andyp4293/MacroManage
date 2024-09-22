@@ -124,7 +124,7 @@ router.post('/get_nutrition_goals', authenticateToken, async (req, res) => {
     try {
         
         const query = `
-            SELECT protein_grams, calories, fat_grams, carbohydrate_grams
+            SELECT protein_percent, calories, fat_percent, carbohydrate_percent
             FROM nutrition_goals
             WHERE user_id = $1;
         `;

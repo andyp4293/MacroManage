@@ -9,6 +9,13 @@ import AddIcon from '@mui/icons-material/Add';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+// function to make it so that every work is has a capitalized first letter and rest lower case
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
+
 function FoodSearchModal({ open, onClose, addFood }) {
     // state for the search query
     const [query, setQuery] = useState('');
@@ -225,7 +232,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                     style={{ borderBottom: '1px solid #ddd' }}
                                                     onClick={() => handleFoodSelect(item)}
                                                 >
-                                                    <td style={{ padding: '8px' }}>{`${item.name}, ${item.serving_size ? item.serving_size: 100} ${item.serving_size_unit ? item.serving_size_unit: 'g'}`}</td>
+                                                    <td style={{ padding: '8px' }}>{`${toTitleCase(item.name)}, ${item.serving_size ? item.serving_size: 100} ${item.serving_size_unit ? item.serving_size_unit: 'g'}`}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -335,7 +342,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                     maxWidth: '100%', 
                                                     textOverflow: 'ellipsis',
                                                 }}>
-                                                    {foodName}
+                                                    {toTitleCase(foodName)}
                                                 </label>
                                             </Box>
                                             <Box sx={{

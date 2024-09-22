@@ -1,24 +1,49 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem, FormControl, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
-function GoalSelector({ open, handleClose }) {
-    const [calories, setCalories] = useState(3000);
-    const [carbs, setCarbs] = useState(45);
-    const [fat, setFat] = useState(20);
-    const [protein, setProtein] = useState(35);
+function GoalSelector({ open, onClose, goals }) {
+    const [calories, setCalories] = useState(parseInt(goals.calories, 10));
+    const [carbs, setCarbs] = useState(parseInt(goals.carbohydrate_percent, 10));
+    const [fat, setFat] = useState(parseInt(goals.fat_percent, 10));
+    const [protein, setProtein] = useState(parseInt(goals.protein_percent, 10));
+
 
     const handleSave = () => {
         // Implement save logic
         console.log('Saved:', { calories, carbs, fat, protein });
-        handleClose();
+        onClose(); 
     };
 
     return (
-    <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Daily Nutrition Goals</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth style = {{borderRadius: '20px'}}>
+        <DialogTitle>
+            Daily Nutrition Goals
+            <IconButton
+                aria-label="close"
+                onClick ={onClose}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
+        </DialogTitle>
         <DialogContent>
             <form>
             <TextField
+                sx={{
+                    '& .MuiInputLabel-root.Mui-focused': {
+                        color: '#00c691',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                            borderColor: '#00c691',
+                        },
+                    },
+                }}
                 margin="normal"
                 label="Calories"
                 type="number"
@@ -26,43 +51,111 @@ function GoalSelector({ open, handleClose }) {
                 value={calories}
                 onChange={(e) => setCalories(e.target.value)}
             />
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Carbohydrates (%)</InputLabel>
-                <Select
-                value={carbs}
-                label="Carbohydrates (%)"
-                onChange={(e) => setCarbs(e.target.value)}
-                >
-                <MenuItem value={45}>45%</MenuItem>
-                <MenuItem value={50}>50%</MenuItem>
-                <MenuItem value={55}>55%</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Fat (%)</InputLabel>
-                <Select
-                value={fat}
-                label="Fat (%)"
-                onChange={(e) => setFat(e.target.value)}
-                >
-                <MenuItem value={20}>20%</MenuItem>
-                <MenuItem value={25}>25%</MenuItem>
-                <MenuItem value={30}>30%</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Protein (%)</InputLabel>
+
+
+            <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
+            <p style = {{width: '80%'}}>
+                Protein {Math.round((protein*calories*0.01)/4)}g
+            </p>
+            <FormControl style = {{width : '15%'}} margin="normal">
                 <Select
                 value={protein}
-                label="Protein (%)"
                 onChange={(e) => setProtein(e.target.value)}
                 >
-                <MenuItem value={35}>35%</MenuItem>
-                <MenuItem value={40}>40%</MenuItem>
-                <MenuItem value={45}>45%</MenuItem>
+                    <MenuItem value={0}>0%</MenuItem>
+                    <MenuItem value={5}>5%</MenuItem>
+                    <MenuItem value={10}>10%</MenuItem>
+                    <MenuItem value={15}>15%</MenuItem>
+                    <MenuItem value={20}>20%</MenuItem>
+                    <MenuItem value={25}>25%</MenuItem>
+                    <MenuItem value={30}>30%</MenuItem>
+                    <MenuItem value={35}>35%</MenuItem>
+                    <MenuItem value={40}>40%</MenuItem>
+                    <MenuItem value={45}>45%</MenuItem>
+                    <MenuItem value={50}>50%</MenuItem>
+                    <MenuItem value={55}>55%</MenuItem>
+                    <MenuItem value={60}>60%</MenuItem>
+                    <MenuItem value={65}>65%</MenuItem>
+                    <MenuItem value={70}>70%</MenuItem>
+                    <MenuItem value={75}>75%</MenuItem>
+                    <MenuItem value={80}>80%</MenuItem>
+                    <MenuItem value={85}>85%</MenuItem>
+                    <MenuItem value={90}>90%</MenuItem>
+                    <MenuItem value={95}>95%</MenuItem>
+                    <MenuItem value={100}>100%</MenuItem>
                 </Select>
             </FormControl>
-            <Button onClick={handleSave} color="primary">
+            </div>
+
+
+            <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
+            <p style = {{width: '80%'}}>
+                Fats {Math.round((fat*calories*0.01)/9)}g
+            </p>
+            <FormControl style = {{width : '15%'}} margin="normal">
+                <Select
+                value={fat}
+                onChange={(e) => setFat(e.target.value)}
+                >
+                    <MenuItem value={0}>0%</MenuItem>
+                    <MenuItem value={5}>5%</MenuItem>
+                    <MenuItem value={10}>10%</MenuItem>
+                    <MenuItem value={15}>15%</MenuItem>
+                    <MenuItem value={20}>20%</MenuItem>
+                    <MenuItem value={25}>25%</MenuItem>
+                    <MenuItem value={30}>30%</MenuItem>
+                    <MenuItem value={35}>35%</MenuItem>
+                    <MenuItem value={40}>40%</MenuItem>
+                    <MenuItem value={45}>45%</MenuItem>
+                    <MenuItem value={50}>50%</MenuItem>
+                    <MenuItem value={55}>55%</MenuItem>
+                    <MenuItem value={60}>60%</MenuItem>
+                    <MenuItem value={65}>65%</MenuItem>
+                    <MenuItem value={70}>70%</MenuItem>
+                    <MenuItem value={75}>75%</MenuItem>
+                    <MenuItem value={80}>80%</MenuItem>
+                    <MenuItem value={85}>85%</MenuItem>
+                    <MenuItem value={90}>90%</MenuItem>
+                    <MenuItem value={95}>95%</MenuItem>
+                    <MenuItem value={100}>100%</MenuItem>
+                </Select>
+            </FormControl>
+            </div>
+
+            <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between'}}>
+            <p style = {{width: '80%'}}>
+                Carbs {Math.round((carbs*calories*0.01)/4)}g
+            </p>
+            <FormControl style = {{width : '15%'}} margin="normal">
+                <Select
+                value={carbs}
+                onChange={(e) => setCarbs(e.target.value)}
+                >
+                    <MenuItem value={0}>0%</MenuItem>
+                    <MenuItem value={5}>5%</MenuItem>
+                    <MenuItem value={10}>10%</MenuItem>
+                    <MenuItem value={15}>15%</MenuItem>
+                    <MenuItem value={20}>20%</MenuItem>
+                    <MenuItem value={25}>25%</MenuItem>
+                    <MenuItem value={30}>30%</MenuItem>
+                    <MenuItem value={35}>35%</MenuItem>
+                    <MenuItem value={40}>40%</MenuItem>
+                    <MenuItem value={45}>45%</MenuItem>
+                    <MenuItem value={50}>50%</MenuItem>
+                    <MenuItem value={55}>55%</MenuItem>
+                    <MenuItem value={60}>60%</MenuItem>
+                    <MenuItem value={65}>65%</MenuItem>
+                    <MenuItem value={70}>70%</MenuItem>
+                    <MenuItem value={75}>75%</MenuItem>
+                    <MenuItem value={80}>80%</MenuItem>
+                    <MenuItem value={85}>85%</MenuItem>
+                    <MenuItem value={90}>90%</MenuItem>
+                    <MenuItem value={95}>95%</MenuItem>
+                    <MenuItem value={100}>100%</MenuItem>
+                </Select>
+            </FormControl>
+            </div>
+            <Button onClick={handleSave} style = {{backgroundColor: '#00c691'}}>
                 Save
             </Button>
             </form>

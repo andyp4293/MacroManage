@@ -7,12 +7,11 @@ const API_KEY = process.env.AI_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 router.post('/', async (req, res) => {
+    const {prompt, history} = req.body; 
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
     const context = `
-        As a fitness and nutrition chatbot, I am here to help with workouts, diets, or nutrition advice. I can also engage in light small talk such as greetings.
-        I will not provide information unrelated to these topics.
-    `;
-    const {prompt} = req.body; 
+        As a fitness and nutrition chatbot, I am here to help with workouts, diets, or nutrition advice. Unless they ask for it, don't mention that you specifically can only be used for fitness related things. These are the previous messages so far: ${history} and this is the prompt: `;
+
     try {
         const message = (await model.generateContent(`${context} ${prompt}`)).response.text();
         return res.status(200).json({

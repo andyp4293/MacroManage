@@ -3,6 +3,12 @@ import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, Button 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
+
 function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
     const [items, setItems] = useState([]);
 
@@ -145,7 +151,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
                         {items.map((item, index) => (
                             <tr key={index} style = {{justifyContent: 'space-between', display: 'flex', alighItems: 'center',  borderBottom: '1px solid #ddd'}}>
                                 <td style={{ padding: '8px'}}>
-                                    <p style = {{fontSize: '10px'}}>{`${item.food_name}, ${item.quantity ? item.quantity : ''} ${item.unit ? item.unit : ''}`}</p>
+                                    <p style = {{fontSize: '10px', marginLeft: '10px'}}>{`${toTitleCase(item.food_name)}, ${item.quantity ? item.quantity : ''} ${item.unit ? item.unit : ''}`}</p>
                                 </td>
                                 <td style={{ padding: '8px' }}>
                                     <Button
