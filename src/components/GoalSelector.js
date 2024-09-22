@@ -155,7 +155,7 @@ function GoalSelector({ open, onClose, goals }) {
                 </Select>
             </FormControl>
             </div>
-            <Button onClick={handleSave} style = {{backgroundColor: '#00c691'}}>
+            <Button onClick={handleSave} style = {{backgroundColor: '#00c691', color: 'white'}}>
                 Save
             </Button>
             </form>

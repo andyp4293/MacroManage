@@ -114,6 +114,11 @@ function Login() {
                         e.target.style.boxShadow = `0 0 3px ${!isValidPassword ? 'red' : '#66afe9'}`;
                     }}
                     onBlur={(e) => (e.target.style.boxShadow = 'none')} 
+                    onKeyDown = {(e) => {
+                        if (e.key === "Enter"){
+                            handleSignin();
+                        }
+                    }}
                     />
 
                 <div>
