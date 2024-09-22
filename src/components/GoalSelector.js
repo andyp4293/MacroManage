@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem, FormControl, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 function GoalSelector({ open, onClose, goals }) {
-    const [calories, setCalories] = useState(parseInt(goals.calories, 10));
-    const [carbs, setCarbs] = useState(parseInt(goals.carbohydrate_percent, 10));
-    const [fat, setFat] = useState(parseInt(goals.fat_percent, 10));
-    const [protein, setProtein] = useState(parseInt(goals.protein_percent, 10));
+    const [calories, setCalories] = useState(null);
+    const [carbs, setCarbs] = useState(null);
+    const [fat, setFat] = useState(null);
+    const [protein, setProtein] = useState(null);
+
+    useEffect(() => {
+        if (goals !== undefined) {
+            setCalories(parseInt(goals.calories, 10));
+            setCarbs(parseInt(goals.carbohydrate_percent, 10));
+            setFat(parseInt(goals.fat_percent, 10));
+            setProtein(parseInt(goals.protein_percent, 10)); 
+        }
+    }, [goals]);
+
 
 
     const handleSave = () => {
@@ -128,6 +138,7 @@ function GoalSelector({ open, onClose, goals }) {
             </p>
             <FormControl style = {{width : '15%'}} margin="normal">
                 <Select
+                style = {{height: '5%'}}
                 value={carbs}
                 onChange={(e) => setCarbs(e.target.value)}
                 >
@@ -154,6 +165,9 @@ function GoalSelector({ open, onClose, goals }) {
                     <MenuItem value={100}>100%</MenuItem>
                 </Select>
             </FormControl>
+            </div>
+            <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', height: '10%'}}>
+                %Total 
             </div>
             <Button onClick={handleSave} style = {{backgroundColor: '#00c691', color: 'white'}}>
                 Save
