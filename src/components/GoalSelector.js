@@ -7,6 +7,7 @@ function GoalSelector({ open, onClose, goals }) {
     const [carbs, setCarbs] = useState(null);
     const [fat, setFat] = useState(null);
     const [protein, setProtein] = useState(null);
+    const [totalPercent, setTotalPercent] = useState(null); 
 
     useEffect(() => {
         if (goals !== undefined) {
@@ -14,8 +15,13 @@ function GoalSelector({ open, onClose, goals }) {
             setCarbs(parseInt(goals.carbohydrate_percent, 10));
             setFat(parseInt(goals.fat_percent, 10));
             setProtein(parseInt(goals.protein_percent, 10)); 
+            setTotalPercent(parseInt(goals.protein_percent, 10) + parseInt(goals.carbohydrate_percent, 10)+ parseInt(goals.fat_percent, 10)); 
         }
     }, [goals]);
+
+    useEffect(() => {
+        setTotalPercent(carbs + fat + protein); 
+    }, [carbs, fat, protein])
 
 
 
@@ -54,6 +60,7 @@ function GoalSelector({ open, onClose, goals }) {
                         },
                     },
                 }}
+                inputProps={{style: {fontSize: 14}}} 
                 margin="normal"
                 label="Calories"
                 type="number"
@@ -64,11 +71,12 @@ function GoalSelector({ open, onClose, goals }) {
 
 
             <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
-            <p style = {{width: '80%'}}>
+            <p style = {{width: '80%', fontSize: '14px'}}>
                 Protein {Math.round((protein*calories*0.01)/4)}g
             </p>
             <FormControl style = {{width : '15%'}} margin="normal">
                 <Select
+                style = {{height: '30px', fontSize: '14px'}}
                 value={protein}
                 onChange={(e) => setProtein(e.target.value)}
                 >
@@ -99,12 +107,13 @@ function GoalSelector({ open, onClose, goals }) {
 
 
             <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
-            <p style = {{width: '80%'}}>
+            <p style = {{width: '80%', fontSize: '14px'}}>
                 Fats {Math.round((fat*calories*0.01)/9)}g
             </p>
             <FormControl style = {{width : '15%'}} margin="normal">
                 <Select
                 value={fat}
+                style = {{height: '30px', fontSize: '14px'}}
                 onChange={(e) => setFat(e.target.value)}
                 >
                     <MenuItem value={0}>0%</MenuItem>
@@ -132,13 +141,13 @@ function GoalSelector({ open, onClose, goals }) {
             </FormControl>
             </div>
 
-            <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between'}}>
-            <p style = {{width: '80%'}}>
+            <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
+            <p style = {{width: '80%', fontSize: '14px'}}>
                 Carbs {Math.round((carbs*calories*0.01)/4)}g
             </p>
             <FormControl style = {{width : '15%'}} margin="normal">
                 <Select
-                style = {{height: '5%'}}
+                style = {{height: '30px', fontSize: '14px'}}
                 value={carbs}
                 onChange={(e) => setCarbs(e.target.value)}
                 >
@@ -166,8 +175,11 @@ function GoalSelector({ open, onClose, goals }) {
                 </Select>
             </FormControl>
             </div>
-            <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', height: '10%'}}>
-                %Total 
+            <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3', marginBottom: '2%'}}>
+                <p style = {{width: '80%', fontSize: '14px'}}>%Total</p> 
+                <p style = {{width: '15%', fontSize: '14px', textAlign: 'right', marginRight: '2%', fontWeight: 'bold', color: totalPercent === 100 ? 'green' : 'red'}}>
+                    {`${totalPercent}%`}
+                </p> 
             </div>
             <Button onClick={handleSave} style = {{backgroundColor: '#00c691', color: 'white'}}>
                 Save
