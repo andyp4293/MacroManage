@@ -120,7 +120,7 @@ router.post('/total_nutrition', authenticateToken, async (req, res) => {
 
 router.post('/get_nutrition_goals', authenticateToken, async (req, res) => {
     const user_id = req.user.id;
-
+    
     try {
         
         const query = `

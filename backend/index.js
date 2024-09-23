@@ -10,11 +10,13 @@ const nutritionRoutes = require('./routes/nutrition');
 const mealsRoutes = require('./routes/meals'); 
 const usersRoutes = require('./routes/users');
 const chatRoutes = require('./routes/chat');
+const weightRoutes = require('./routes/weight');
 
 app.use('/api/nutrition', nutritionRoutes); 
 app.use('/api/meals', mealsRoutes); 
 app.use('/api/users', usersRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/weight', weightRoutes); 
 
 
 

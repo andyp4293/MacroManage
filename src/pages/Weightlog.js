@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect} from 'react';
 import DateSelector from '../components/DateSelector'; 
 import styles from '../styles/Weightlog.module.css';
 import EditIcon from '@mui/icons-material/Edit';
@@ -7,11 +7,16 @@ import CheckIcon from '@mui/icons-material/Check';
 
 
 function WeightLog() {
-
+    const token = localStorage.getItem('token'); // json web token
     // setting the weight value in the weight input box
     const [weight, setWeight] = useState('');
     // setting the data for the weight entry
     const [selectedDate, setSelectedDate] = useState(new Date())
+
+    const [weightLogs, setWeightlogs] = useState([]);
+
+
+
     
     // entries is an array for objects that will hold each entry's date and weight
     const [entries, setEntries] = useState([
@@ -30,8 +35,29 @@ function WeightLog() {
         if (value < 1000 && value.length < 8 && value >= 0){ // if the current value is 999, if a user tries typing another 9 the value won't change
             setWeight(value);
         }
-
     };
+
+    const fetchWeightLogs = useCallback(async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/meals/get_weight_logs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt authorization
+                },
+            });
+
+            const weightlogData = await response.json(); 
+            setWeightlogs(weightlogData.weightlogs); 
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }, [token]); // token should be included in the dependency array
+
+    useEffect(() => {
+        fetchWeightLogs();
+    }, [fetchWeightLogs]); // useCallback ensures checkMealLogs doesn't change unnecessarily
 
     // func to add a new weight entry whenever user presses save
     const addEntry = () => {
