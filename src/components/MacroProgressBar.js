@@ -49,8 +49,8 @@ const MacroProgressBar = ({ label, color, unit,  nutritionTarget, nutrition }) =
     return (
         <div style={progressBarContainerStyle}>
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                <label style={labelStyle}>{label} ({nutrition}{unit}/{nutritionTarget}{unit})</label>
-                <span>{percentage}%</span> {/* Updated to use the rounded percentage */}
+                <label style={labelStyle}>{label} ({nutrition||0}{unit}/{nutritionTarget||0}{unit})</label>
+                <span>{percentage||0}%</span> {/* Updated to use the rounded percentage */}
             </div>
             <div style={progressBarOuterStyle}>
                 <div style={progressBarInnerStyle}></div>

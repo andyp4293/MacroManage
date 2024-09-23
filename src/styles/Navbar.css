@@ -9,6 +9,7 @@ nav {
     flex-wrap: wrap;
     max-height: 22vh; 
     margin-bottom: 2vh;
+    overflow-x: hidden;
 
 }
 

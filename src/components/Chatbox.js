@@ -34,7 +34,7 @@ const ChatBox = () => {
         })
     });
     const data = await response.json(); 
-    setMessages((prevMessages) => [...prevMessages, `MacroManage: ${data.message}`]);
+    setMessages((prevMessages) => [...prevMessages, `MacroManage: \n${data.message}`]);
 
     }
     catch (error) {

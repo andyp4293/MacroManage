@@ -12,7 +12,7 @@ function App() {
     return (
         // Uses router react component for page navigation
         <Router>
-            <div style = {{ display: 'flex', minWidth: '100vw', minHeight: '100vh', backgroundColor: '#F2F2F2', flexDirection: 'column'}}>
+            <div style = {{ display: 'flex', minWidth: 'auto', minHeight: '100vh', backgroundColor: '#F2F2F2', flexDirection: 'column'}}>
                 <Navbar />
                 <div style={{
                     display: 'flex', 

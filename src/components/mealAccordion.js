@@ -59,7 +59,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
     }, [selectedDate, title, items, token]); // re-fetches the meal_items every time there is a change to the date, a change to items state, or a change to the title
 
     // goes through all of the items within the items array and sums up the total macros and calories 
-    const totals = items.reduce(
+    const totals = (items || []).reduce(
         (totals, item) => {
             totals.calories += item.calories;
             totals.protein += item.protein;
@@ -151,7 +151,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
                         {items.map((item, index) => (
                             <tr key={index} style = {{justifyContent: 'space-between', display: 'flex', alighItems: 'center',  borderBottom: '1px solid #ddd'}}>
                                 <td style={{ padding: '8px'}}>
-                                    <p style = {{fontSize: '10px', marginLeft: '10px'}}>{`${toTitleCase(item.food_name)}, ${item.quantity ? item.quantity : ''} ${item.unit ? item.unit : ''}`}</p>
+                                    <p style = {{fontSize: '10px'}}>{`${toTitleCase(item.food_name)}, ${item.quantity ? item.quantity : ''} ${item.unit ? item.unit : ''}`}</p>
                                 </td>
                                 <td style={{ padding: '8px' }}>
                                     <Button

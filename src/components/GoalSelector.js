@@ -21,10 +21,10 @@ function GoalSelector({ open, onClose, goals }) {
             setTotalPercent(parseInt(goals.protein_percent, 10) + parseInt(goals.carbohydrate_percent, 10)+ parseInt(goals.fat_percent, 10)); 
         }
     }, [goals]);
-// carbs !== parseInt(goals.carbohydrate_percent, 10) || fat !== parseInt(goals.fat_percent, 10) || protein !== parseInt(goals.protein_percent, 10) || 
+
     useEffect(() => {
         setTotalPercent(carbs + fat + protein); 
-        if (parseInt(calories, 10) !== parseInt(goals.calories, 10)) {
+        if (carbs !== parseInt(goals.carbohydrate_percent, 10) || fat !== parseInt(goals.fat_percent, 10) || protein !== parseInt(goals.protein_percent, 10) || parseInt(calories, 10) !== parseInt(goals.calories, 10)) {
             setChanged(true); 
         }
         else {
@@ -51,12 +51,10 @@ function GoalSelector({ open, onClose, goals }) {
             });
 
             if(response.ok){
-                setMessage('Nutrition goals have been successfully updated.');
+                onClose(); 
             }
             else {
-                response.json().then(data => {
-                    setMessage(data.message); 
-                })
+                setMessage('Server Error')
             }
 
 
@@ -64,9 +62,6 @@ function GoalSelector({ open, onClose, goals }) {
 
         catch (error) {
             console.error(error); 
-        }
-        finally {
-            onClose();
         }
     };
 
@@ -88,33 +83,35 @@ function GoalSelector({ open, onClose, goals }) {
         </DialogTitle>
         <DialogContent>
             <form>
-            <TextField
-                sx={{
-                    '& .MuiInputLabel-root.Mui-focused': {
-                        color: '#00c691',
-                    },
-                    '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': {
-                            borderColor: '#00c691',
+                <div style = {{display: 'flex', alignItems: 'end',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
+                <p style = {{width: '40%', fontSize: '15px'}}>
+                    Calories
+                </p>
+                <TextField
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: calories === '' ? 'red' : '#00c691',
+                            },
                         },
-                    },
-                }}
-                inputProps={{style: {fontSize: 14}}} 
-                margin="normal"
-                label="Calories"
-                pattern="[0-9]"
-                onChange={(e) => {
-                    const newCalories = e.target.value;
-                    const regex = /^[0-9\b]+$/;  // only allows digits
+                    }}
+                    inputProps={{style: {fontSize: 14}}} 
+                    margin="normal"
+                    pattern="[0-9]"
+                    onChange={(e) => {
+                        const newCalories = e.target.value;
+                        const regex = /^[0-9\b]+$/;  // only allows digits
 
-                    if (newCalories === '' || regex.test(newCalories)) {
-                        setCalories(newCalories);  
-                    }
-                }}
-                type="text"  
-                fullWidth
-                value={calories}
-            />
+                        if ((newCalories === '' || regex.test(newCalories)) && newCalories.length <= 5) { // calories can only be 99,999 at most
+                            setCalories(newCalories);  
+                        }
+                    }}
+                    type="text"  
+                    fullWidth
+                    value={calories}
+                />
+            </div>
+            
 
 
             <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
@@ -228,9 +225,12 @@ function GoalSelector({ open, onClose, goals }) {
                     {`${totalPercent}%`}
                 </p> 
             </div>
-            <Button onClick={handleSave} style = {{backgroundColor: (totalPercent === 100 && changed) ? '#00c691': '#808080', color: 'white'}} disabled = {(totalPercent !== 100 || !changed)}>
+            <Button onClick={handleSave} style = {{backgroundColor: (totalPercent === 100 && changed && calories !== '') ? '#00c691': '#808080', color: 'white'}} disabled = {(totalPercent !== 100 || !changed || calories === '')}>
                 Save
             </Button>
+            {message &&
+                <p style = {{fontSize: '14px', color: 'red', marginTop: '5px'}}>{message}</p>
+            }   
             </form>
         </DialogContent>
     </Dialog>

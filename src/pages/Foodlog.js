@@ -176,8 +176,7 @@ function FoodLog() {
 
 
             {/* container that holds the nutrition goals and food log */}
-            <div style={{ display: 'flex', justifyContent: 'center', flex: 1 }}>
-            <div style={{ width: '100%', backgroundColor: '#F2F2F2', display: 'flex', flex: 1 }}> 
+            <div style={{ width: '100%', backgroundColor: '#F2F2F2', display: 'flex', flex: 1,  }}> 
             {/* container that holds the nutrition goals and food log */}
             <Box className={styles.foodLogContainer}
             style={{ 
@@ -240,8 +239,6 @@ function FoodLog() {
                     <MacroProgressBar label="Carbs" value={60} color="#FF5722" unit = 'g' nutritionTarget = {Math.round((nutritionGoals.carbohydrate_percent*nutritionGoals.calories*0.01)/4)} nutrition = {totalNutrition.total_carbs} />
                 </Box>
             </Box>
-
-            </div>
 
 
             </div>

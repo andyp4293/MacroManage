@@ -7,6 +7,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
 
 function WeightLog() {
+
     // setting the weight value in the weight input box
     const [weight, setWeight] = useState('');
     // setting the data for the weight entry
@@ -121,12 +122,23 @@ function WeightLog() {
 
 
     return (
-            <div>
-                <div className = {styles['date-container']}>
-                    <h3>Weight Log Entry For:</h3>
-                    <DateSelector onDateChange={updateDate}/>
-                </div> 
-                <hr></hr>
+            <div 
+                style={{ 
+                    width: '100%',  
+                    padding: '1%', 
+                    border: '1px solid #f0f0f0',
+                    borderRadius: '8px',
+                    boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
+                    display: 'flex', 
+                    marginLeft: '10px',
+                    marginRight: '10px',
+                    justifyContent: 'space-between',
+                    backgroundColor: 'white',
+                    flex: 1,
+                    marginBottom: '3vh'
+                    
+                }} elevation = {10}>
+
                 <div className = {styles['weight']}> 
                     <h4>Enter weigh-in</h4>
                     <input // input for the weight log of the day
@@ -138,7 +150,6 @@ function WeightLog() {
                         min = '0' // input cannot be negative
 
                     />
-                    <span className = {styles['unit']}>lbs</span>
                     
                     <button
                         className = {styles['save-button']}
