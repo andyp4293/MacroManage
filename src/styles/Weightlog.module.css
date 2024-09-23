@@ -29,8 +29,8 @@ input[type="number"] {
 
 .weight .weight-input {
     width: 150px;
-    height: 40px;
-    font-size: 25px; 
+    height: 30px;
+    font-size: 16px; 
 }
 
 .weight .unit {
@@ -68,9 +68,7 @@ input[type="number"] {
 
 .weight-entry-table .actionButton{
     padding: 8px 24px; 
-    margin: 4px 0; 
-    font-size: 18px; 
-    font-weight: 100; 
+    font-size: 10px; 
     text-transform: uppercase; 
     border:none; 
     background: rgba(0, 198, 145, 1); 
@@ -88,7 +86,7 @@ input[type="number"] {
     display: flex; 
     justify-content: center; 
     gap: 10px; 
-    max-height: 50%;
+    max-height: 50%; 
 }
 
 .weight-edit-input {

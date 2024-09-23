@@ -171,17 +171,16 @@ function FoodLog() {
 
 
     return (
-        <div style = {{ display: 'flex', backgroundColor: '#F2F2F2', width: '100%', flexDirection: 'column', flex: 1, overflowX: 'hidden'}}>
+        <div style = {{ display: 'flex', backgroundColor: '#F2F2F2', width: '100%', flexDirection: 'column', flex: 1,}}>
 
 
 
             {/* container that holds the nutrition goals and food log */}
-            <div style={{ width: '100%', backgroundColor: '#F2F2F2', display: 'flex', flex: 1,  }}> 
+            <div style={{ width: '100%', backgroundColor: '#F2F2F2', display: 'flex', flex: 1, }}> 
             {/* container that holds the nutrition goals and food log */}
             <Box className={styles.foodLogContainer}
             style={{ 
                     width: '100%',  
-                    padding: '1%', 
                     border: '1px solid #f0f0f0',
                     borderRadius: '8px',
                     boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
@@ -191,6 +190,7 @@ function FoodLog() {
                     justifyContent: 'space-between',
                     backgroundColor: 'white',
                     flex: 1,
+                    padding: '1%',
                     marginBottom: '3vh'
                     
                 }} elevation = {10}>

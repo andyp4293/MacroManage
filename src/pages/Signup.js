@@ -53,13 +53,14 @@ function Signup() {
     return (
     <Box sx={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
       <div style={{
-        width: '35vw', 
+        width: '35vw',
+        minWidth: '400px', 
         backgroundColor: "white",  
         borderRadius: '20px', 
         height: 'fit-content',
         border: '1px solid #ddd', 
         boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
-        padding: '2vw',
+        padding: '7%',
         fontFamily: 'Arial, sans-serif'
       }}>
 

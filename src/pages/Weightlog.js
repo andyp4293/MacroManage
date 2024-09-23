@@ -4,7 +4,7 @@ import styles from '../styles/Weightlog.module.css';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
-import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
+
 
 function WeightLog() {
 
@@ -139,117 +139,121 @@ function WeightLog() {
                     
                 }} elevation = {10}>
 
-                <div className = {styles['weight']}> 
-                    <h4>Enter weigh-in</h4>
-                    <input // input for the weight log of the day
-                        name = 'weight' 
-                        type = 'number' // user can only input numbers
-                        className = {styles['weight-input']}
-                        onChange={handleInput}
-                        value={weight} // value inside the input is whatever weight value currently is
-                        min = '0' // input cannot be negative
+                <div className = 'weight-table-and-date-container' style = {{width: '50%'}}>
+                    <div className = {styles['weight']}> 
+                        <h4>Enter weigh-in</h4>
+                        <input // input for the weight log of the day
+                            name = 'weight' 
+                            type = 'number' // user can only input numbers
+                            className = {styles['weight-input']}
+                            onChange={handleInput}
+                            value={weight} // value inside the input is whatever weight value currently is
+                            min = '0' // input cannot be negative
 
-                    />
-                    
-                    <button
-                        className = {styles['save-button']}
-                        onClick = {addEntry}
-                    >
-                        Save
-                    </button>
-                </div>
-
-                <div className = {styles['weight-entry-table']}>
-                    <div className = {styles['weight-entry-header']}>
-                    <MonitorWeightIcon style = {{fontSize: '50px', color: '#00c691', marginRight: '-10px'}}/>
-                        <h1>Weight Entries</h1>
+                        />
+                        
+                        <button
+                            className = {styles['save-button']}
+                            onClick = {addEntry}
+                        >
+                            Save
+                        </button>
                     </div>
-                    <table 
-                        style = {{
-                            minWidth: '600px',
-                            width: '60%',
-                        }}
-                    >
-                        <thead>
-                            <tr style={{ backgroundColor: '#00c691', color: 'white' }}>
-                                <th style={{ padding: '10px', border: '1px solid #ddd', width: '40%'}}>Date</th>
-                                <th style={{ padding: '10px', border: '1px solid #ddd', width: '30%'}}>Weight</th>
-                                <th style={{ padding: '10px', border: '1px solid #ddd', width: '30%'}}>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {entries.map((entry, index) => (
-                            <tr key={index}>
-                                {/* first column with date value of entry */}
-                                <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center', fontFamily: '"Roboto", sans-serif' }}>{entry.date}</td>
-                                {/* second column with weight value of entry */}
-                                <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center', fontFamily: '"Roboto", sans-serif' }}> 
-                                    {editIndex === index 
-                                            ? 
-                                            <div>
-                                                <input // if the index of the entry is the one being edited, its weight column becomes an input element
-                                                className = {styles['weight-edit-input']}
-                                                type="number"
-                                                value={newWeight}
-                                                onChange={handleEditInput}
-                                                //onChange={(e) => setNewWeight(e.target.value)}
-                                                style={{ width: '80px' }}
-                                                max = '1000'
-                                                min = '0'
-                                                />
-                                                <span className = {styles['edit-unit']}>lbs</span>
-                                            </div>
-                                            :
-                                            <div>
-                                                {entry.weight === '' 
-                                                ? '0 lbs' // display 0 lbs if the input is empty
-                                                : <div>{entry.weight} lbs</div>
-                                                }
-                                                
-                                            </div>
-                                    }
-                                </td>
-                                {/* third column with action options of editing or deleting the entry */}
-                                <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }} className = {styles['actionButtons']}>
+
+                    <div className = {styles['weight-entry-table']}>
+                        <table 
+                            style = {{
+                                width: 'auto',
+                                borderCollapse: 'collapse'
+                            }}
+                        >
+                            <thead style = {{backgroundColor: '#007BFF'}}>
+                                <tr style={{ backgroundColor: '#00c691', color: 'white', borderCollapse: 'collapse', border: '1px solid #ddd'}}>
+                                    <th style={{ padding: '10px', width: '40%', fontSize: '14px'}}>Date</th>
+                                    <th style={{ padding: '10px', width: '30%', fontSize: '14px'}}>Weight</th>
+                                    <th style={{ padding: '10px', width: '30%', fontSize: '14px'}}>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {entries.map((entry, index) => (
+                                <tr style={{ height: '20px', border: '1px solid #ddd' }} key={index}>
+                                    {/* first column with date value of entry */}
+                                    <td style={{ textAlign: 'center', fontFamily: '"Roboto", sans-serif', height: '20px', fontSize: '14px', border: 'none'}}>{entry.date}</td>
+                                    {/* second column with weight value of entry */}
+                                    <td style={{ textAlign: 'center', fontFamily: '"Roboto", sans-serif', height: '20px'}}> 
                                         {editIndex === index 
-                                        ? // if editng index is the index of entry
-                                        <div> 
-                                            <button 
-                                                className = {styles['actionButton']}
-                                                onClick = {() => handleSaveEdit(index)}
-                                            >
-                                                <CheckIcon></CheckIcon>
-                                            </button>
-                                        </div>
-                                        : // if editing index is not the index of the entry
-                                        <div className = {styles['actionButtons']}> 
-                                            <button 
-                                                className = {styles['actionButton']}
-                                                onClick = {() => handleEdit(index, entry.weight)}
-                                            >
-                                                <EditIcon></EditIcon>
-                                            </button>
-                                            <button 
-                                                className = {styles['actionButton']}
-                                                onClick = {() => deleteEntry(index)}
-                                            >
-                                                <DeleteIcon></DeleteIcon>
-                                            </button>
-                                        </div>
-                                        
-                                        
+                                                ? 
+                                                <div>
+                                                    <input // if the index of the entry is the one being edited, its weight column becomes an input element
+                                                    className = {styles['weight-edit-input']}
+                                                    type="number"
+                                                    value={newWeight}
+                                                    onChange={handleEditInput}
+                                                    //onChange={(e) => setNewWeight(e.target.value)}
+                                                    style={{ width: '80px' }}
+                                                    max = '1000'
+                                                    min = '0'
+                                                    />
+                                                    <span className = {styles['edit-unit']}>lbs</span>
+                                                </div>
+                                                :
+                                                <div>
+                                                    {entry.weight === '' 
+                                                    ? '0 lbs' // display 0 lbs if the input is empty
+                                                    : <div style = {{fontSize: '14px'}}>{entry.weight} lbs</div>
+                                                    }
+                                                    
+                                                </div>
                                         }
-                                        
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                    {/* third column with action options of editing or deleting the entry */}
+                                    <td style={{ padding: '10px', textAlign: 'center' }} className = {styles['actionButtons']}>
+                                            {editIndex === index 
+                                            ? // if editng index is the index of entry
+                                            <div> 
+                                                <button 
+                                                    className = {styles['actionButton']}
+                                                    onClick = {() => handleSaveEdit(index)}
+                                                >
+                                                    <CheckIcon></CheckIcon>
+                                                </button>
+                                            </div>
+                                            : // if editing index is not the index of the entry
+                                            <div className = {styles['actionButtons']}> 
+                                                <button 
+                                                    className = {styles['actionButton']}
+                                                    onClick = {() => handleEdit(index, entry.weight)}
+                                                >
+                                                    <EditIcon style = {{fontSize: '18px'}}></EditIcon>
+                                                </button>
+                                                <button 
+                                                    className = {styles['actionButton']}
+                                                    onClick = {() => deleteEntry(index)}
+                                                >
+                                                    <DeleteIcon style = {{fontSize: '18px'}}></DeleteIcon>
+                                                </button>
+                                            </div>
+                                            
+                                            
+                                            }
+                                            
+                                    </td>
+                                </tr>
+                            ))}
 
-                        </tbody>
+                            </tbody>
 
 
-                    </table>
+                        </table>
+                    </div>
                 </div>
-                
+
+                <div>
+                    <DateSelector onDateChange={updateDate}/>
+                </div>
+
+
+
             </div>
 
     );
