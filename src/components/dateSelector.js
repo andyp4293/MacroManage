@@ -7,7 +7,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/dateSelector.css';
 
-
 function DateSelector({onDateChange}){
     // state for the selected date
     const [date, setDate] = useState(new Date()); // starts off with the current date
