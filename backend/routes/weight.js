@@ -10,6 +10,7 @@ router.post('/get_weight_logs', authenticateToken,  async (req, res) => {
         const result = await pool.query(`
             SELECT * FROM weight_logs
             WHERE user_id = $1
+            ORDER BY weight_date DESC; -- 
         `, [user_id]);
 
         // if weight logs were not found under this account id, return empty array 

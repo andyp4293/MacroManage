@@ -95,23 +95,7 @@ function WeightLog() {
             const result = await response.json();
 
             if (response.ok) {
-                // Update the local entries state based on the server's response
-                const newEntry = result.weightlog;
-                console.log(result.weightlog); 
-                let newEntries = [...entries];
-                const index = entries.findIndex(entry => entry.date === formattedDate);
-
-                if (index !== -1) {
-                    newEntries[index] = newEntry; // Update the existing entry
-                } else {
-                    newEntries.push(newEntry); // Add the new entry
-                }
-
-                // Sort the entries by most recent date
-                newEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                setEntries(newEntries);
-                setWeight('');
+                fetchWeightLogs(); 
             } else {
                 console.error('Failed to add or update entry:', result.message);
             }
