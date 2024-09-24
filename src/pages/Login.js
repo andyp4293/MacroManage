@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import {Box, Button, Typography} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 
@@ -38,6 +38,10 @@ function Login() {
             console.error('Error Signing in:', error);
         }
     }
+
+    useEffect(() => {
+        setError(''); 
+    }, [email, password])
 
     return (
         <Box sx = {{display: 'flex', justifyContent: 'center'}}>

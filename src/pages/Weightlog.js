@@ -5,6 +5,18 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 
+// for formatting the date to MM-DD-YYYY
+function formatDate(isoDate) {
+    const date = new Date(isoDate);
+    const month = date.getMonth() + 1;  
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    // Pad the month and day with leading zeros if necessary
+    const formattedDate = `${month}-${day}-${year}`;
+    return formattedDate;
+}
+
 
 function WeightLog() {
     const token = localStorage.getItem('token'); // json web token
@@ -13,18 +25,12 @@ function WeightLog() {
     // setting the data for the weight entry
     const [selectedDate, setSelectedDate] = useState(new Date())
 
-    const [weightLogs, setWeightlogs] = useState([]);
 
 
 
     
     // entries is an array for objects that will hold each entry's date and weight
-    const [entries, setEntries] = useState([
-        { date: '8/24/2024', weight: 150 },
-        { date: '8/23/2024', weight: 152 },
-        { date: '8/22/2024', weight: 148 },
-        { date: '8/21/2024', weight: 151 },
-    ]); 
+    const [entries, setEntries] = useState([]); 
 
     // function to handle whenever the user inputs anything
     const handleInput = (event) => {
@@ -38,8 +44,9 @@ function WeightLog() {
     };
 
     const fetchWeightLogs = useCallback(async () => {
+        if (!token) return; // prevent making the request if there is no token/user isn't logged in
         try {
-            const response = await fetch('http://localhost:5000/api/meals/get_weight_logs', {
+            const response = await fetch('http://localhost:5000/api/weight/get_weight_logs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,7 +55,7 @@ function WeightLog() {
             });
 
             const weightlogData = await response.json(); 
-            setWeightlogs(weightlogData.weightlogs); 
+            setEntries(weightlogData.weightlogs);  
 
         } catch (error) {
             console.error('Error:', error);
@@ -60,44 +67,59 @@ function WeightLog() {
     }, [fetchWeightLogs]); // useCallback ensures checkMealLogs doesn't change unnecessarily
 
     // func to add a new weight entry whenever user presses save
-    const addEntry = () => {
-        // taken is true if the date selected already has a weight entry associated with it
-        const taken = entries.some(entry => entry.date === selectedDate.toLocaleDateString());
+    const addEntry = async () => {
         let weightValue;
 
-        if (weight === ''){
-            weightValue = 0; 
-        }
-        else {
-            weightValue = parseFloat(weight)
+        if (weight === '') {
+            weightValue = 0;
+        } else {
+            weightValue = parseFloat(weight);
         }
 
-        if (!taken){  // if the date selected isn't taken, just make a new entry
-            
-            const newEntry = {
-                weight: weightValue, 
-                date: selectedDate.toLocaleDateString()
+        // Format the date to match your backend expectations (e.g., 'YYYY-MM-DD')
+        const formattedDate = selectedDate.toISOString().slice(0, 10);
+
+        try {
+            const response = await fetch('http://localhost:5000/api/weight/add_weight_log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt token
+                },
+                body: JSON.stringify({
+                    weight_lbs: weightValue,
+                    weight_date: formattedDate
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Update the local entries state based on the server's response
+                const newEntry = result.weightlog;
+                console.log(result.weightlog); 
+                let newEntries = [...entries];
+                const index = entries.findIndex(entry => entry.date === formattedDate);
+
+                if (index !== -1) {
+                    newEntries[index] = newEntry; // Update the existing entry
+                } else {
+                    newEntries.push(newEntry); // Add the new entry
+                }
+
+                // Sort the entries by most recent date
+                newEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                setEntries(newEntries);
+                setWeight('');
+            } else {
+                console.error('Failed to add or update entry:', result.message);
             }
-            let newEntries = [...entries, newEntry]; // entries with the new entry added
-            
-            // sort the entries by most recent, ie most recent date is at index 0 of entries
-            newEntries = newEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            setEntries(newEntries); 
-            setWeight('');    
+        } catch (error) {
+            console.error('Error adding or updating entry:', error);
         }
-
-        else { // if the date is taken, just update the weight on the entry associated with that date
-            const index = entries.findIndex(entry => entry.date === selectedDate.toLocaleDateString());
-            const updatedEntries = [...entries];
-            updatedEntries[index] = {
-                ...updatedEntries[index],
-                weight: weightValue
-            }
-            setEntries(updatedEntries);
-            setWeight('');
-        }   
     }
+
     
     const deleteEntry = (index) => {
         let updatedEntries = [...entries];
@@ -186,25 +208,26 @@ function WeightLog() {
                         </button>
                     </div>
 
-                    <div className = {styles['weight-entry-table']}>
+                    <div className = {styles['weight-entry-table']} >
                         <table 
                             style = {{
-                                width: 'auto',
+                                width: '100%',
                                 borderCollapse: 'collapse'
                             }}
                         >
                             <thead style = {{backgroundColor: '#007BFF'}}>
-                                <tr style={{ backgroundColor: '#00c691', color: 'white', borderCollapse: 'collapse', border: '1px solid #ddd'}}>
+                                <tr style={{ backgroundColor: '#00c691', color: 'white', borderCollapse: 'collapse', border: '1px solid #ddd',}}>
                                     <th style={{ padding: '10px', width: '40%', fontSize: '14px'}}>Date</th>
                                     <th style={{ padding: '10px', width: '30%', fontSize: '14px'}}>Weight</th>
                                     <th style={{ padding: '10px', width: '30%', fontSize: '14px'}}>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                            
                             {entries.map((entry, index) => (
                                 <tr style={{ height: '20px', border: '1px solid #ddd' }} key={index}>
                                     {/* first column with date value of entry */}
-                                    <td style={{ textAlign: 'center', fontFamily: '"Roboto", sans-serif', height: '20px', fontSize: '14px', border: 'none'}}>{entry.date}</td>
+                                    <td style={{ textAlign: 'center', fontFamily: '"Roboto", sans-serif', height: '20px', fontSize: '14px', border: 'none'}}>{formatDate(entry.weight_date)}</td>
                                     {/* second column with weight value of entry */}
                                     <td style={{ textAlign: 'center', fontFamily: '"Roboto", sans-serif', height: '20px'}}> 
                                         {editIndex === index 
@@ -226,7 +249,7 @@ function WeightLog() {
                                                 <div>
                                                     {entry.weight === '' 
                                                     ? '0 lbs' // display 0 lbs if the input is empty
-                                                    : <div style = {{fontSize: '14px'}}>{entry.weight} lbs</div>
+                                                    : <div style = {{fontSize: '14px'}}>{entry.weight_lbs} lbs</div>
                                                     }
                                                     
                                                 </div>

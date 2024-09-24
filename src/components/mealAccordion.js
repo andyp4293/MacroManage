@@ -17,6 +17,8 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
     useEffect(() => {
         // fetches the meal_items associated with the correct meal (title) and selected date
         const fetchMealItems = async () => {
+            if (!token) return; // prevent making the request if there is no token/user isn't logged in
+            
             try {
                 const mealDate = selectedDate.toISOString().split('T')[0]; // formats the date
 
@@ -59,7 +61,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
     }, [selectedDate, title, items, token]); // re-fetches the meal_items every time there is a change to the date, a change to items state, or a change to the title
 
     // goes through all of the items within the items array and sums up the total macros and calories 
-    const totals = (items || []).reduce(
+    const totals = items.reduce(
         (totals, item) => {
             totals.calories += item.calories;
             totals.protein += item.protein;
