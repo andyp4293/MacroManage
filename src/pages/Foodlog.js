@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import DateSelector from '../components/dateSelector'; 
 import styles from '../styles/Foodlog.module.css';
 import {Box, Typography} from '@mui/material';
-import MealAccordion from '../components/MealAccordion';
+import MealAccordion from '../components/mealAccordion';
 import FoodSearch from '../components/FoodSearch'; 
 import ChatBox from '../components/Chatbox';
 import MacroProgressBar from '../components/MacroProgressBar'; 
