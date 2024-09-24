@@ -67,13 +67,14 @@ function WeightLog() {
     }, [fetchWeightLogs]); // useCallback ensures checkMealLogs doesn't change unnecessarily
 
     // func to add a new weight entry whenever user presses save
-    const addEntry = async () => {
+    const addEntry = async (addWeight) => {
         let weightValue;
+        setWeight(''); 
 
-        if (weight === '') {
+        if (addWeight === '') {
             weightValue = 0;
         } else {
-            weightValue = parseFloat(weight);
+            weightValue = parseFloat(addWeight);
         }
 
         // Format the date to match your backend expectations (e.g., 'YYYY-MM-DD')
@@ -92,7 +93,7 @@ function WeightLog() {
                 })
             });
 
-            const result = await response.json();
+            const result = await response.json(); 
 
             if (response.ok) {
                 fetchWeightLogs(); 
@@ -105,15 +106,27 @@ function WeightLog() {
     }
 
     
-    const deleteEntry = (index) => {
-        let updatedEntries = [...entries];
-        updatedEntries.splice(index,1);
-
-        // sort the entries by most recent, ie most recent date is at index 0 of entries
-        updatedEntries = updatedEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        setEntries(updatedEntries);
-    }
+    const deleteEntry = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/weight/delete_weight_entry/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,  // jwt authorization
+                    'Content-Type': 'application/json',  
+                }
+            });
+            
+            if (response.ok){
+                fetchWeightLogs(); 
+            }
+            else {
+                throw new Error('Failed to delete weight entry');
+            }
+        }
+        catch(error) {
+            console.error('Error deleting meal item:', error); 
+        }
+    }; 
 
     // updates the date state whenever the date selector component changes date
     const updateDate = (newDate) => {
@@ -124,22 +137,36 @@ function WeightLog() {
     // state for the index to edit 
     const [editIndex, setEditIndex] = useState(null); 
 
-    // function to handle if the user clicks the edit button
-    const handleEdit = (index, weight) => {
-        setEditIndex(index); 
-        setNewWeight(weight); 
-    }
     // state for the weight edit
     const [newWeight, setNewWeight] = useState('');
     // func for saving the weight edit
-    const handleSaveEdit = (index) => {
-        const updatedEntries = [...entries]; 
-        updatedEntries[index] = {
-            ...updatedEntries[index], // specific entry we're editing
-            weight: newWeight // updates the weight at the entry to the one in the input box
+    const handleSaveEdit = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/weight/edit_weight_entry/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt token
+                },
+                body: JSON.stringify({
+                    weight: newWeight, 
+                })
+            });
+
+            const result = await response.json(); 
+
+            if (response.ok) {
+                fetchWeightLogs(); 
+            } else {
+                console.error('Failed to edit entry:', result.message);
+            }
         }
-        setEntries(updatedEntries); 
-        setEditIndex(null); 
+        catch (error){
+            console.error('Error editing weight:', error)
+        }
+        finally {
+            setEditIndex(null); 
+        }
     }
     // ensure the user cannot type a number greater 999.999 or less than 0  
     const handleEditInput = (event) =>{
@@ -186,7 +213,7 @@ function WeightLog() {
                         
                         <button
                             className = {styles['save-button']}
-                            onClick = {addEntry}
+                            onClick = {() => {addEntry(weight)}}
                         >
                             Save
                         </button>
@@ -246,7 +273,7 @@ function WeightLog() {
                                             <div> 
                                                 <button 
                                                     className = {styles['actionButton']}
-                                                    onClick = {() => handleSaveEdit(index)}
+                                                    onClick = {() => handleSaveEdit(entry.id)}
                                                 >
                                                     <CheckIcon></CheckIcon>
                                                 </button>
@@ -255,13 +282,13 @@ function WeightLog() {
                                             <div className = {styles['actionButtons']}> 
                                                 <button 
                                                     className = {styles['actionButton']}
-                                                    onClick = {() => handleEdit(index, entry.weight)}
+                                                    onClick = {() => setEditIndex(index)}
                                                 >
                                                     <EditIcon style = {{fontSize: '18px'}}></EditIcon>
                                                 </button>
                                                 <button 
                                                     className = {styles['actionButton']}
-                                                    onClick = {() => deleteEntry(index)}
+                                                    onClick = {() => deleteEntry(entry.id)}
                                                 >
                                                     <DeleteIcon style = {{fontSize: '18px'}}></DeleteIcon>
                                                 </button>

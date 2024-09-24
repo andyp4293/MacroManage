@@ -3,7 +3,7 @@ const pool = require('../db'); // Import the shared pool
 const router = express.Router();
 const authenticateToken = require('./authToken');
 
-
+// this is for the food log page to refresh the weight logs for any changes
 router.post('/get_weight_logs', authenticateToken,  async (req, res) => {
     const user_id = req.user.id;
     try {
@@ -27,7 +27,7 @@ router.post('/get_weight_logs', authenticateToken,  async (req, res) => {
     }
 });
 
-
+// for adding weight log to the database 
 router.post('/add_weight_log', authenticateToken, async (req, res) => {
     const { weight_lbs, weight_date } = req.body;
     const user_id = req.user.id;
@@ -58,6 +58,45 @@ router.post('/add_weight_log', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Error handling weight log entry:', error);
         res.status(500).send('Server error');
+    }
+});
+
+// Route to delete a meal_item based on its id
+router.delete('/delete_weight_entry/:id', authenticateToken, async (req, res) => {
+    const { id: weightId } = req.params;
+
+    try {
+        // perform delete on row with the matching id
+        const result = await pool.query('DELETE FROM weight_logs WHERE id = $1 RETURNING *', [weightId]);
+
+        if (result.rowCount === 0) {
+            // No rows were deleted, meaning no item with that id was found
+            return res.status(404).json({ message: 'weight entry not found' });
+        }
+
+        // return success message 
+        return res.status(200).json({ message: 'Weight entry deleted successfully'});
+    } catch (error) {
+        console.error('Error deleting meal item:', error);
+        return res.status(500).json({ message: 'Server error while deleting weight entry' });
+    }
+});
+
+
+router.put('/edit_weight_entry/:id', authenticateToken, async (req, res) => {
+    const { id: weightId } = req.params;
+    const { weight } = req.body;
+
+    try {
+        await pool.query(
+            `UPDATE weight_logs SET weight_lbs = $1 WHERE id = $2 RETURNING *`,
+            [weight, weightId]
+        );
+
+        return res.status(200).json({ message: 'Weight log updated'});
+    } catch (error) {
+        console.error('Error editing weight entry:', error);
+        return res.status(500).json({ message: 'Server error while editing weight entry' });
     }
 });
 
