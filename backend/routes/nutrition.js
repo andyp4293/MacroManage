@@ -164,7 +164,6 @@ router.post('/set_nutrition_goals', authenticateToken, async (req, res) => {
         }
         
     }
-    // 
     catch(error) {
         console.error(error);
         res.status(500).send('Server error');
