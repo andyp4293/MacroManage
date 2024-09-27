@@ -4,6 +4,7 @@ import styles from '../styles/Weightlog.module.css';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
+import WeightChart from '../components/WeightChart'; 
 
 // for formatting the date to MM-DD-YYYY
 function formatDate(isoDate) {
@@ -12,7 +13,6 @@ function formatDate(isoDate) {
     const day = date.getDate();
     const year = date.getFullYear();
 
-    // Pad the month and day with leading zeros if necessary
     const formattedDate = `${month}-${day}-${year}`;
     return formattedDate;
 }
@@ -56,6 +56,7 @@ function WeightLog() {
 
             const weightlogData = await response.json(); 
             setEntries(weightlogData.weightlogs);  
+            console.log(weightlogData.weightlogs)
 
         } catch (error) {
             console.error('Error:', error);
@@ -184,21 +185,25 @@ function WeightLog() {
             <div 
                 style={{ 
                     width: '100%',  
-                    padding: '1%', 
-                    border: '1px solid #f0f0f0',
-                    borderRadius: '8px',
-                    boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
                     display: 'flex', 
-                    marginLeft: '10px',
-                    marginRight: '10px',
                     justifyContent: 'space-between',
-                    backgroundColor: 'white',
-                    flex: 1,
-                    marginBottom: '3vh'
                     
                 }} elevation = {10}>
 
-                <div className = 'weight-table-and-date-container' style = {{width: '50%'}}>
+                <div className = 'weight-table-and-date-container' style={{ 
+                        width: '100%',  
+                        padding: '1%', 
+                        border: '1px solid #f0f0f0',
+                        borderRadius: '8px',
+                        boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
+                        marginLeft: '10px',
+                        marginRight: '10px',
+                        backgroundColor: 'white',
+                        marginBottom: '3vh'
+                    
+                    }} elevation = {10}>
+
+                    <DateSelector onDateChange={updateDate}/>
                     <div className = {styles['weight']}> 
                         <h4>Enter weigh-in</h4>
                         <input // input for the weight log of the day
@@ -308,8 +313,18 @@ function WeightLog() {
                     </div>
                 </div>
 
-                <div>
-                    <DateSelector onDateChange={updateDate}/>
+                <div style={{ 
+                        width: '100%',  
+                        padding: '1%', 
+                        border: '1px solid #f0f0f0',
+                        borderRadius: '8px',
+                        boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
+                        marginRight: '10px',
+                        backgroundColor: 'white',
+                        marginBottom: '3vh'
+                    
+                    }} elevation = {10}>
+                    <WeightChart data = {entries}/>
                 </div>
 
 

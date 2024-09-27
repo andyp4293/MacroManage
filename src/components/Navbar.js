@@ -51,8 +51,8 @@ function Navbar() {
             <Link className="home" to="/">MacroManage</Link>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <ul className="nav-links">
-                    <li><Link to="/weight-log">Weight Log</Link></li>
-                    <li><Link to="/food-log">Food Log</Link></li>
+                    <li><Link to="/weight-log">Weight</Link></li>
+                    <li><Link to="/food-log">Food</Link></li>
                     <li><Link to="/calculator">Calculator</Link></li> 
                 </ul>
                 <ul>
