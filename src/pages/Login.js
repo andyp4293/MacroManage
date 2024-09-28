@@ -54,6 +54,7 @@ function Login() {
                     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
                     padding: '7%',
                     height: 'fit-content',
+                    margin: '2vh', 
                     fontFamily: 'Arial, sans-serif'
                 }}>
                 

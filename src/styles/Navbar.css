@@ -1,6 +1,5 @@
 nav {
     background-color: rgba(0, 198, 145, 1); /* Example color */
-    font-family: "Roboto", sans-serif; 
     font-weight: bold; 
     height: fit-content;
     width: auto; 
@@ -8,7 +7,6 @@ nav {
     flex-direction: column;
     flex-wrap: wrap;
     max-height: 22vh; 
-    margin-bottom: 2vh;
     overflow-x: hidden;
 
 }
@@ -23,7 +21,7 @@ nav .home {
     display: flex;
     padding: 2vh; 
     margin-bottom: 0; 
-    margin-left: 3vh; 
+    margin-left: 1vh; 
     background-color: rgba(0, 198, 145, 1);
     border-radius: 4px;
 }

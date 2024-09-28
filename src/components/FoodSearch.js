@@ -3,7 +3,7 @@ import { Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, Box,
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from '../styles/FoodSearch.module.css';
-import { Pie } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -255,7 +255,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                             </Typography>
                                             <div style={{ display: 'flex', width: '100%' }}>
                                                 <div style={{ height: '100px', width: '100px' }}>
-                                                    <Pie
+                                                    <Doughnut
                                                         data={{
                                                             datasets: [
                                                                 {
@@ -266,6 +266,8 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                                     ],
                                                                     backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
                                                                     hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                                                                    borderWidth: 4, 
+                                                                    borderRadius: 20,
                                                                 },
                                                             ],
                                                         }}
@@ -273,6 +275,9 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                             responsive: true,
                                                             plugins: {
                                                                 tooltip: false
+                                                            },
+                                                            animation: {
+                                                                duration: 0 // no animation
                                                             },
                                                         }}
                                                         style={{ width: '50px', height: '50px' }}

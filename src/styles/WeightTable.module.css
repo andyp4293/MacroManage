@@ -1,0 +1,110 @@
+.date-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
+    margin-top: -3px;
+}
+
+/*removes the increment and decrement arrows of the weight input box*/
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+/*for the weight entry div*/
+.weight {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: 10px;
+    margin-top: -10px;
+}
+
+.weight .weight-input {
+    width: 150px;
+    height: 30px;
+    font-size: 16px;
+}
+
+.weight .unit {
+    color: gray;
+    position: absolute;
+    top: 10px;
+    left: 230px;
+    font-size: 28px;
+}
+
+.weight .save-button {
+    padding: 8px 24px;
+    margin: 13px 0;
+    font-size: 18px;
+    font-weight: 100;
+    text-transform: uppercase;
+    border: none;
+    background: rgba(0, 198, 145, 1);
+    color: white;
+    cursor: pointer;
+    margin-bottom: 14px;
+    border-radius: 10px;
+}
+
+.weight .save-button:hover {
+    background: rgb(3, 152, 112);
+}
+
+.weight-entry-table h1 {
+    width: 100%;
+    margin-top: 0px;
+    margin-left: 10px;
+    margin-bottom: 3px;
+}
+
+.weight-entry-table .actionButton {
+    padding: 8px 24px;
+    font-size: 10px;
+    text-transform: uppercase;
+    border: none;
+    background: rgba(0, 198, 145, 1);
+    color: white;
+    cursor: pointer;
+    margin-bottom: 0px;
+    border-radius: 10px;
+}
+
+.weight-entry-table .actionButton:hover {
+    background: rgb(3, 152, 112);
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    max-height: 50%;
+}
+
+.weight-edit-input {
+    width: 10%;
+    height: 30px;
+    font-size: 20px;
+    text-align: center;
+
+}
+
+.edit-unit {
+    margin-left: 5px;
+    font-size: 20px;
+}
+
+.weight-entry-header {
+    display: flex;
+    gap: 0px;
+}
+

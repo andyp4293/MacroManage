@@ -11,7 +11,6 @@ function WeightChart({ data }) {
         datasets: [
             {
                 pointRadius: 5,
-                label: 'Weight',
                 data: data.map(item => item.weight_lbs),
                 borderColor: '#4BC0C0',
                 tension: 0.1,
@@ -44,7 +43,7 @@ function WeightChart({ data }) {
         },
         plugins: {
             legend: {
-                display: true,
+                display: false,
                 labels: {
                     color: 'black'
                 }
@@ -70,7 +69,6 @@ function WeightChart({ data }) {
 
     return (
         <div>
-            <h2>Weight</h2>
             <Line ref={chartRef} data={chartData} options={options} />
         </div>
     );

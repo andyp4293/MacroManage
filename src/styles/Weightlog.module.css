@@ -107,3 +107,11 @@ input[type="number"] {
     gap: 0px;
 }
 
+
+.weightTableContainer {
+    margin-right: 0.3%; 
+}
+
+.weightChartContainer {
+    margin-left: 0.3%; 
+}
