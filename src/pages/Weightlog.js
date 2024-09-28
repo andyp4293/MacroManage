@@ -100,14 +100,13 @@ function WeightLog() {
     };
 
     return (
-            <div 
+        <div style = {{display: 'flex', width: '100%'}}> 
+            <div className = {styles.weightLogContainer}
                 style={{ 
-                    width: '100%',  
-                    display: 'flex', 
-                    justifyContent: 'space-between',
-                    padding: '1%'
+                    width: 'auto',  
+                    flex: 1, 
                     
-                }} elevation = {10}>
+                }}>
 
                 <div className = {styles.weightTableContainer} style={{ 
                         width: '100%',  
@@ -161,6 +160,7 @@ function WeightLog() {
 
             </div>
 
+    </div>
     );
 }
 

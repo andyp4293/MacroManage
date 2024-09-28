@@ -85,7 +85,11 @@ router.delete('/delete_weight_entry/:id', authenticateToken, async (req, res) =>
 
 router.put('/edit_weight_entry/:id', authenticateToken, async (req, res) => {
     const { id: weightId } = req.params;
-    const { weight } = req.body;
+    let { weight } = req.body;
+    
+    if (weight === ""){
+        weight = 0; 
+    }
 
     try {
         await pool.query(

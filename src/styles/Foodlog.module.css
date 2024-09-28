@@ -30,28 +30,39 @@
 .foodLogContainer {
     display: flex;
     justify-content: space-between;
+    padding: 0.7%; 
 }
 
 .mealLog {
     margin-right: 0.4%;
+    width: 100%; 
 }
 
 .progressBarContainer {
     margin-left: 0.3%;
+    width: 70%; 
 }
 
 @media (max-width: 768px) {
     .foodLogContainer {
+        padding: 2%;
+        padding-top: 1%; 
+        padding-bottom: 1%;
         align-items: center; 
         flex-direction: column;
-        margin: 0; 
+
 
     }
     .mealLog {
-        margin-right: 0; 
+        width: 100%;
+        margin: 0.5%; 
+        margin-bottom: 0.75%;
     }
     .progressBarContainer{
         margin-left: 0; 
+        width: 100%;
+        margin: 0.5%; 
+        margin-top: 0.75%; 
     }
 
 

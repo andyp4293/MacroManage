@@ -18,7 +18,7 @@ function App() {
                     display: 'flex', 
                     flex: 1,
                     justifyContent: 'center',  
-                    minWidth: 'auto'
+                    minWidth: '100%'
                 }}>
                 <Routes>  
                     {/*Displays pages depending on the link */}

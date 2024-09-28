@@ -151,6 +151,15 @@ function FoodSearchModal({ open, onClose, addFood }) {
         onClose(); 
     };
 
+    const dataValues = [
+        protein * 4,
+        fats * 9,
+        carbs * 4,
+    ]; 
+    
+    // boolean in case the macros are zero, it'll just show a gray circle
+    const zero = protein === 0 && carbs === 0 && fats === 0;
+
     return (
         <div>
             <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -253,26 +262,24 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                             <Typography variant="h6" component="div" gutterBottom sx={{ textAlign: 'center' }}>
                                                 {calories} kcal
                                             </Typography>
-                                            <div style={{ display: 'flex', width: '100%' }}>
-                                                <div style={{ height: '100px', width: '100px' }}>
+                                            <div style={{ display: 'flex', width: '100%',}}>
+                                                <div style={{ height: '100px', width: '100px', display: 'flex', alignItems: 'center', }}>
                                                     <Doughnut
                                                         data={{
                                                             datasets: [
                                                                 {
-                                                                    data: [
-                                                                        protein * 4,
-                                                                        fats * 9,
-                                                                        carbs * 4,
-                                                                    ],
-                                                                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                                                                    hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                                                                    borderWidth: 4, 
-                                                                    borderRadius: 20,
+                                                                    data: zero ? [1] : dataValues, 
+                                                                    backgroundColor: zero? ['#D3D3D3'] : ['#FF6384', '#36A2EB', '#FFCE56'],
+                                                                    hoverBackgroundColor: zero? ['#D3D3D3'] : ['#FF6384', '#36A2EB', '#FFCE56'],
+                                                                    borderWidth: 0, 
+                                                                    spacing: zero ? 0 : 4, 
+                                                                    borderRadius: zero ? 0 : 20,
                                                                 },
                                                             ],
                                                         }}
                                                         options={{
                                                             responsive: true,
+                                                            cutout: '60%',
                                                             plugins: {
                                                                 tooltip: false
                                                             },
@@ -280,7 +287,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                                 duration: 0 // no animation
                                                             },
                                                         }}
-                                                        style={{ width: '50px', height: '50px' }}
+                                                        style={{ width: '50px', height: '50px', }}
                                                     />
                                                 </div>
                                                 <div style={{ marginTop: '-15px' }}>

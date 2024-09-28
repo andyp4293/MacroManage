@@ -179,10 +179,10 @@ function FoodLog() {
             <div style={{ width: '100%', backgroundColor: '#F2F2F2', display: 'flex', flex: 1, }}> 
             {/* container that holds the nutrition goals and food log */}
             <Box className={styles.foodLogContainer}
-            style={{ width: '100%', padding: '1%'}}>
+            style={{ width: '100%'}}>
 
                 {/*box that holds the food log */}
-                <div className = {styles.mealLog} style = {{width: '100%', boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)', padding: '1%', borderRadius: '8px', backgroundColor: 'white', }} elevation = {10}> 
+                <div className = {styles.mealLog} style = {{ boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)', padding: '1%', borderRadius: '8px', backgroundColor: 'white', }} elevation = {10}> 
                     <div className = {styles['date-container']}>
                         <DateSelector onDateChange={updateDate}/>
                     </div> 
@@ -204,7 +204,7 @@ function FoodLog() {
                 </div>
 
 
-                <Box className = {styles.progressBarContainer} sx = {{ width: '70%', boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)', padding: '1%', borderRadius: '8px', backgroundColor: 'white',}}  elevation = {10}> 
+                <Box className = {styles.progressBarContainer} sx = {{boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)', padding: '1%', borderRadius: '8px', backgroundColor: 'white',}}  elevation = {10}> 
                     <div style = {{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                         <Typography style = {{marginLeft: '7px'}}>Macronutrient Targets</Typography>
                         <button className = {styles['add-food']} onClick = {() => {setIsGoalsOpen(true)}} >
