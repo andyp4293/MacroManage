@@ -48,59 +48,59 @@ function Navbar() {
 
     return (
         <nav className="navigation">
-            <Link className="home" to="/">MacroManage</Link>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <ul className="nav-links">
-                    <li><Link to="/weight-log">Weight</Link></li>
-                    <li><Link to="/food-log">Food</Link></li>
-                    <li><Link to="/calculator">Calculator</Link></li> 
-                </ul>
-                <ul>
-                    {username ? (
-                        // if token is is valid, display profile picture rather than login button
-                        <li style={{ marginRight: '10px', marginBottom: '-15px' }}>
-                            <div
-                                onClick={handleClick}
-                                style={{
-                                    width: '50px',
-                                    height: '50px',  
-                                    borderRadius: '50%',
-                                    backgroundColor: 'white',
-                                    color: 'black',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    fontSize: '30px',
-                                    fontWeight: 'bold',
-                                    marginTop: '-25px',
-                                    marginBottom: '-25px', 
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                {username.charAt(0).toUpperCase()}
-                            </div>
-                            <Menu
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleClose}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                            >
-                                <MenuItem onClick={handleLogout}>Log out</MenuItem>
-                            </Menu>
+            <div className="left">
+                <Link className="home" to="/">MacroManage</Link>
+            </div>
+            <div className = 'nav-links'>
+            <ul>
+                <li><Link to="/weight-log">Weight</Link></li>
+                <li><Link to="/food-log">Food</Link></li>
+                <li><Link to="/calculator">Calculator</Link></li> 
+                {username ? (
+                    // if token is is valid, display profile picture rather than login button
+                    <li style = {{marginRight: '1vw', marginTop: '0', marginBottom: '0', padding: '0' }} >
+                        <div
+                            onClick={handleClick}
+                            style={{
+                                width: '30px',
+                                height: '30px',  
+                                borderRadius: '50%',
+                                backgroundColor: 'white',
+                                color: 'black',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                fontSize: '20px',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                margin: '0',
+                                marginLeft: '5px',
+                            }}
+                        >
+                            {username.charAt(0).toUpperCase()}
+                        </div>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                        >
+                            <MenuItem onClick={handleLogout}>Log out</MenuItem>
+                        </Menu>
 
-                        </li>
-                    ) : (
-                        // If no token, show login button
-                        <li><Link to="/login">Login</Link></li>
-                    )}
-                </ul>
+                    </li>
+                ) : (
+                    // If no token, show login button
+                    <li><Link to="/login">Login</Link></li>
+                )}
+            </ul>
             </div>
         </nav>
     );
