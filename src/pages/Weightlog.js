@@ -100,17 +100,19 @@ function WeightLog() {
     };
 
     return (
-        <div style = {{display: 'flex', width: '100%'}}> 
+            <div style = {{width: '100%', height: '100%'}}>
             <div className = {styles.weightLogContainer}
                 style={{ 
                     width: 'auto',  
-                    flex: 1, 
-                    
+                    overflowY: 'auto',     
+
                 }}>
 
-                <div className = {styles.weightTableContainer} style={{ 
-                        width: '100%',  
-                        padding: '1%', 
+                
+                <div>
+                <div className = {styles.dateContainer} style={{ 
+                        width: 'auto',  
+                        padding: '1vh', 
                         border: '1px solid #f0f0f0',
                         borderRadius: '8px',
                         boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
@@ -138,10 +140,20 @@ function WeightLog() {
                             Save
                         </button>
                     </div>
+                </div>
 
-                    <div className = {styles['weight-entry-table']} >
-                        <WeightTable/>
-                    </div>
+                <div className = {styles['weight-entry-table']} style={{ 
+                        width: 'auto',  
+                        padding: '3%', 
+                        border: '1px solid #f0f0f0',
+                        borderRadius: '8px',
+                        boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
+                        backgroundColor: 'white',
+                    
+                    }} elevation = {10}>
+                    <WeightTable data ={entries} onChange = {fetchWeightLogs}/>
+                </div>
+
                 </div>
 
                 <div className = {styles.weightChartContainer} style={{ 
@@ -159,8 +171,8 @@ function WeightLog() {
 
 
             </div>
-
     </div>
+
     );
 }
 

@@ -171,15 +171,12 @@ function FoodLog() {
 
 
     return (
-        <div style = {{ display: 'flex', backgroundColor: '#F2F2F2', minWidth: '100%', flexDirection: 'column', flex: 1,}}>
-
-
+        <div style = {{ display: 'flex', backgroundColor: '#F2F2F2', width: '100%', flexDirection: 'column', flex: 1, alignItems: 'center', backgroundColor: 'black'}}>
 
             {/* container that holds the nutrition goals and food log */}
-            <div style={{ width: '100%', backgroundColor: '#F2F2F2', display: 'flex', flex: 1, }}> 
+            <div style={{ width: '100%', backgroundColor: '#F2F2F2', display: 'flex', flex: 1, justifyContent: 'center'}}> 
             {/* container that holds the nutrition goals and food log */}
-            <Box className={styles.foodLogContainer}
-            style={{ width: '100%'}}>
+            <Box className={styles.foodLogContainer}>
 
                 {/*box that holds the food log */}
                 <div className = {styles.mealLog} style = {{ boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)', padding: '1%', borderRadius: '8px', backgroundColor: 'white', }} elevation = {10}> 
@@ -204,7 +201,7 @@ function FoodLog() {
                 </div>
 
 
-                <Box className = {styles.progressBarContainer} sx = {{boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)', padding: '1%', borderRadius: '8px', backgroundColor: 'white',}}  elevation = {10}> 
+                <Box className = {styles.progressBarContainer} sx = {{boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)', padding: '1%', borderRadius: '8px', backgroundColor: 'white', marginBottom: '40px'}}  elevation = {10}> 
                     <div style = {{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                         <Typography style = {{marginLeft: '7px'}}>Macronutrient Targets</Typography>
                         <button className = {styles['add-food']} onClick = {() => {setIsGoalsOpen(true)}} >

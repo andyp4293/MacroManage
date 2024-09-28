@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Menu, MenuItem } from '@mui/material';
 import '../styles/Navbar.css';
 import {jwtDecode} from 'jwt-decode'; 
@@ -49,13 +49,13 @@ function Navbar() {
     return (
         <nav className="navigation">
             <div className="left">
-                <Link className="home" to="/">MacroManage</Link>
+                <NavLink className="home" to="/">MacroManage</NavLink>
             </div>
             <div className = 'nav-links'>
             <ul>
-                <li><Link to="/weight-log">Weight</Link></li>
-                <li><Link to="/food-log">Food</Link></li>
-                <li><Link to="/calculator">Calculator</Link></li> 
+                <li><NavLink to="/weight-log">Weight</NavLink></li>
+                <li><NavLink to="/food-log">Food</NavLink></li>
+                <li><NavLink to="/calculator">Calculator</NavLink></li> 
                 {username ? (
                     // if token is is valid, display profile picture rather than login button
                     <li style = {{marginRight: '1vw', marginTop: '0', marginBottom: '0', padding: '0' }} >
@@ -98,7 +98,7 @@ function Navbar() {
                     </li>
                 ) : (
                     // If no token, show login button
-                    <li><Link to="/login">Login</Link></li>
+                    <li><NavLink to="/login">Login</NavLink></li>
                 )}
             </ul>
             </div>

@@ -76,12 +76,12 @@ function DateSelector({onDateChange}){
                 textAlign: 'center', 
                 flexGrow: 1,
                 cursor: 'pointer',
-                fontSize: '22px',
+                fontSize: '15x',
                 fontFamily: '"Roboto", sans-serif'
             }}
             onClick = {dateClick}
             >
-            {format(date, 'EEE, MMM d, yyyy')}
+            {format(date, 'EEE, MMM d')}
             </Typography>
 
             {/*Right arrow button */}

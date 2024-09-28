@@ -67,7 +67,7 @@ const ChatBox = () => {
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: isOpen ? '400px' : '37px', // changes height of the box based on whether or not the chatbox is closed
+        height: isOpen ? '400px' : '35px', // changes height of the box based on whether or not the chatbox is closed
         width: '300px',
         border: '1px solid #ccc',
         borderRadius: '8px 8px 0 0',  

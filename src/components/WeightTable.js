@@ -16,7 +16,7 @@ function formatDate(isoDate) {
     return formattedDate;
 }
 
-function WeightTable() {
+function WeightTable({data, onChange}) {
     // entries is an array for objects that will hold each entry's date and weight
     const [entries, setEntries] = useState([]); 
 
@@ -44,7 +44,7 @@ function WeightTable() {
 
     useEffect(() => {
         fetchWeightLogs();
-    }, [fetchWeightLogs]); // useCallback ensures checkMealLogs doesn't change unnecessarily
+    }, [fetchWeightLogs, data]); // useCallback ensures checkMealLogs doesn't change unnecessarily
 
     
 
@@ -105,6 +105,7 @@ function WeightTable() {
         }
         finally {
             setEditIndex(null); 
+            onChange(); 
         }
     }
 
@@ -128,7 +129,7 @@ function WeightTable() {
                 }}
             >
                 <thead style = {{backgroundColor: '#007BFF'}}>
-                    <tr style={{ backgroundColor: '#00c691', color: 'white', borderCollapse: 'collapse', border: '1px solid #ddd',}}>
+                    <tr style={{ backgroundColor: 'white', color: 'black', borderCollapse: 'collapse', border: 'none',}}>
                         <th style={{ padding: '10px', width: '40%', fontSize: '14px'}}>Date</th>
                         <th style={{ padding: '10px', width: '30%', fontSize: '14px'}}>Weight</th>
                         <th style={{ padding: '10px', width: '30%', fontSize: '14px'}}>Action</th>
@@ -137,7 +138,7 @@ function WeightTable() {
                 <tbody>
                             
                 {entries.map((entry, index) => (
-                    <tr style={{ height: '20px', border: '1px solid #ddd' }} key={index}>
+                    <tr style={{ height: '20px', borderBottom: '1px solid #ddd' }} key={index}>
                         {/* first column with date value of entry */}
                         <td style={{ textAlign: 'center', fontFamily: '"Roboto", sans-serif', height: '20px', fontSize: '14px', border: 'none'}}>{formatDate(entry.weight_date)}</td>
                         {/* second column with weight value of entry */}

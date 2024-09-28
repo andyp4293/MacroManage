@@ -19,7 +19,6 @@ input[type="number"] {
 
 /*for the weight entry div*/
 .weight{ 
-    position: relative;
     display: flex;
     align-items: center;
     gap: 7px; 
@@ -67,20 +66,17 @@ input[type="number"] {
 }
 
 .weight-entry-table .actionButton{
-    padding: 8px 24px; 
+    padding: 4px 12px; 
     font-size: 10px; 
     text-transform: uppercase; 
     border:none; 
-    background: rgba(0, 198, 145, 1); 
-    color: white; 
+    background: white; 
+    color: black; 
     cursor: pointer; 
     margin-bottom: 0px; 
     border-radius: 10px; 
 }
 
-.weight-entry-table .actionButton:hover{
-    background: rgb(3, 152, 112);
-}
 
 .actionButtons {
     display: flex; 
@@ -88,6 +84,8 @@ input[type="number"] {
     gap: 10px; 
     max-height: 50%; 
 }
+
+
 
 .weight-edit-input {
     width: 10%;
@@ -108,15 +106,18 @@ input[type="number"] {
 }
 
 
-.weightTableContainer {
+.dateContaine {
     margin-right: 0.4%; 
 
 }
 
 .weightChartContainer {
-    margin-left: 0.4%; 
+    margin-left: 0.7%; 
 }
 
+.weight-entry-table {
+    margin-top: 2%;
+}
 .weightLogContainer {
     display: flex; 
     padding: 1.5vh; 
@@ -126,7 +127,6 @@ input[type="number"] {
 @media (max-width: 768px) {
     .weightLogContainer {
             padding: 2%;
-            width: 10%; 
             padding-top: 1%;
             padding-bottom: 1%;
             flex-direction: column; 
@@ -135,7 +135,7 @@ input[type="number"] {
             overflow-x: hidden; 
         }
 
-    .weightTableContainer{
+    .dateContainer{
         width: auto; 
         margin-bottom: 0.75%;
 
@@ -146,5 +146,10 @@ input[type="number"] {
         width: auto;
         margin-left: 0; 
         margin-top: 0.75%;
+    }
+
+    .weight-entry-table {
+        margin-top: 2%;
+        margin-bottom: 1%;
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';  // Import Routes
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';  
 import Navbar from './components/Navbar';
 import Calculator from './pages/Calculator';
 import WeightLog from './pages/Weightlog';
@@ -7,28 +7,30 @@ import FoodLog from './pages/Foodlog';
 import Login from './pages/Login'; 
 import Signup from './pages/Signup'; 
 
-
 function App() {
     return (
-        // Uses router react component for page navigation
         <Router>
-            <div style = {{ display: 'flex', minWidth: 'auto', minHeight: '100vh', backgroundColor: '#F2F2F2', flexDirection: 'column'}}>
-                <Navbar />
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#F2F2F2' }}>
+                
+                <div style={{ height: 'auto', backgroundColor: '#343d46', }}>
+                    <Navbar />
+                </div>
+                
                 <div style={{
-                    display: 'flex', 
-                    flex: 1,
-                    justifyContent: 'center',  
-                    minWidth: '100%',
-                    overflow: 'auto', 
+                    flex: 1,                         
+                    width: 'auto',              
+                    display: 'flex',
+                    justifyContent: 'center',
+                    overflowY: 'auto',     
+                    height: '100%'
                 }}>
-                <Routes>  
-                    {/*Displays pages depending on the link */}
-                    <Route path="/calculator" element={<Calculator />} />
-                    <Route path="/food-log" element={<FoodLog />} />
-                    <Route path="/weight-log" element={<WeightLog />} />
-                    <Route path ='/login' element = {<Login/>} />
-                    <Route path="/signup" element={<Signup/>} />
-                </Routes>
+                    <Routes>  
+                        <Route path="/calculator" element={<Calculator />} />
+                        <Route path="/food-log" element={<FoodLog />} />
+                        <Route path="/weight-log" element={<WeightLog />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<Signup />} />
+                    </Routes>
                 </div>
             </div>
         </Router>

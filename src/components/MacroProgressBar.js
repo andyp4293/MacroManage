@@ -24,7 +24,7 @@ const MacroProgressBar = ({ label, color, unit,  nutritionTarget, nutrition }) =
         justifyContent: 'flex-end',
         color: 'white',
         fontWeight: 'bold',
-        width: `${Math.min((nutrition / nutritionTarget) * 100, 100)}%`, // caps at 100% 
+        width: `${Math.min((nutrition / nutritionTarget) * 100, 100) || 0}%`, // caps at 100% 
         backgroundColor: color, // solid color fill
         transition: 'width 0.3s ease-in-out',
     };
