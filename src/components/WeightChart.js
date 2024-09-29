@@ -1,80 +1,52 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
-import 'chart.js/auto';
-import 'chartjs-adapter-date-fns'; 
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { format } from 'date-fns'; // You can use date-fns for date formatting
 
 function WeightChart({ data }) {
-    const chartRef = React.useRef(null);
+    // Transform your data from the Chart.js format to the Recharts format
+    const chartData = data.map(item => ({
+        weight_date: new Date(item.weight_date).getTime(), // ensure weight_date is in the correct format
+        weight_lbs: item.weight_lbs
+    }));
 
-    const chartData = {
-        labels: data.map(item => item.weight_date), 
-        datasets: [
-            {
-                pointRadius: 5,
-                data: data.map(item => item.weight_lbs),
-                borderColor: '#4BC0C0',
-                tension: 0.1,
-                fill: true,
-            },
-        ]
-    };
-
-    const options = {
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                grid: {
-                    display: false  
-                },
-                beginAtZero: true,
-            },
-            x: {
-                type: 'time',
-                grid: {
-                    display: false  
-                },
-                time: {
-                    unit: 'day',
-                    tooltipFormat: 'M/dd',
-                    displayFormats: {
-                        day: 'M/dd'
-                    }
-                },
-            },
-        },
-        plugins: {
-            legend: {
-                display: false,
-                labels: {
-                    color: 'black'
-                }
-            },
-            tooltip: {
-                mode: 'index',
-                intersect: false,
-                callbacks: {
-                    label: function(context) {
-                        let label = context.dataset.label || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        if (context.parsed.y !== null) {
-                            label += context.parsed.y + ' lbs';
-                        }
-                        return label;
-                    }
-                }
-            }
-        }
-    };
 
     return (
-        <div style = {{height: '400px'}}>
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h3>Weight</h3>
-            <Line ref={chartRef} data={chartData} options={options} />
+            <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={chartData}>
+                    {/* CartesianGrid can be removed if you don't want the grid lines */}
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+
+                    {/* XAxis with time formatting */}
+                    <XAxis 
+                        dataKey="weight_date" 
+                        tickFormatter={(tick) => format(new Date(tick), 'MM/dd')} // Format the dates
+                        type="number"
+                        domain={['dataMin', 'dataMax']}
+                        scale="time"
+                        interval="preserveStartEnd"
+                    />
+                    
+                    <YAxis allowDecimals={false} domain={['auto', 'auto']} />
+
+                    <Tooltip labelFormatter={(value) => format(new Date(value), 'MM/dd/yyyy')} />
+
+                    {/* Line settings */}
+                    <Line 
+                        type="monotone" // Tension equivalent for smoothing the line
+                        dataKey="weight_lbs" 
+                        stroke="#4BC0C0" 
+                        strokeWidth={2}
+                        dot={{ r: 5 }} // Dot (point) radius equivalent
+                        activeDot={{ r: 8 }} // Active dot size
+                        fillOpacity={0.3} 
+                        fill="#4BC0C0" // Fill color under the line
+                    />
+                </LineChart>
+            </ResponsiveContainer>
         </div>
     );
 }
-
 
 export default WeightChart;

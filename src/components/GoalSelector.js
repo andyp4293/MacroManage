@@ -91,7 +91,7 @@ function GoalSelector({ open, onClose, goals }) {
                     sx={{
                         '& .MuiOutlinedInput-root': {
                             '&.Mui-focused fieldset': {
-                                borderColor: calories === '' ? 'red' : '#00c691',
+                                borderColor: calories === '' ? 'red' : '#343d46',
                             },
                         },
                     }}
@@ -225,8 +225,8 @@ function GoalSelector({ open, onClose, goals }) {
                     {`${totalPercent}%`}
                 </p> 
             </div>
-            <Button onClick={handleSave} style = {{backgroundColor: (totalPercent === 100 && changed && calories !== '') ? '#00c691': '#808080', color: 'white'}} disabled = {(totalPercent !== 100 || !changed || calories === '')}>
-                Save
+            <Button onClick={handleSave} style = {{backgroundColor: (totalPercent === 100 && changed && calories !== '') ? '#343d46': '#E5E5E5', color: 'white', textTransform: 'none'}} disabled = {(totalPercent !== 100 || !changed || calories === '')}>
+                Save Goals
             </Button>
             {message &&
                 <p style = {{fontSize: '14px', color: 'red', marginTop: '5px'}}>{message}</p>

@@ -3,6 +3,7 @@ import DateSelector from '../components/dateSelector';
 import styles from '../styles/Weightlog.module.css';
 import WeightChart from '../components/WeightChart'; 
 import WeightTable from '../components/WeightTable'; 
+import ChatBox from '../components/Chatbox';
 
 
 function WeightLog() {
@@ -100,16 +101,8 @@ function WeightLog() {
     };
 
     return (
-            <div style = {{width: '85%', height: '100%'}}>
-            <div className = {styles.weightLogContainer}
-                style={{ 
-                    width: 'auto',  
-                    overflowY: 'auto',     
-
-                }}>
-
-                
-                <div>
+            <div className = {styles.weightLogContainer}>
+                <div className = {styles.leftContainer}>
                 <div className = {styles.dateContainer} style={{ 
                         width: 'auto',  
                         padding: '1vh', 
@@ -140,7 +133,7 @@ function WeightLog() {
                         </button>
                     </div>
                 </div>
-
+                
                 <div className = {styles['weight-entry-table']} style={{ 
                         width: 'auto',  
                         padding: '3%', 
@@ -152,12 +145,14 @@ function WeightLog() {
                     }} elevation = {10}>
                     <WeightTable data ={entries} onChange = {fetchWeightLogs}/>
                 </div>
-
                 </div>
 
-                <div className = {styles.weightChartContainer} style={{ 
-                        width: '100%',  
+                <div className = {styles.weightChartContainer} style={{  
+                        display: 'flex', 
+                        justifyContent: 'center', 
                         padding: '1%', 
+                        height: 'auto',
+
                         border: '1px solid #f0f0f0',
                         borderRadius: '8px',
                         boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
@@ -167,10 +162,9 @@ function WeightLog() {
                     <WeightChart data = {entries}/>
                 </div>
 
-
+                <ChatBox/>
 
             </div>
-    </div>
 
     );
 }
