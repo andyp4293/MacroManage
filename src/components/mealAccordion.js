@@ -170,12 +170,12 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
                                             cursor: 'pointer',
                                             marginBottom: '0px',
                                             borderRadius: '10px',
-                                            backgroundColor: '#00c691',
-                                            '&:hover': { backgroundColor: '#00a67e' },
+                                            backgroundColor: 'white',
+                                            '&:hover': { backgroundColor: 'white' },
                                         }}
                                         onClick={() => deleteEntry(item.id)}
                                     >
-                                        <DeleteIcon style = {{fontSize: '17px'}} />
+                                        <DeleteIcon style = {{fontSize: '17px', color: 'black'}} />
                                     </Button>
                                 </td>
                             </tr>

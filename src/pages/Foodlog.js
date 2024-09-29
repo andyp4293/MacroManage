@@ -171,7 +171,7 @@ function FoodLog() {
 
 
     return (
-        <div style = {{ display: 'flex', backgroundColor: '#F2F2F2', width: '100%', flexDirection: 'column', flex: 1, alignItems: 'center', backgroundColor: 'black'}}>
+        <div style = {{ display: 'flex', backgroundColor: '#F2F2F2', width: '100%', flexDirection: 'column', flex: 1, alignItems: 'center'}}>
 
             {/* container that holds the nutrition goals and food log */}
             <div style={{ width: '100%', backgroundColor: '#F2F2F2', display: 'flex', flex: 1, justifyContent: 'center'}}> 

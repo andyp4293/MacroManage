@@ -13,7 +13,7 @@
     display: flex; 
     justify-content: center;
     align-items: center;
-    background: #00c691;
+    background: #343d46;
     border-radius: 30px;
     cursor: pointer;
     border: none;
@@ -24,7 +24,7 @@
     margin-top: 7px; 
 }
 .add-food:hover{
-    background: #00a67e;
+    background: #4f5b66;
 }
 
 .foodLogContainer {

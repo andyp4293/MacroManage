@@ -81,7 +81,7 @@ const ChatBox = () => {
             display: 'flex',
             justifyContent: 'space-between',
             padding: '8px',
-            backgroundColor: '#00c691',
+            backgroundColor: '#343d46',
             color: '#fff',
             fontWeight: 'bold',
             cursor: 'pointer'
@@ -151,8 +151,8 @@ const ChatBox = () => {
                   }}
                   sx={{ marginRight: '8px' }}
                 />
-                <Button onClick={handlePrompt} variant="contained" sx={{ width: '20%', backgroundColor: '#00c691', '&:hover': {
-                      backgroundColor: '#00a67e'
+                <Button onClick={handlePrompt} variant="contained" sx={{ width: '20%', backgroundColor: '#343d46', '&:hover': {
+                      backgroundColor: '#4f5b66'
                   }}}>
                   <IoSend/>
                 </Button>

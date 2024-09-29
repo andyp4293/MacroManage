@@ -3,6 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import styles from '../styles/Weightlog.module.css';
+import Pagination from '@mui/material/Pagination';
 import React, { useState, useCallback, useEffect} from 'react';
 
 
@@ -17,9 +18,6 @@ function formatDate(isoDate) {
 }
 
 function WeightTable({data, onChange}) {
-    // entries is an array for objects that will hold each entry's date and weight
-    const [entries, setEntries] = useState([]); 
-
     const token = localStorage.getItem('token'); // json web token
 
     const fetchWeightLogs = useCallback(async () => {
@@ -61,6 +59,7 @@ function WeightTable({data, onChange}) {
             
             if (response.ok){
                 fetchWeightLogs(); 
+                onChange(); 
             }
             else {
                 throw new Error('Failed to delete weight entry');
@@ -120,8 +119,37 @@ function WeightTable({data, onChange}) {
         }
     }
 
+    
+    // FOR PAGINATION
+    const [currentPage, setCurrentPage] = useState(1); // current page state
+    const [rowsPerPage] = useState(7); // number of rows to display per page
+
+
+    // entries is an array for objects that will hold each entry's date and weight
+    const [entries, setEntries] = useState([]); 
+
+    const totalPages = Math.ceil(entries.length / rowsPerPage); // Calculate total pages
+
+    // Get the data for the current page
+    const indexOfLastRow = currentPage * rowsPerPage;
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+    const currentRows = entries.slice(indexOfFirstRow, indexOfLastRow);
+
+    // Change page
+    const handlePageChange = (_, value) => {
+        setCurrentPage(value);
+    };
+
+    const paddedRows = [
+        ...currentRows,
+        ...Array.from({ length: rowsPerPage - currentRows.length }, () => ({ weight_date: '', weight_lbs: '' }))
+    ];
+
+
+
+
     return (
-        <div> 
+        <div style = {{display: 'flex', alignItems: 'center', flexDirection: 'column'}}> 
             <table 
                 style = {{
                     width: '100%',
@@ -137,10 +165,10 @@ function WeightTable({data, onChange}) {
                 </thead>
                 <tbody>
                             
-                {entries.map((entry, index) => (
+                {paddedRows.map((entry, index) => (
                     <tr style={{ height: '20px', borderBottom: '1px solid #ddd' }} key={index}>
                         {/* first column with date value of entry */}
-                        <td style={{ textAlign: 'center', fontFamily: '"Roboto", sans-serif', height: '20px', fontSize: '14px', border: 'none'}}>{formatDate(entry.weight_date)}</td>
+                        <td style={{ textAlign: 'center', fontFamily: '"Roboto", sans-serif', height: '20px', fontSize: '14px', border: 'none'}}>{entry.weight_date ? formatDate(entry.weight_date) : ''}</td>
                         {/* second column with weight value of entry */}
                         <td style={{ textAlign: 'center', fontFamily: '"Roboto", sans-serif', height: '20px'}}> 
                             {editIndex === index 
@@ -162,7 +190,7 @@ function WeightTable({data, onChange}) {
                                     <div>
                                         {entry.weight === '' 
                                         ? '0 lbs' // display 0 lbs if the input is empty
-                                        : <div style = {{fontSize: '14px'}}>{entry.weight_lbs} lbs</div>
+                                        : <div style = {{fontSize: '14px'}}>{entry.weight_lbs? `${entry.weight_lbs} lbs` : ''} </div>
                                         }
                                                     
                                     </div>
@@ -170,35 +198,44 @@ function WeightTable({data, onChange}) {
                         </td>
                         {/* third column with action options of editing or deleting the entry */}
                         <td style={{ padding: '10px', textAlign: 'center' }} className = {styles['actionButtons']}>
-                                {editIndex === index 
-                                ? // if editng index is the index of entry
-                                <div> 
-                                    <button 
-                                        className = {styles['actionButton']}
-                                        onClick = {() => handleSaveEdit(entry.id)}
+                            {entry.weight_lbs ? (
+                                editIndex === index ? (
+                                 // if editing index is the index of the entry
+                                    <div>
+                                        <button
+                                            className={styles['actionButton']}
+                                            onClick={() => handleSaveEdit(entry.id)}
+                                        >
+                                            <CheckIcon />
+                                        </button>
+                                    </div>
+                                ) : (
+                                // if editing index is not the index of the entry
+                                <div className={styles['actionButtons']}>
+                                    <button
+                                        className={styles['actionButton']}
+                                        onClick={() => setEditIndex(index)}
                                     >
-                                        <CheckIcon></CheckIcon>
+                                        <EditIcon style={{ fontSize: '18px' }} />
+                                    </button>
+                                    <button
+                                        className={styles['actionButton']}
+                                        onClick={() => deleteEntry(entry.id)}
+                                    >
+                                        <DeleteIcon style={{ fontSize: '18px' }} />
                                     </button>
                                 </div>
-                                : // if editing index is not the index of the entry
-                                <div className = {styles['actionButtons']}> 
-                                    <button 
-                                        className = {styles['actionButton']}
-                                        onClick = {() => setEditIndex(index)}
-                                    >
-                                        <EditIcon style = {{fontSize: '18px'}}></EditIcon>
-                                    </button>
-                                    <button 
-                                        className = {styles['actionButton']}
-                                        onClick = {() => deleteEntry(entry.id)}
-                                    >
-                                        <DeleteIcon style = {{fontSize: '18px'}}></DeleteIcon>
-                                    </button>
-                                </div>
-                                            
-                                            
-                                }
-                                            
+                                )
+                            ) : (
+                            <button
+                                className={styles['actionButton']}
+                                disabled
+                                style = {{opacity: '0'}}
+                            >
+                                <DeleteIcon style={{ fontSize: '18px' }} />
+                            </button>
+                            )}
+
                         </td>
                     </tr>
                 ))}
@@ -207,6 +244,12 @@ function WeightTable({data, onChange}) {
 
 
             </table>
+            <Pagination 
+                sx = {{backgroundColor: 'white' ,width: 'auto', marginTop: '1vh'}} 
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+            />
         </div>
     );
 }

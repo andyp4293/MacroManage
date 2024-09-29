@@ -100,7 +100,7 @@ function WeightLog() {
     };
 
     return (
-            <div style = {{width: '100%', height: '100%'}}>
+            <div style = {{width: '85%', height: '100%'}}>
             <div className = {styles.weightLogContainer}
                 style={{ 
                     width: 'auto',  
@@ -121,8 +121,7 @@ function WeightLog() {
                     }} elevation = {10}>
 
                     <DateSelector onDateChange={updateDate}/>
-                    <div className = {styles['weight']}> 
-                        <h4>Enter weigh-in</h4>
+                    <div className = {styles['weight']} > 
                         <input // input for the weight log of the day
                             name = 'weight' 
                             type = 'number' // user can only input numbers
@@ -137,7 +136,7 @@ function WeightLog() {
                             className = {styles['save-button']}
                             onClick = {() => {addEntry(weight)}}
                         >
-                            Save
+                            <h5 style = {{margin:'0'}}>Add Entry</h5>
                         </button>
                     </div>
                 </div>

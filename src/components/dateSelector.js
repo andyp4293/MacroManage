@@ -38,14 +38,13 @@ function DateSelector({onDateChange}){
             <Box
             sx = {{
                 position: 'relative', // relative for positioning context of the date picker component
-                backgroundColor: '#00c691',
                 display: 'flex', 
+                backgroundColor: 'white', 
                 alignItems: 'center',
                 justifyContent: 'space-between', 
                 borderRadius: '10px', 
-                padding: '0px 0px',
-                width: '350px',
-                height: '45px'
+                padding: '2px 20px',
+                margin: '0', 
             }}
             >
             
@@ -54,15 +53,9 @@ function DateSelector({onDateChange}){
                 disableRipple
                 onClick = {prevDay} // when left arrow clicked the date is decremented by 1 day
                 sx = {{
-                    color: 'white', 
-                    borderRadius: '10px 0 0 10px',
-                    borderRight: '3px solid white', 
+                    color: 'black', 
                     height: '45px', 
                     width: '45px',  
-                    '&:hover':{
-                    backgroundColor: '#00a67e',
-                },
-
                 }}
                 
             >
@@ -72,7 +65,7 @@ function DateSelector({onDateChange}){
             <Typography //
             variant="body1" 
             sx={{ 
-                color: 'white',
+                color: 'black',
                 textAlign: 'center', 
                 flexGrow: 1,
                 cursor: 'pointer',
@@ -81,7 +74,7 @@ function DateSelector({onDateChange}){
             }}
             onClick = {dateClick}
             >
-            {format(date, 'EEE, MMM d')}
+            {format(date, 'MMM d')}
             </Typography>
 
             {/*Right arrow button */}
@@ -89,14 +82,9 @@ function DateSelector({onDateChange}){
             onClick = {nextDay} // when right arrow is clicked, the date is incremented by 1 day
             disableRipple
             sx={{ 
-                color: 'white',
-                borderRadius: '0 10px 10px 0',
-                borderLeft: '3px solid white',
+                color: 'black',
                 height: '45px', 
                 width: '45px',
-                '&:hover':{
-                    backgroundColor: '#00a67e',
-                },
             }}
             >
                 <KeyboardArrowRightIcon />
@@ -106,7 +94,7 @@ function DateSelector({onDateChange}){
                 <Box // the date picker component is rendered within a box component
                     sx = {{
                         position: 'absolute',
-                        top: '110%',
+                        top: '100%',
                         right: '0', 
                         zIndex: 1000,
                     }}

@@ -20,6 +20,7 @@ function WeightChart({ data }) {
     };
 
     const options = {
+        maintainAspectRatio: false,
         scales: {
             y: {
                 grid: {
@@ -68,7 +69,8 @@ function WeightChart({ data }) {
     };
 
     return (
-        <div>
+        <div style = {{height: '400px'}}>
+            <h3>Weight</h3>
             <Line ref={chartRef} data={chartData} options={options} />
         </div>
     );
