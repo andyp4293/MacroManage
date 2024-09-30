@@ -1,10 +1,13 @@
 import React, { useState} from 'react';
 import {Box, Button, Typography} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
+import { useNavigate } from 'react-router-dom';
+
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
 function Signup() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
 
@@ -40,7 +43,7 @@ function Signup() {
             }
             else {
               setError(''); 
-              window.location.href = '/login'; // redirects to login page if no errors
+              navigate('/login'); // redirects to login page if no errors
             }
         }
 

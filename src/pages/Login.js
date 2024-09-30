@@ -1,10 +1,12 @@
 import React, { useState, useEffect} from 'react';
 import {Box, Button, Typography} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
+import { useNavigate } from 'react-router-dom';
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
 function Login() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
 
@@ -30,7 +32,7 @@ function Login() {
             const data = await response.json(); 
             if (response.ok) { // triggers if the status response is not 200-299, 
                 localStorage.setItem('token', data.token);  // save the jwt token in local storage
-                window.location.href = '/food-log'; // redirects to home page
+                navigate('/food-log'); // redirects to food page
             }
             else {
                 setError(data.message); 
