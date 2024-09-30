@@ -3,6 +3,9 @@ import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, Button 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+const backendUrl = process.env.REACT_APP_APIURL;
+
+
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -15,6 +18,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
     const token = localStorage.getItem('token'); // json web token
 
     useEffect(() => {
+        
         // fetches the meal_items associated with the correct meal (title) and selected date
         const fetchMealItems = async () => {
             if (!token) return; // prevent making the request if there is no token/user isn't logged in
@@ -23,7 +27,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
                 const mealDate = selectedDate.toISOString().split('T')[0]; // formats the date
 
                 // 1.) fetches meal_log_id of the meal_log with the associated selected date
-                const logResponse = await fetch('http://localhost:5000/api/meals/get_log_id', {
+                const logResponse = await fetch(`${backendUrl}/api/meals/get_log_id`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -42,7 +46,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
                 }
 
                 // 2.) fetches meal_items based on meal_log_id and title (which is the meal_type)
-                const itemsResponse = await fetch(`http://localhost:5000/api/meals/get_items?meal_log_id=${meal_log_id}&meal_type=${title}`, {
+                const itemsResponse = await fetch(`${backendUrl}/api/meals/get_items?meal_log_id=${meal_log_id}&meal_type=${title}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,  // jwt authorization
@@ -76,7 +80,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
     // function to delete a food_items row based on the item's id 
     const deleteEntry = async (itemId) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/meals/delete_item/${itemId}`, {
+            const response = await fetch(`${backendUrl}/api/meals/delete_item/${itemId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,  // jwt authorization

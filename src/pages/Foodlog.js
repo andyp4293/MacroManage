@@ -8,6 +8,8 @@ import ChatBox from '../components/Chatbox';
 import MacroProgressBar from '../components/MacroProgressBar'; 
 import GoalSelector from '../components/GoalSelector'; 
 
+const backendUrl = process.env.REACT_APP_APIURL;
+
 function FoodLog() {
     const [selectedDate, setSelectedDate] = useState(new Date()) // state to keep track of the date 
 
@@ -37,7 +39,7 @@ function FoodLog() {
 
         try {
             // based the current selected date, fetch the id of meal_log associated with the selected date
-            const logResponse = await fetch('http://localhost:5000/api/meals/get_log_id', {
+            const logResponse = await fetch(`${backendUrl}/api/meals/get_log_id`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,7 +58,7 @@ function FoodLog() {
             }
 
             // insert the food details from the food search modal into the meal_items table, with the associated meal_log id
-            await fetch('http://localhost:5000/api/meals/add_food_item', {
+            await fetch(`${backendUrl}/api/meals/add_food_item`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +91,7 @@ function FoodLog() {
     // function to check if there's already been a meal_log row with the current selected date, and if there isn't make one
     const checkMealLogs = useCallback(async (mealDate) => {
         try {
-            const response = await fetch('http://localhost:5000/api/meals/check_meal_log', {
+            const response = await fetch(`${backendUrl}/api/meals/check_meal_log`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -111,7 +113,7 @@ function FoodLog() {
 
     const fetchNutritionGoals =  useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/nutrition/get_nutrition_goals', {
+            const response = await fetch(`${backendUrl}/api/nutrition/get_nutrition_goals`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -134,7 +136,7 @@ function FoodLog() {
     const fetchTotalNutrition = useCallback(async() =>{
         const mealDate = selectedDate.toISOString().split('T')[0]
         try{
-            const totalNutritionResponse = await fetch('http://localhost:5000/api/nutrition/total_nutrition', {
+            const totalNutritionResponse = await fetch(`${backendUrl}/api/nutrition/total_nutrition`, {
                 method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json',

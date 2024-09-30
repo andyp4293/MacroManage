@@ -6,6 +6,7 @@ import styles from '../styles/Weightlog.module.css';
 import Pagination from '@mui/material/Pagination';
 import React, { useState, useCallback, useEffect} from 'react';
 
+const backendUrl = process.env.REACT_APP_APIURL;
 
 function formatDate(isoDate) {
     const date = new Date(isoDate);
@@ -23,7 +24,7 @@ function WeightTable({data, onChange}) {
     const fetchWeightLogs = useCallback(async () => {
         if (!token) return; // prevent making the request if there is no token/user isn't logged in
         try {
-            const response = await fetch('http://localhost:5000/api/weight/get_weight_logs', {
+            const response = await fetch(`${backendUrl}/api/weight/get_weight_logs`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,7 +49,7 @@ function WeightTable({data, onChange}) {
 
     const deleteEntry = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/weight/delete_weight_entry/${id}`, {
+            const response = await fetch(`${backendUrl}/api/weight/delete_weight_entry/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,  // jwt authorization
@@ -81,7 +82,7 @@ function WeightTable({data, onChange}) {
         
 
         try {
-            const response = await fetch(`http://localhost:5000/api/weight/edit_weight_entry/${id}`, {
+            const response = await fetch(`${backendUrl}/api/weight/edit_weight_entry/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

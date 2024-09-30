@@ -5,6 +5,7 @@ import WeightChart from '../components/WeightChart';
 import WeightTable from '../components/WeightTable'; 
 import ChatBox from '../components/Chatbox';
 
+const backendUrl = process.env.REACT_APP_APIURL;
 
 function WeightLog() {
     const token = localStorage.getItem('token'); // json web token
@@ -13,10 +14,6 @@ function WeightLog() {
     // setting the data for the weight entry
     const [selectedDate, setSelectedDate] = useState(new Date())
 
-
-
-
-    
     // entries is an array for objects that will hold each entry's date and weight
     const [entries, setEntries] = useState([]); 
 
@@ -34,7 +31,7 @@ function WeightLog() {
     const fetchWeightLogs = useCallback(async () => {
         if (!token) return; // prevent making the request if there is no token/user isn't logged in
         try {
-            const response = await fetch('http://localhost:5000/api/weight/get_weight_logs', {
+            const response = await fetch(`${backendUrl}/api/weight/get_weight_logs`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +66,7 @@ function WeightLog() {
         const formattedDate = selectedDate.toISOString().slice(0, 10);
 
         try {
-            const response = await fetch('http://localhost:5000/api/weight/add_weight_log', {
+            const response = await fetch(`${backendUrl}/api/weight/add_weight_log`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

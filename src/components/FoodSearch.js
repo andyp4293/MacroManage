@@ -9,6 +9,9 @@ import AddIcon from '@mui/icons-material/Add';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+const backendUrl = process.env.REACT_APP_APIURL;
+
+
 // function to make it so that every work is has a capitalized first letter and rest lower case
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt) {
@@ -35,7 +38,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
 
     // search for food results based on the search query 
     const handleSearch = () => {
-        fetch('http://localhost:5000/api/nutrition', {
+        fetch(`${backendUrl}/api/nutrition`, {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'
@@ -61,7 +64,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
 
     // select food and fetch nutritional details from the backend
     const handleFoodSelect = (item) => {
-        fetch(`http://localhost:5000/api/nutrition/item?item_id=${item.id}`) // fetches nutrition details based on the food's id
+        fetch(`${backendUrl}/api/nutrition/item?item_id=${item.id}`) // fetches nutrition details based on the food's id
             .then(response => response.json()) // parses the backend's returninto json
             .then(data => {
                 const fetchedItemData = data;

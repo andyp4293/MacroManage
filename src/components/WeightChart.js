@@ -2,6 +2,8 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, } from 'recharts';
 import { format } from 'date-fns'; // You can use date-fns for date formatting
 
+
+
 function WeightChart({ data }) {
     // Transform your data from the Chart.js format to the Recharts format
     const chartData = data.map(item => ({
