@@ -30,7 +30,7 @@ function Login() {
             const data = await response.json(); 
             if (response.ok) { // triggers if the status response is not 200-299, 
                 localStorage.setItem('token', data.token);  // save the jwt token in local storage
-                window.location.href = '/home'; // redirects to home page
+                window.location.href = '/food-log'; // redirects to home page
             }
             else {
                 setError(data.message); 
