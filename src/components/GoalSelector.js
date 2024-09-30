@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem, FormControl, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
+const backendUrl = process.env.REACT_APP_APIURL;
+
 function GoalSelector({ open, onClose, goals }) {
     const token = localStorage.getItem('token'); // json web token
     const [calories, setCalories] = useState(null);
@@ -36,7 +38,7 @@ function GoalSelector({ open, onClose, goals }) {
 
     const handleSave = async () => {
         try{
-            const response = await fetch('http://localhost:5000/api/nutrition/set_nutrition_goals', {
+            const response = await fetch(`${backendUrl}/api/nutrition/set_nutrition_goals`, {
                 method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json', 

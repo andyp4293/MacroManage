@@ -2,6 +2,8 @@ import React, { useState} from 'react';
 import {Box, Button, Typography} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 
+const backendUrl = process.env.REACT_APP_APIURL;
+
 function Signup() {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
@@ -19,7 +21,7 @@ function Signup() {
 
     const handleSignup = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/users/signup', {
+            const response = await fetch(`${backendUrl}/api/users/signup`, {
                 method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json', 

@@ -2,6 +2,8 @@ import React, { useState, useEffect} from 'react';
 import {Box, Button, Typography} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 
+const backendUrl = process.env.REACT_APP_APIURL;
+
 function Login() {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
@@ -14,7 +16,7 @@ function Login() {
 
     const handleSignin = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/users/signin', {
+            const response = await fetch(`${backendUrl}/api/users/signin`, {
                 method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json', 
