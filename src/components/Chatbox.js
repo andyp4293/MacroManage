@@ -3,7 +3,7 @@ import { Box, TextField, Button} from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import { IoSend } from "react-icons/io5";
 
-
+const backendUrl = process.env.REACT_APP_APIURL;
 
 const ChatBox = () => {
   const [prompt, setPrompt] = useState('');
@@ -23,7 +23,7 @@ const ChatBox = () => {
     setLoading(true); 
     setPrompt(''); 
     try {
-      const response = await fetch('http://localhost:5000/api/chat', {
+      const response = await fetch(`${backendUrl}/api/chat`, {
         method: 'POST', 
         headers: {
             'Content-Type': 'application/json', 
