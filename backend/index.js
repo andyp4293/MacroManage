@@ -25,5 +25,5 @@ app.use('/api/weight', weightRoutes);
 
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
