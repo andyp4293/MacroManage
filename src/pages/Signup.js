@@ -189,8 +189,8 @@ function Signup() {
         <Button 
           sx={{
             width: '100%', 
-            backgroundColor: '#00c691', 
-            '&:hover': { backgroundColor: '#00a67e' },
+            backgroundColor: '#343d46', 
+            '&:hover': { backgroundColor: '#4f5b66' },
             borderRadius: '5px',
             transition: 'all 0.2s ease',
             padding: '5px',
