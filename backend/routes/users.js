@@ -1,7 +1,7 @@
 const express = require('express');
 const pool = require('../db'); // Import the shared pool
 const router = express.Router();
-const bcrypt = require('bcrypt'); // for encrypting the passwords
+const bcrypt = require('bcryptjs'); // for encrypting the passwords
 const jwt = require('jsonwebtoken');
 require('dotenv').config();  // load .env file
 
