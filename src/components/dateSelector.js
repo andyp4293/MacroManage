@@ -43,7 +43,7 @@ function DateSelector({onDateChange}){
                 alignItems: 'center',
                 justifyContent: 'space-between', 
                 borderRadius: '10px', 
-                padding: '2px 20px',
+                padding: '0',
                 margin: '0', 
             }}
             >
@@ -67,7 +67,6 @@ function DateSelector({onDateChange}){
             sx={{ 
                 color: 'black',
                 textAlign: 'center', 
-                flexGrow: 1,
                 cursor: 'pointer',
                 fontSize: '15x',
                 fontFamily: '"Roboto", sans-serif'

@@ -55,7 +55,6 @@ function Navbar() {
             <ul>
                 <li><NavLink to="/weight-log">Weight</NavLink></li>
                 <li><NavLink to="/food-log">Food</NavLink></li>
-                <li><NavLink to="/calculator">Calculator</NavLink></li> 
                 {username ? (
                     // if token is is valid, display profile picture rather than login button
                     <li style = {{marginRight: '1vw', marginTop: '0', marginBottom: '0', padding: '0' }} >

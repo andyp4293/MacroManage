@@ -33,7 +33,6 @@ function WeightTable({data, onChange}) {
 
             const weightlogData = await response.json(); 
             setEntries(weightlogData.weightlogs);  
-            console.log(weightlogData.weightlogs)
 
         } catch (error) {
             console.error('Error:', error);
@@ -79,6 +78,8 @@ function WeightTable({data, onChange}) {
     // func for saving the weight edit
 
     const handleSaveEdit = async (id) => {
+        
+
         try {
             const response = await fetch(`http://localhost:5000/api/weight/edit_weight_entry/${id}`, {
                 method: 'PUT',
@@ -87,7 +88,7 @@ function WeightTable({data, onChange}) {
                     'Authorization': `Bearer ${token}`, // jwt token
                 },
                 body: JSON.stringify({
-                    weight: newWeight, 
+                    weight: newWeight ? newWeight: 0, 
                 })
             });
 
@@ -188,7 +189,7 @@ function WeightTable({data, onChange}) {
                                     </div>
                                     :
                                     <div>
-                                        {entry.weight === '' 
+                                        {entry.weight_lbs === 0 
                                         ? '0 lbs' // display 0 lbs if the input is empty
                                         : <div style = {{fontSize: '14px'}}>{entry.weight_lbs? `${entry.weight_lbs} lbs` : ''} </div>
                                         }
@@ -198,13 +199,18 @@ function WeightTable({data, onChange}) {
                         </td>
                         {/* third column with action options of editing or deleting the entry */}
                         <td style={{ padding: '10px', textAlign: 'center' }} className = {styles['actionButtons']}>
-                            {entry.weight_lbs ? (
+                            {entry.weight_lbs || entry.weight_lbs === 0 ? (
                                 editIndex === index ? (
                                  // if editing index is the index of the entry
                                     <div>
                                         <button
                                             className={styles['actionButton']}
-                                            onClick={() => handleSaveEdit(entry.id)}
+                                            onClick={() => {
+                                                if (newWeight === '') {
+                                                    setNewWeight('0'); 
+                                                }
+                                                
+                                                handleSaveEdit(entry.id)}}
                                         >
                                             <CheckIcon />
                                         </button>

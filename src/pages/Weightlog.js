@@ -44,7 +44,6 @@ function WeightLog() {
 
             const weightlogData = await response.json(); 
             setEntries(weightlogData.weightlogs);  
-            console.log(weightlogData.weightlogs)
 
         } catch (error) {
             console.error('Error:', error);
@@ -107,13 +106,19 @@ function WeightLog() {
                         width: 'auto',  
                         padding: '1vh', 
                         border: '1px solid #f0f0f0',
+                        display: 'flex', 
                         borderRadius: '8px',
+                        justifyContent: 'space-between',
                         boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)',  
                         backgroundColor: 'white',
                     
                     }} elevation = {10}>
-
-                    <DateSelector onDateChange={updateDate}/>
+                    
+                    <div style = {{display: 'flex'}}>
+                        <DateSelector onDateChange={updateDate}/>
+                    </div>
+                    
+                    
                     <div className = {styles['weight']} > 
                         <input // input for the weight log of the day
                             name = 'weight' 
@@ -146,12 +151,11 @@ function WeightLog() {
                     <WeightTable data ={entries} onChange = {fetchWeightLogs}/>
                 </div>
                 </div>
-
+                
                 <div className = {styles.weightChartContainer} style={{  
                         display: 'flex', 
                         justifyContent: 'center', 
                         padding: '1%', 
-                        height: 'auto',
 
                         border: '1px solid #f0f0f0',
                         borderRadius: '8px',
@@ -160,6 +164,7 @@ function WeightLog() {
                     
                     }} elevation = {10}>
                     <WeightChart data = {entries}/>
+
                 </div>
 
                 <ChatBox/>

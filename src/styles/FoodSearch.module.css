@@ -25,7 +25,7 @@
 }
 
 .food-table-container::-webkit-scrollbar-thumb {
-    background-color: #00c691; /* Scrollbar color */
+    background-color: #343d46; /* Scrollbar color */
     border-radius: 10px; /* Roundness of the scrollbar */
     border: 3px solid #f1f1f1; /* Padding around the thumb */
 }

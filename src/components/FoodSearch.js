@@ -201,11 +201,11 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                         onChange={(e) => setQuery(e.target.value)}
                                         sx={{
                                             '& .MuiInputLabel-root.Mui-focused': {
-                                                color: '#00c691',
+                                                color: '#343d46',
                                             },
                                             '& .MuiOutlinedInput-root': {
                                                 '&.Mui-focused fieldset': {
-                                                    borderColor: '#00c691',
+                                                    borderColor: '#343d46',
                                                 },
                                             },
                                         }}
@@ -216,13 +216,13 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                         onClick={handleSearch}
                                         startIcon={<SearchIcon />}
                                         sx={{
-                                            background: '#00c691',
+                                            background: '#343d46',
                                             marginBottom: '5px',
                                             marginTop: "3px",
                                             minWidth: '100px', 
                                             justifyContent: 'space-between',
                                             '&:hover': {
-                                                backgroundColor: '#00a67e'
+                                                backgroundColor: '#4f5b66'
                                             }
                                         }}
                                     >
@@ -432,16 +432,19 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                 marginTop: '20px'
                                             }}>
                                                 <Button variant="contained" startIcon={<AddIcon/>} disableRipple 
+                                                    
                                                     style={{
                                                         width: '50%',
                                                         height: '40px',
-                                                        backgroundColor: '#00c691',
+                                                        backgroundColor: '#343d46',
                                                         color: 'white',
-                                                        fontSize: '16px'
+                                                        fontSize: '16px',
+                                                        textTransform: 'none'
+                                                        
                                                     }}
                                                     onClick={handleAdd}
                                                 >
-                                                    ADD
+                                                    Add item
                                                 </Button>
                                             </Box>
                                         </div>
