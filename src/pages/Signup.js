@@ -58,9 +58,9 @@ function Signup() {
     return (
       <Box sx = {{display: 'flex', justifyContent: 'center', width: 
           {
-              xs: '80%',
-              sm: '80%',  
-              md: '80%',  
+              xs: '90%',
+              sm: '90%',  
+              md: '90%',  
               lg: '35vw', 
           },
       }}>

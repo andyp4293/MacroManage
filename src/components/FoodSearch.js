@@ -451,7 +451,9 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                                     }}
                                                     onClick={handleAdd}
                                                 >
-                                                    Add item
+                                                    <h5>
+                                                        Add item
+                                                    </h5>
                                                 </Button>
                                             </Box>
                                         </div>
