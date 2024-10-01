@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -16,53 +16,64 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
     const [items, setItems] = useState([]);
 
     const token = localStorage.getItem('token'); // json web token
+    const [expanded, setExpanded] = useState(true); 
+
+    const handleChange = () => {
+        setExpanded(!expanded);
+    };
+    
+
+    // fetches the meal_items associated with the correct meal (title) and selected date
+    const fetchMealItems = useCallback(async () => {
+        if (!token) return; // prevent making the request if there is no token/user isn't logged in
+
+        try {
+            const mealDate = selectedDate.toISOString().split('T')[0]; // formats the date
+
+            // 1.) fetches meal_log_id of the meal_log with the associated selected date
+            const logResponse = await fetch(`${backendUrl}/api/meals/get_log_id`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // jwt authorization
+                },
+                body: JSON.stringify({
+                    meal_date: mealDate,
+                }),
+            });
+
+            const logData = await logResponse.json();
+            const meal_log_id = logData.meal_log_id;
+
+            if (!meal_log_id) {
+                throw new Error('Meal log not found for the specified date and meal type.');
+            }
+
+            // 2.) fetches meal_items based on meal_log_id and title (which is the meal_type)
+            const itemsResponse = await fetch(`${backendUrl}/api/meals/get_items?meal_log_id=${meal_log_id}&meal_type=${title}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,  // jwt authorization
+                    'Content-Type': 'application/json',  
+                }
+            });
+            const itemsData = await itemsResponse.json();
+            setItems(itemsData.items); // update the item state
+
+        } catch (error) {
+            console.error('Error fetching meal items:', error);
+        } 
+    }, [token, selectedDate, title]); 
 
     useEffect(() => {
-        
-        // fetches the meal_items associated with the correct meal (title) and selected date
-        const fetchMealItems = async () => {
-            if (!token) return; // prevent making the request if there is no token/user isn't logged in
-            
-            try {
-                const mealDate = selectedDate.toISOString().split('T')[0]; // formats the date
-
-                // 1.) fetches meal_log_id of the meal_log with the associated selected date
-                const logResponse = await fetch(`${backendUrl}/api/meals/get_log_id`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`, // jwt authorization
-                    },
-                    body: JSON.stringify({
-                        meal_date: mealDate,
-                    }),
-                });
-
-                const logData = await logResponse.json();
-                const meal_log_id = logData.meal_log_id;
-
-                if (!meal_log_id) {
-                    throw new Error('Meal log not found for the specified date and meal type.');
-                }
-
-                // 2.) fetches meal_items based on meal_log_id and title (which is the meal_type)
-                const itemsResponse = await fetch(`${backendUrl}/api/meals/get_items?meal_log_id=${meal_log_id}&meal_type=${title}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,  // jwt authorization
-                        'Content-Type': 'application/json',  
-                    }
-                });
-                const itemsData = await itemsResponse.json();
-                setItems(itemsData.items); // update the item state
-
-            } catch (error) {
-                console.error('Error fetching meal items:', error);
-            }
-        };
-
         fetchMealItems();
-    }, [selectedDate, title, items, token]); // re-fetches the meal_items every time there is a change to the date, a change to items state, or a change to the title
+    }, [selectedDate, token, fetchMealItems]); // re-fetches the meal_items every time there is a change to the date, a change to items state, or a change to the title
+
+
+
+
+
+
 
     // goes through all of the items within the items array and sums up the total macros and calories 
     const totals = (items || []).reduce(
@@ -108,7 +119,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
             border: '1px solid #b0b0b0',
             borderBottom: isFirst ? '0' : isLast ? '1px solid #b0b0b0':  '0',
             borderTop: isLast ? '1px solid #b0b0b0' : '1px solid #b0b0b0'
-        }}  disableGutters elevation={0}>
+        }}  disableGutters expanded = {expanded} onChange = {handleChange} elevation={0}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`${title}-log`} // name for each expandable body of each meal accordion
@@ -154,8 +165,8 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
             <AccordionDetails style={{ margin: '0', padding: '0' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <tbody style = {{fontSize: '10px', border: 'none', borderCollapse: 'collapse'}}>
-                        {items.map((item, index) => (
-                            <tr key={index} style = {{justifyContent: 'space-between', display: 'flex', alighItems: 'center',  borderBottom: '1px solid #ddd'}}>
+                        {items.map((item) => (
+                            <tr key = {item.id} style = {{justifyContent: 'space-between', display: 'flex', alighItems: 'center',  borderBottom: '1px solid #ddd'}}>
                                 <td style={{ padding: '8px'}}>
                                     <p style = {{fontSize: '10px'}}>{`${toTitleCase(item.food_name)}, ${item.quantity ? item.quantity : ''} ${item.unit ? item.unit : ''}`}</p>
                                 </td>
