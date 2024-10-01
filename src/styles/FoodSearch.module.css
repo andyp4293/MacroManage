@@ -29,3 +29,30 @@
     border-radius: 10px; /* Roundness of the scrollbar */
     border: 3px solid #f1f1f1; /* Padding around the thumb */
 }
+
+.left-container {
+    width: 50%; 
+}
+
+.right-container{
+    width: 50%; 
+}
+
+.foodSearchContainer {
+    width: 100; 
+}
+
+@media (max-width: 768px) {
+    .left-container {
+            width: 100%;
+    }
+
+    .foodSearchContainer {
+        flex-direction: column; 
+    }
+
+    .right-container {
+        width: 100%;
+    }
+
+}

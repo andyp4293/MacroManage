@@ -86,7 +86,7 @@ function GoalSelector({ open, onClose, goals }) {
         <DialogContent>
             <form>
                 <div style = {{display: 'flex', alignItems: 'end',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
-                <p style = {{width: '40%', fontSize: '15px'}}>
+                <p style = {{width: '100%', fontSize: '15px'}}>
                     Calories
                 </p>
                 <TextField
@@ -96,8 +96,12 @@ function GoalSelector({ open, onClose, goals }) {
                                 borderColor: calories === '' ? 'red' : '#343d46',
                             },
                         },
+                        width: {
+                            xs: '40%',
+                            sm: '15%', 
+                        }
                     }}
-                    inputProps={{style: {fontSize: 14}}} 
+                    inputProps={{style: {fontSize: 14, height: '3px'}}} 
                     margin="normal"
                     pattern="[0-9]"
                     onChange={(e) => {
@@ -117,10 +121,18 @@ function GoalSelector({ open, onClose, goals }) {
 
 
             <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
-            <p style = {{width: '80%', fontSize: '14px'}}>
+            <p style = {{width: {
+                    xs: '30vw',
+                    sm: '30vw',  
+                    md: '80%',  
+                }, fontSize: '14px'}}>
                 Protein {Math.round((protein*calories*0.01)/4)}g
             </p>
-            <FormControl style = {{width : '15%'}} margin="normal">
+            <FormControl style = {{width : {
+                    xs: '60vw',
+                    sm: '60vw',  
+                    md: '15%',  
+                }, }} margin="normal">
                 <Select
                 style = {{height: '30px', fontSize: '14px'}}
                 value={protein || 0}
@@ -153,10 +165,18 @@ function GoalSelector({ open, onClose, goals }) {
 
 
             <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
-            <p style = {{width: '80%', fontSize: '14px'}}>
+                <p style = {{width: {
+                    xs: '30vw',
+                    sm: '30vw',  
+                    md: '80%',  
+                }, fontSize: '14px'}}>
                 Fats {Math.round((fat*calories*0.01)/9)}g
             </p>
-            <FormControl style = {{width : '15%'}} margin="normal">
+                <FormControl style = {{width : {
+                    xs: '60vw',
+                    sm: '60vw',  
+                    md: '15%',  
+                }, }} margin="normal">
                 <Select
                 value={fat || 0}
                 style = {{height: '30px', fontSize: '14px'}}
@@ -188,10 +208,18 @@ function GoalSelector({ open, onClose, goals }) {
             </div>
 
             <div style = {{display: 'flex', alignItems: 'center',  justifyContent: 'space-between', borderBottom: 'solid 1px #D3D3D3'}}>
-            <p style = {{width: '80%', fontSize: '14px'}}>
+                <p style = {{width: {
+                    xs: '30vw',
+                    sm: '30vw',  
+                    md: '80%',  
+                }, fontSize: '14px'}}>
                 Carbs {Math.round((carbs*calories*0.01)/4)}g
             </p>
-            <FormControl style = {{width : '15%'}} margin="normal">
+                <FormControl style = {{width : {
+                    xs: '60vw',
+                    sm: '60vw',  
+                    md: '15%',  
+                }, }} margin="normal">
                 <Select
                 style = {{height: '30px', fontSize: '14px'}}
                 value={carbs || 0}

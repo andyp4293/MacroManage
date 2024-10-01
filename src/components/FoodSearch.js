@@ -181,10 +181,9 @@ function FoodSearchModal({ open, onClose, addFood }) {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <div style={{ display: 'flex', width: '100%', height: 'auto', alignItems: 'stretch'}}>
+                    <div className = {styles['foodSearchContainer']} style={{ display: 'flex', width: '100%', height: 'auto', alignItems: 'stretch'}}>
 
-                        {/*left half */}
-                        <div style = {{width: '50%'}}>
+                        <div className = {styles['left-container']}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%'}}>
                                 <div style={{ position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px' }}>
                                     <TextField
@@ -256,16 +255,16 @@ function FoodSearchModal({ open, onClose, addFood }) {
 
 
 
-                        {/*right half */}
-                        <div style={{ width: '50%' ,backgroundColor: 'white', }}>
+                        
+                        <div className = {styles['right-container']} style={{backgroundColor: 'white', }}>
                             {foodPopup && itemData && (
                                 <div style={{ width: '100%' }}>
                                     <Box style={{ width: '100%' }}>
-                                        <Box className='macro and calorie container'>
+                                        <Box className='macro and calorie container' sx = {{ marginTop: '3%', marginBottom: '3%', borderRadius: '10px'}}>
                                             <Typography variant="h6" component="div" gutterBottom sx={{ textAlign: 'center' }}>
                                                 {calories} kcal
                                             </Typography>
-                                            <div style={{ display: 'flex', width: '100%',}}>
+                                            <div style={{ display: 'flex', width: '100%', justifyContent: 'center'}}>
                                                 <div style={{ height: '100px', width: '100px', display: 'flex', alignItems: 'center', }}>
                                                     <Doughnut
                                                         data={{
@@ -436,13 +435,18 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                             }}>
                                                 <Button variant="contained" startIcon={<AddIcon/>} disableRipple 
                                                     
-                                                    style={{
-                                                        width: '50%',
+                                                    sx={{
+                                                        width: {
+                                                            xs: '100%', 
+                                                            sm: '100%', 
+                                                            md: '50%'
+                                                        },
                                                         height: '40px',
                                                         backgroundColor: '#343d46',
                                                         color: 'white',
                                                         fontSize: '16px',
-                                                        textTransform: 'none'
+                                                        textTransform: 'none',
+                                                        '&:hover': { backgroundColor: '#4f5b66' },
                                                         
                                                     }}
                                                     onClick={handleAdd}

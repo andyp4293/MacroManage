@@ -230,7 +230,7 @@ function FoodLog() {
 
 
             <ChatBox/>
-            <div style = {{backgroundColor: 'black'}}>
+            <div>
                 {/* modal is displayed when FOOD button is clicked */}
                 <FoodSearch
                     open={isFoodSearchOpen}
