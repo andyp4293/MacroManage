@@ -56,10 +56,16 @@ function Signup() {
 
 
     return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
+      <Box sx = {{display: 'flex', justifyContent: 'center', width: 
+          {
+              xs: '80%',
+              sm: '80%',  
+              md: '80%',  
+              lg: '35vw', 
+          },
+      }}>
       <div style={{
-        width: '35vw',
-        minWidth: '400px', 
+        width: '100%',
         backgroundColor: "white",  
         borderRadius: '20px', 
         height: 'fit-content',

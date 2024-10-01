@@ -36,7 +36,8 @@ function WeightChart({ data }) {
     return (
         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h3>Weight</h3>
-            <ResponsiveContainer width="100%" height='100%'>
+            <div style={{ width: '100%', height: '100%' }}>
+            <ResponsiveContainer width="99%" height='99%'>
                 <LineChart data={chartData}>
 
                     <XAxis 
@@ -76,6 +77,7 @@ function WeightChart({ data }) {
                     />
                 </LineChart>
             </ResponsiveContainer>
+            </div>
         </div>
     );
 }
