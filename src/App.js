@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';  
 import Navbar from './components/Navbar';
 import Calculator from './pages/Calculator';
@@ -13,6 +13,10 @@ function App() {
     const handleLogin = () => {
         setLoggedIn(true); 
     }
+
+
+    
+
     
     return (
         <Router>

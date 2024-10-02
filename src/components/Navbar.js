@@ -54,7 +54,7 @@ function Navbar({change}) {
     return (
         <nav className="navigation">
             <div className="left">
-                <NavLink className="home" to="/">MacroManage</NavLink>
+                <NavLink className="home" to="/food-log">MacroManage</NavLink>
             </div>
             <div className = 'nav-links'>
             <ul>
