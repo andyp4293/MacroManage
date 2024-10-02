@@ -10,6 +10,7 @@ const backendUrl = process.env.REACT_APP_APIURL;
 
 function formatDate(isoDate) {
     const date = new Date(isoDate);
+    date.setDate(date.getDate() + 1); 
     const month = date.getMonth() + 1;  
     const day = date.getDate();
     const year = date.getFullYear();
@@ -20,6 +21,8 @@ function formatDate(isoDate) {
 
 function WeightTable({data, onChange}) {
     const token = localStorage.getItem('token'); // json web token
+    // entries is an array for objects that will hold each entry's date and weight
+    const [entries, setEntries] = useState([]); 
 
     const fetchWeightLogs = useCallback(async () => {
         if (!token) return; // prevent making the request if there is no token/user isn't logged in
@@ -124,11 +127,8 @@ function WeightTable({data, onChange}) {
     
     // FOR PAGINATION
     const [currentPage, setCurrentPage] = useState(1); // current page state
-    const [rowsPerPage] = useState(7); // number of rows to display per page
+    const [rowsPerPage] = useState(10); // number of rows to display per page
 
-
-    // entries is an array for objects that will hold each entry's date and weight
-    const [entries, setEntries] = useState([]); 
 
     const totalPages = Math.ceil(entries.length / rowsPerPage); // Calculate total pages
 

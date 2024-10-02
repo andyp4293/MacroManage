@@ -8,6 +8,7 @@ import WeightStats from '../components/WeightStats';
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
+
 function WeightLog() {
     const token = localStorage.getItem('token'); // json web token
     // setting the weight value in the weight input box
@@ -55,6 +56,7 @@ function WeightLog() {
 
         // Format the date to match your backend expectations (e.g., 'YYYY-MM-DD')
         const formattedDate = selectedDate.toISOString().slice(0, 10);
+        
 
         try {
             const response = await fetch(`${backendUrl}/api/weight/add_weight_log`, {
@@ -148,10 +150,11 @@ function WeightLog() {
                 </div>
                 </div>
                 
+                <div className = {styles.rightContainer} >
                 <div className = {styles.weightChartContainer} style={{  
                         display: 'flex', 
-                        justifyContent: 'center', 
-                        padding: '1%', 
+                        alignItems:'center', 
+                        flexDirection: 'column',
 
                         border: '1px solid #f0f0f0',
                         borderRadius: '8px',
@@ -162,11 +165,12 @@ function WeightLog() {
                     <WeightChart data = {entries}/>
 
                 </div>
+                    <WeightStats/>
+                </div>
 
                 <ChatBox/>
 
             </div>
-                <WeightStats/>
             </div>
 
     );
