@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu, MenuItem } from '@mui/material';
 import '../styles/Navbar.css';
 import {jwtDecode} from 'jwt-decode'; 
 
-function Navbar() {
+function Navbar({change}) {
     const token = localStorage.getItem('token');
-    let username = null;
+    const [username, setUsername] = useState(null); 
     
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -29,22 +29,27 @@ function Navbar() {
     };
 
 
-    if (token) {
-        try {
-            const decodedToken = jwtDecode(token);
-            const currentTime = Date.now() / 1000; 
+    
+    
 
-            // checks if token is expired
-            if (decodedToken.exp > currentTime) {
-                username = decodedToken.username || decodedToken.user || null;
-            } else {
-                localStorage.removeItem('token'); // remove token is invalid
+    useEffect(() => {
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                const currentTime = Date.now() / 1000; 
+
+                // checks if token is expired
+                if (decodedToken.exp > currentTime) {
+                    setUsername(decodedToken.username || decodedToken.user || null);
+                } else {
+                    localStorage.removeItem('token'); // remove token is invalid
+                }
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                localStorage.removeItem('token'); // remove token if invalid
             }
-        } catch (error) {
-            console.error('Error decoding token:', error);
-            localStorage.removeItem('token'); // remove token if invalid
         }
-    }
+    }, [token, change]);
 
     return (
         <nav className="navigation">

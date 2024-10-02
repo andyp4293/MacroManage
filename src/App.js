@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';  
 import Navbar from './components/Navbar';
 import Calculator from './pages/Calculator';
@@ -8,12 +8,18 @@ import Login from './pages/Login';
 import Signup from './pages/Signup'; 
 
 function App() {
+    const [loggedIn, setLoggedIn] = useState(false); 
+
+    const handleLogin = () => {
+        setLoggedIn(true); 
+    }
+    
     return (
         <Router>
             <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#F2F2F2' }}>
                 
                 <div style={{ height: 'auto', backgroundColor: '#343d46', }}>
-                    <Navbar />
+                    <Navbar change = {loggedIn}/>
                 </div>
                 
                 <div style={{
@@ -28,7 +34,7 @@ function App() {
                         <Route path="/calculator" element={<Calculator />} />
                         <Route path="/food-log" element={<FoodLog />} />
                         <Route path="/weight-log" element={<WeightLog />} />
-                        <Route path="/login" element={<Login />} />
+                        <Route path="/login" element={<Login onLogin = {handleLogin}/>} />
                         <Route path="/signup" element={<Signup />} />
                     </Routes>
                 </div>

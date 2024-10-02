@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
-function Login() {
+function Login({onLogin}) {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
@@ -33,6 +33,7 @@ function Login() {
             if (response.ok) { // triggers if the status response is not 200-299, 
                 localStorage.setItem('token', data.token);  // save the jwt token in local storage
                 navigate('/food-log'); // redirects to food page
+                onLogin(); 
             }
             else {
                 setError(data.message); 
