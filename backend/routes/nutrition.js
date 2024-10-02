@@ -9,23 +9,14 @@ router.post('/', async (req, res) => {
 
     try {
         const result = await pool.query(`
-            WITH RankedFood AS (
-                SELECT *,
-                    ROW_NUMBER() OVER (PARTITION BY LOWER(name) ORDER BY CASE
-                        -- 1. Exact match first
-                        WHEN LOWER(name) = LOWER($2) THEN 1
-                        -- 2. Names that start with the query
-                        WHEN LOWER(name) LIKE LOWER($1) THEN 2
-                        -- 3. Partial matches come last
-                        ELSE 3
-                    END) AS rank
-                FROM food_nutrition_data
-                WHERE LOWER(name) LIKE LOWER($1)
-            )
-            SELECT * FROM RankedFood
-            WHERE rank <= 5
-            LIMIT 75;
-        `, [`${query}%`, query]);
+        SELECT *
+        FROM food_nutrition_data
+        WHERE LOWER(name) LIKE LOWER('%' || $1 || '%')
+
+        LIMIT 200;
+
+
+        `, [query]);
         // for the query, the specifications of the return prioritizes items with just the query in the name, any that contains the name first, and then any that contains the name in general
 
         res.json(result.rows);

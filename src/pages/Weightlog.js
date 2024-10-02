@@ -4,6 +4,7 @@ import styles from '../styles/Weightlog.module.css';
 import WeightChart from '../components/WeightChart'; 
 import WeightTable from '../components/WeightTable'; 
 import ChatBox from '../components/Chatbox';
+import WeightStats from '../components/WeightStats';
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
@@ -17,16 +18,6 @@ function WeightLog() {
     // entries is an array for objects that will hold each entry's date and weight
     const [entries, setEntries] = useState([]); 
 
-    // function to handle whenever the user inputs anything
-    const handleInput = (event) => {
-        let value = event.target.value; // Get the current value of the input
-        
-        // the weight value inside the input only changes as long as it is below 1000
-        // the input also cannot have more than 7 digits, highest possible input is 999.999
-        if (value < 1000 && value.length < 8 && value >= 0){ // if the current value is 999, if a user tries typing another 9 the value won't change
-            setWeight(value);
-        }
-    };
 
     const fetchWeightLogs = useCallback(async () => {
         if (!token) return; // prevent making the request if there is no token/user isn't logged in
@@ -97,6 +88,7 @@ function WeightLog() {
     };
 
     return (
+        <div style = {{width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'column'}}> 
             <div className = {styles.weightLogContainer}>
                 <div className = {styles.leftContainer}>
                 <div className = {styles.dateContainer} style={{ 
@@ -119,14 +111,21 @@ function WeightLog() {
                     <div className = {styles['weight']} > 
                         <input // input for the weight log of the day
                             name = 'weight' 
-                            type = 'number' // user can only input numbers
+                            type = 'text'
                             className = {styles['weight-input']}
-                            onChange={handleInput}
+                            onChange={(e) => {
+                                const newWeight = e.target.value;
+                                const regex = /^[0-9\b]+$/;  // only allows digits
+
+                                if ((newWeight === '' || regex.test(newWeight)) && newWeight.length <= 3) { // calories can only be 99,999 at most
+                                    setWeight(newWeight);  
+                                }
+                            }}
                             value={weight} // value inside the input is whatever weight value currently is
                             min = '0' // input cannot be negative
 
                         />
-                        
+                        <h5>lbs</h5>
                         <button
                             className = {styles['save-button']}
                             onClick = {() => {addEntry(weight)}}
@@ -166,6 +165,8 @@ function WeightLog() {
 
                 <ChatBox/>
 
+            </div>
+                <WeightStats/>
             </div>
 
     );

@@ -12,7 +12,7 @@ function toTitleCase(str) {
     });
 }
 
-function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
+function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete, change}) {
     const [items, setItems] = useState([]);
 
     const token = localStorage.getItem('token'); // json web token
@@ -67,7 +67,7 @@ function MealAccordion({ title, selectedDate, isFirst, isLast, onDelete}) {
 
     useEffect(() => {
         fetchMealItems();
-    }, [selectedDate, token, fetchMealItems]); // re-fetches the meal_items every time there is a change to the date, a change to items state, or a change to the title
+    }, [selectedDate, token, fetchMealItems, change]); // re-fetches the meal_items every time there is a change to the date, a change to items state, or a change to the title
 
 
 

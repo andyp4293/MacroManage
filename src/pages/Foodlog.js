@@ -185,10 +185,10 @@ function FoodLog() {
                     <div className = {styles['date-container']}>
                         <DateSelector onDateChange={updateDate}/>
                     </div> 
-                    <MealAccordion title="Breakfast" selectedDate = {selectedDate} isFirst = {true} onDelete = {fetchTotalNutrition} />
-                    <MealAccordion title="Lunch" selectedDate = {selectedDate} onDelete = {fetchTotalNutrition}/>
-                    <MealAccordion title="Dinner" selectedDate = {selectedDate} onDelete = {fetchTotalNutrition}/>
-                    <MealAccordion title="Snacks" selectedDate = {selectedDate} isLast = {true} onDelete = {fetchTotalNutrition}/>
+                        <MealAccordion title="Breakfast" selectedDate = {selectedDate} isFirst = {true} onDelete = {fetchTotalNutrition} change = {totalNutrition} />
+                        <MealAccordion title="Lunch" selectedDate = {selectedDate} onDelete = {fetchTotalNutrition} change = {totalNutrition}/>
+                        <MealAccordion title="Dinner" selectedDate = {selectedDate} onDelete = {fetchTotalNutrition} change = {totalNutrition}/>
+                        <MealAccordion title="Snacks" selectedDate = {selectedDate} isLast = {true} onDelete = {fetchTotalNutrition} change = {totalNutrition}/>
                     <button className = {styles['add-food']} onClick = {() => {handleOpenFoodSearch()}} >
                         <Box // Stack an add icon to the bottom right of food icon
                             sx={{

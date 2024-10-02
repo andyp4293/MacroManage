@@ -1,12 +1,19 @@
-import React, { useState, useCallback, useEffect} from 'react';
+import React from 'react';
+import {Box} from '@mui/material';
+import styles from '../styles/WeightStats.module.css';
 
-function weightStats () {
+function WeightStats ({data}) {
 
 
 
-    return {
+    return (
+        <Box className = {styles['weightStatsContainer']} >  
+            <h1>Weight Summary</h1>
+            
+        </Box>
 
-    }
-}
 
-export default WeightStats
+    );
+};
+
+export default WeightStats;

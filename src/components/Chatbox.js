@@ -86,7 +86,7 @@ const ChatBox = () => {
             fontWeight: 'bold',
             cursor: 'pointer'
           }}  onClick={toggleChatBox}>
-            <Box>Chat</Box>
+            <Box>AI Chatbot</Box>
           </Box>
 
           {/* conditionally render the chat content when the box is open */}

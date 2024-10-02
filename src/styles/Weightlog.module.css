@@ -25,7 +25,7 @@ input[type="number"] {
 .weight .weight-input {
     display: flex;
     align-items: center;
-    width: 150px;
+    width: 70px;
     height: 40px;
     border-radius: 5px;
     margin: 0; 
@@ -118,11 +118,10 @@ input[type="number"] {
     height: fit-content;
     display: flex; 
     padding: 1.5vh; 
-    margin-bottom: 40px;
 
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
     .weightLogContainer {
             width: 95%; 
             padding: 1%;
