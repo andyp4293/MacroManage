@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import {Box, Button, Typography} from '@mui/material';
+import {Box, Button, Typography, CircularProgress} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,8 +22,11 @@ function Signup() {
 
     const formIsIncomplete = !password || !email || !confirmPassword; // cannot click sign up button if all fields are not filled out
 
+    const [loading, setLoading] = useState(false); // for when the frontend is waiting to get a response back 
+
     const handleSignup = async () => {
         try {
+            setLoading(true);
             const response = await fetch(`${backendUrl}/api/users/signup`, {
                 method: 'POST', 
                 headers: {
@@ -49,6 +52,9 @@ function Signup() {
 
         catch(error){
             console.error('Error Signing up:', error);
+        }
+        finally {
+          setLoading(false); 
         }
     }
 
@@ -157,6 +163,13 @@ function Signup() {
           e.target.style.boxShadow = `0 0 3px ${!isValidPassword ? 'red' : '#66afe9'}`;
         }}
         onBlur={(e) => (e.target.style.boxShadow = 'none')} 
+        onKeyDown = {(e) => {
+          if (e.key === "Enter"){
+            if (!loading && !passwordError && !emailError && !formIsIncomplete)
+              handleSignup(); 
+          }
+        }}
+      
         />
 
         <div className = 'confirm-password-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -206,6 +219,7 @@ function Signup() {
             cursor: (formIsIncomplete || passwordError || confirmPasswordError || emailError) ? 'not-allowed' : 'pointer'
           }}
           disableRipple
+          disabled = {loading}
           onClick={() => {
             if (!passwordError && !confirmPasswordError && !emailError && !formIsIncomplete) { // sign up only goes through if all inputs are valid and none are empty
 
@@ -217,6 +231,13 @@ function Signup() {
             Sign up
           </Typography>
         </Button>
+
+        {/* show loading spinner when loading */}
+        {loading && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+            <CircularProgress sx = {{color: '#343d46'}} size={24} />
+          </Box>
+        )}
         {error && <Box className = 'error-message' style={{width: '100%', borderRadius: '4px', display: 'flex', justifyContent: 'center', height: '30px', border: '', color: 'red'}} >
           <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' , display: 'flex', alignItems: "center"}}><ErrorIcon style = {{fontSize: '20px'}}/> {error}</h4>
         </Box>}

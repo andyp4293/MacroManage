@@ -3,6 +3,7 @@ import DateSelector from '../components/dateSelector';
 import styles from '../styles/Weightlog.module.css';
 import WeightChart from '../components/WeightChart'; 
 import WeightTable from '../components/WeightTable'; 
+import {CircularProgress} from '@mui/material';
 import ChatBox from '../components/Chatbox';
 import WeightStats from '../components/WeightStats';
 
@@ -15,6 +16,7 @@ function WeightLog() {
     const [weight, setWeight] = useState('');
     // setting the data for the weight entry
     const [selectedDate, setSelectedDate] = useState(new Date())
+    const [loading, setLoading] = useState(false); 
 
     // entries is an array for objects that will hold each entry's date and weight
     const [entries, setEntries] = useState([]); 
@@ -45,6 +47,7 @@ function WeightLog() {
 
     // func to add a new weight entry whenever user presses save
     const addEntry = async (addWeight) => {
+        setLoading(true); 
         let weightValue;
         setWeight(''); 
 
@@ -81,6 +84,9 @@ function WeightLog() {
         } catch (error) {
             console.error('Error adding or updating entry:', error);
         }
+        finally {
+            setLoading(false); 
+        }
     }
 
 
@@ -111,6 +117,10 @@ function WeightLog() {
                     
                     
                     <div className = {styles['weight']} > 
+                        {loading && (
+                            <CircularProgress style = {{color: '#343d46'}}size = {22}/>
+                        )}
+                        
                         <input // input for the weight log of the day
                             name = 'weight' 
                             type = 'text'
@@ -124,7 +134,13 @@ function WeightLog() {
                                 }
                             }}
                             value={weight} // value inside the input is whatever weight value currently is
-                            min = '0' // input cannot be negative
+                            onKeyDown = {(e) => {
+                                if (e.key === "Enter"){
+                                if (!loading)
+                                    addEntry(weight); 
+                                }
+                            }}
+
 
                         />
                         <h5>lbs</h5>

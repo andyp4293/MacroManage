@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import {Box, Button, Typography} from '@mui/material';
+import {Box, Button, Typography, CircularProgress} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,8 +15,10 @@ function Login({onLogin}) {
     const formIsIncomplete = !password || !email; // cannot click sign in button if all fields are not filled out
 
     const [error, setError] = useState(''); 
+    const [loading, setLoading] = useState(false); // for when the frontend is waiting to get a response back 
 
     const handleSignin = async () => {
+        setLoading(true);
         try {
             const response = await fetch(`${backendUrl}/api/users/signin`, {
                 method: 'POST', 
@@ -41,6 +43,9 @@ function Login({onLogin}) {
         }
         catch(error){
             console.error('Error Signing in:', error);
+        }
+        finally {
+            setLoading(false); 
         }
     }
 
@@ -133,7 +138,8 @@ function Login({onLogin}) {
                     onBlur={(e) => (e.target.style.boxShadow = 'none')} 
                     onKeyDown = {(e) => {
                         if (e.key === "Enter"){
-                            handleSignin();
+                            if (!loading && !passwordError && !emailError && !formIsIncomplete)
+                                handleSignin();
                         }
                     }}
                     />
@@ -160,11 +166,18 @@ function Login({onLogin}) {
                                         handleSignin();
                                     }
                                 }}
+                                disabled = {loading}
                         >
                         <Typography sx = {{textTransform: 'none', color: "white", fontSize: '20px'}}>
                             Sign in
                         </Typography>
                 </Button>
+                    {/* show loading spinner when loading */}
+                    {loading && (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                            <CircularProgress sx = {{color: '#343d46'}} size={24} />
+                        </Box>
+                    )}
                     {error && <Box className = 'error-message' style={{width: '100%', borderRadius: '4px', display: 'flex', justifyContent: 'center', height: '30px', border: '', color: 'red'}} >
                         <h4 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' , display: 'flex', alignItems: "center"}}><ErrorIcon style = {{fontSize: '20px'}}/> {error}</h4>
                     </Box>}

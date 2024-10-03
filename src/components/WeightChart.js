@@ -24,7 +24,7 @@ function WeightChart({ data }) {
 
         return data.map(d => ({
             weight_date: d.weight_date,
-            Trend: m * d.weight_date + b || 0
+            Trend: m * d.weight_date + b || data[0].weight
         }));
     };
 

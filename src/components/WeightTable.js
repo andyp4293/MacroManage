@@ -10,7 +10,6 @@ const backendUrl = process.env.REACT_APP_APIURL;
 
 function formatDate(isoDate) {
     const date = new Date(isoDate);
-    date.setDate(date.getDate() + 1); 
     const month = date.getMonth() + 1;  
     const day = date.getDate();
     const year = date.getFullYear();
