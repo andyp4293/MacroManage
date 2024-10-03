@@ -3,12 +3,11 @@ import {Box, Button, Typography, CircularProgress} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import 'react-toastify/dist/ReactToastify.css';
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
-function Login({onLogin}) {
+function ForgotPassword() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
@@ -50,8 +49,7 @@ function Login({onLogin}) {
             const data = await response.json(); 
             if (response.ok) { // triggers if the status response is not 200-299, 
                 localStorage.setItem('token', data.token);  // save the jwt token in local storage
-                navigate('/food-log'); // redirects to food page
-                onLogin(); 
+                navigate('/reset-password'); // redirects to food page
                 notifySuccess(); 
             }
             else {
@@ -59,7 +57,7 @@ function Login({onLogin}) {
             }
         }
         catch(error){
-            console.error('Error Signing in:', error);
+            console.error('Error finding email:', error);
         }
         finally {
             setLoading(false); 
@@ -91,10 +89,9 @@ function Login({onLogin}) {
                     margin: '2vh', 
                     fontFamily: 'Arial, sans-serif'
                 }}>
-                <h2 style = {{width: '100%', margin: '0', marginTop: '2%', display: 'flex', marginBottom: '0', justifyContent: 'center', alignItems: 'center'}}><LockOutlinedIcon />Login</h2>
                 
                 <>
-                <div className = 'email-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '-2%' }}>
+                <div className = 'email-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h5 style={{ marginBottom: '5px', fontWeight: '500' }}>Email</h5>
                     {emailError && <h5 style={{ color: 'red', fontSize: '12px', marginBottom: '0px' }}>Please enter a valid email address.</h5>}
                 </div>
@@ -166,7 +163,7 @@ function Login({onLogin}) {
                 <div>
                 <div style = {{display: 'flex', justifyContent: 'space-between'}}>
                     <p style={{ fontSize: '14px', textAlign: 'center' }}>Don't have an account? <a href="/signup">Sign up</a></p>
-                    <p style={{ fontSize: '13px', alignItems: 'center' }}><a href="/forgot-password">Forgot Password</a></p>
+                    <p style={{ fontSize: '13px', alignItems: 'center' }}><a href="/signup">Forgot Password</a></p>
                 </div>
 
                 <Button sx={{
@@ -208,4 +205,4 @@ function Login({onLogin}) {
     );
 }
 
-export default Login
+export default ForgotPassword

@@ -4,6 +4,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 
 const backendUrl = process.env.REACT_APP_APIURL;
@@ -86,19 +87,21 @@ function Signup() {
               lg: '35vw', 
           },
       }}>
-      <div style={{
-        width: '100%',
-        backgroundColor: "white",  
-        borderRadius: '20px', 
-        height: 'fit-content',
-        border: '1px solid #ddd', 
-        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
-        padding: '7%',
-        margin: '2vh', 
-        fontFamily: 'Arial, sans-serif'
-      }}>
+        <div style={{
+            width: '100%',
+            backgroundColor: "white", 
+            borderRadius: '20px', 
+            border: '1px solid #ddd', 
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
+            padding: '7%',
+            paddingTop: '2%',
+            height: 'fit-content',
+            margin: '2vh', 
+            fontFamily: 'Arial, sans-serif'
+        }}>
+        <h2 style = {{width: '100%', margin: '0', marginTop: '1%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}><LockOutlinedIcon />Signup</h2>
 
-        <h5 style={{ marginBottom: '5px', fontWeight: '500' , marginTop: '-5px'}}>Username</h5>
+        <h5 style={{ marginBottom: '5px', fontWeight: '500' , marginTop: '3%'}}>Username</h5>
         <input style={{
           marginBottom: '0px', 
           height: '25px', 

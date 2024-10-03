@@ -6,6 +6,8 @@ import WeightLog from './pages/Weightlog';
 import FoodLog from './pages/Foodlog';
 import Login from './pages/Login'; 
 import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import { ToastContainer } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';   
 
@@ -39,6 +41,8 @@ function App() {
                         <Route path="/weight-log" element={<WeightLog />} />
                         <Route path="/login" element={<Login onLogin = {handleLogin}/>} />
                         <Route path="/signup" element={<Signup />} />
+                        <Route path="/forgot-password" element={<ForgotPassword/>} />
+                        <Route path="/reset-password" element={<ResetPassword />} />
                     </Routes>
                 </div>
             </div>

@@ -190,11 +190,11 @@ function FoodSearchModal({ open, onClose, addFood }) {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <div className = {styles['foodSearchContainer']} style={{ display: 'flex', width: '100%', height: 'auto', alignItems: 'stretch'}}>
+                    <div className = {styles['foodSearchContainer']} style={{ display: 'flex', width: '100%', height: 'auto', alignItems: 'stretch', backgroundColor: 'white'}}>
 
                         <div className = {styles['left-container']}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%'}}>
-                                <div style={{ position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '10px' }}>
+                                <div style={{ position: 'sticky', top: 0, backgroundColor: 'white', marginBottom: '0' }}>
                                     <TextField
                                         autoFocus
                                         margin="dense"
@@ -267,7 +267,7 @@ function FoodSearchModal({ open, onClose, addFood }) {
                         
                         <div className = {styles['right-container']} style={{backgroundColor: 'white', }}>
                             {foodPopup && itemData && (
-                                <div style={{ width: '100%' }}>
+                                <div style={{ width: '100%' , height: '100%'}}>
                                     <Box style={{ width: '100%' }}>
                                         <Box className='macro and calorie container' sx = {{ marginTop: '3%', marginBottom: '3%', borderRadius: '10px'}}>
                                             <Typography variant="h6" component="div" gutterBottom sx={{ textAlign: 'center' }}>
@@ -347,10 +347,11 @@ function FoodSearchModal({ open, onClose, addFood }) {
                                         outline: '1px solid #D3D3D3',
                                         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                         padding: '20px'
+
                                     }}>
 
                                         {/* quantity selection box */}
-                                        <div className='quantity selection' style = {{marginBottom: '2px'}}>
+                                        <div className='quantity selection' style = {{height: 'auto'}}>
                                             <Box sx={{
                                                 display: 'flex',
                                                 justifyContent: 'center',
