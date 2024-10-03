@@ -20,6 +20,7 @@ function toTitleCase(str) {
 }
 
 function FoodSearchModal({ open, onClose, addFood }) {
+    const token = localStorage.getItem('token'); // json web token
     // state for the search query
     const [query, setQuery] = useState('');
     
@@ -142,6 +143,10 @@ function FoodSearchModal({ open, onClose, addFood }) {
 
 
     const handleAdd = () => {
+        if(!token) {
+            window.location.href = '/login';// prompts the user to login if they aren't and they try to add an entry
+            return; 
+        }
         const foodDetails = {
             calories,
             protein, 

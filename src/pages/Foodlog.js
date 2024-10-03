@@ -160,10 +160,13 @@ function FoodLog() {
 
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0]; // get the current date
-        checkMealLogs(today); // check if today's date already has a meal_log associated with it
-        fetchNutritionGoals();
-        fetchTotalNutrition(); 
-    }, [checkMealLogs, fetchNutritionGoals, fetchTotalNutrition, isGoalsOpen]); // useCallback ensures checkMealLogs doesn't change unnecessarily
+        if (token){
+            checkMealLogs(today); // check if today's date already has a meal_log associated with it
+            checkMealLogs(today); // check if today's date already has a meal_log associated with it
+            fetchNutritionGoals();
+            fetchTotalNutrition(); 
+        }
+    }, [checkMealLogs, fetchNutritionGoals, fetchTotalNutrition, isGoalsOpen, token]); // useCallback ensures checkMealLogs doesn't change unnecessarily
 
     const updateDate = (newDate) => { // triggers every time there is a change to the selected date
         setSelectedDate(newDate); // changes the selected date to the current date displayed on the date selector
@@ -181,7 +184,7 @@ function FoodLog() {
             <Box className={styles.foodLogContainer}>
 
                 {/*box that holds the food log */}
-                <div className = {styles.mealLog} style = {{ boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)', padding: '1%', borderRadius: '8px', backgroundColor: 'white', }} elevation = {10}> 
+                <div className = {styles.mealLog} style = {{ boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.5)', borderRadius: '8px', backgroundColor: 'white', }} elevation = {10}> 
                     <div className = {styles['date-container']}>
                         <DateSelector onDateChange={updateDate}/>
                     </div> 

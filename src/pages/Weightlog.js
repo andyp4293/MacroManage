@@ -47,6 +47,9 @@ function WeightLog() {
 
     // func to add a new weight entry whenever user presses save
     const addEntry = async (addWeight) => {
+        if(!token) {
+            window.location.href = '/login';// prompts the user to login if they aren't and they try to add an entry
+        }
         setLoading(true); 
         let weightValue;
         setWeight(''); 

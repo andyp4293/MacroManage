@@ -146,12 +146,15 @@ const ChatBox = () => {
                   onChange={(e) => setPrompt(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      handlePrompt();
+                      if(!loading){
+                        handlePrompt();
+                      }
+                      
                     }
                   }}
                   sx={{ marginRight: '8px' }}
                 />
-                <Button onClick={handlePrompt} variant="contained" sx={{ width: '20%', backgroundColor: '#343d46', '&:hover': {
+                <Button onClick={handlePrompt} disabled = {loading} variant="contained" sx={{ width: '20%', backgroundColor: '#343d46', '&:hover': {
                       backgroundColor: '#4f5b66'
                   }}}>
                   <IoSend/>

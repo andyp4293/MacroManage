@@ -69,6 +69,7 @@ function Login({onLogin}) {
                     border: '1px solid #ddd', 
                     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', 
                     padding: '7%',
+                    paddingTop: '2%',
                     height: 'fit-content',
                     margin: '2vh', 
                     fontFamily: 'Arial, sans-serif'

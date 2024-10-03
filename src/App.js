@@ -13,10 +13,6 @@ function App() {
     const handleLogin = () => {
         setLoggedIn(true); 
     }
-
-
-    
-
     
     return (
         <Router>
