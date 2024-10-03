@@ -99,10 +99,10 @@ function FoodSearchModal({ open, onClose, addFood }) {
                 setServingQty(fetchedItemData.serving_size || 100)
                 setDefaultServingQty(fetchedItemData.serving_size || 100); // Default serving amount
                 setDefaultServingQtyGrams(servingWeightGrams||100); // Default serving amount in grams
-                setCalories(Number((fetchedItemData.kcal).toFixed(1)));
-                setProtein(Number((fetchedItemData.protein).toFixed(1))); 
-                setFats(Number((fetchedItemData.total_fat).toFixed(1)));
-                setCarbs(Number((fetchedItemData.total_carb).toFixed(1))); 
+                setCalories(Number((fetchedItemData.kcal||0).toFixed(1)));
+                setProtein(Number((fetchedItemData.protein||0).toFixed(1))); 
+                setFats(Number((fetchedItemData.total_fat||0).toFixed(1)));
+                setCarbs(Number((fetchedItemData.total_carb||0).toFixed(1))); 
                 setFoodName(fetchedItemData.name); 
                 setServingUnit(fetchedItemData.serving_size_unit ? fetchedItemData.serving_size_unit: 'g');
                 setFoodPopup(true); // Open the food popup after data is fetched
@@ -122,19 +122,19 @@ function FoodSearchModal({ open, onClose, addFood }) {
             case 'unit1': // default serving unit
                 setServingUnit('g'); 
                 setPassedServingQty(servingQty || 100); 
-                setCalories(Number((itemData.kcal * (servingQty / defaultServingQty)).toFixed(1)));
-                setProtein(Number((itemData.protein * (servingQty / defaultServingQty)).toFixed(1)));
-                setFats(Number((itemData.total_fat * (servingQty / defaultServingQty)).toFixed(1)));
-                setCarbs(Number((itemData.total_carb * (servingQty / defaultServingQty)).toFixed(1)));
+                setCalories(Number(((itemData.kcal * (servingQty / defaultServingQty))||0).toFixed(1)));
+                setProtein(Number(((itemData.protein * (servingQty / defaultServingQty))||0).toFixed(1)));
+                setFats(Number((itemData.total_fat * (servingQty / defaultServingQty)||0).toFixed(1)));
+                setCarbs(Number(((itemData.total_carb * (servingQty / defaultServingQty))||0).toFixed(1)));
             break; 
 
             case 'unit2': // default serving amount in grams or ml 
                 setServingUnit((servingUnit === 'g') ? 'g': 'ml'); 
                 setPassedServingQty(servingQty * defaultServingQtyGrams);
-                setCalories(Number((itemData.kcal * (servingQty)).toFixed(1)));
-                setProtein(Number((itemData.protein * (servingQty)).toFixed(1)));
-                setFats(Number((itemData.total_fat * (servingQty)).toFixed(1)));
-                setCarbs(Number((itemData.total_carb * (servingQty)).toFixed(1)));
+                setCalories(Number(((itemData.kcal * (servingQty))||0).toFixed(1)));
+                setProtein(Number(((itemData.protein * (servingQty))||0).toFixed(1)));
+                setFats(Number(((itemData.total_fat * (servingQty))||0).toFixed(1)));
+                setCarbs(Number(((itemData.total_carb * (servingQty))||0).toFixed(1)));
             break; 
             default:
         }
