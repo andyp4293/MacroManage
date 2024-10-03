@@ -16,7 +16,7 @@ function FoodLog() {
     const token = localStorage.getItem('token'); // json web token
     const [isFoodSearchOpen, setIsFoodSearchOpen] = useState(false); // state to open or close the modal 
 
-    const [totalNutrition, setTotalNutrition] = useState({});
+    const [totalNutrition, setTotalNutrition] = useState({calories: 0, protein_percent: 0, fat_percent: 0, carbohydrate_percent: 0});
 
     const [isGoalsOpen, setIsGoalsOpen] = useState(false); 
 
