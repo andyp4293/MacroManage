@@ -99,7 +99,10 @@ function Signup() {
             margin: '2vh', 
             fontFamily: 'Arial, sans-serif'
         }}>
-        <h2 style = {{width: '100%', margin: '0', marginTop: '1%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}><LockOutlinedIcon />Signup</h2>
+        <div style = {{width: '100%', margin: '0', marginTop: '2%', display: 'flex', marginBottom: '0', flexDirection: 'column', alignItems: 'center'}}>
+            <LockOutlinedIcon sx = {{fontSize: '30px'}}/>
+            <h3 style = {{width: '100%', margin: '0', marginTop: '2%', display: 'flex', marginBottom: '0', justifyContent: 'center', alignItems: 'center'}}>Sign up</h3>
+        </div>
 
         <h5 style={{ marginBottom: '5px', fontWeight: '500' , marginTop: '3%'}}>Username</h5>
         <input style={{

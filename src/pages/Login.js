@@ -21,7 +21,7 @@ function Login({onLogin}) {
     const [loading, setLoading] = useState(false); // for when the frontend is waiting to get a response back 
 
     const notifySuccess = () => {
-        toast.success('Logged in successfully', {
+        toast.success('Logged in successfully!', {
             position: "top-right",
             autoClose: 3000, // slose after 3 seconds
             hideProgressBar: false,
@@ -91,7 +91,10 @@ function Login({onLogin}) {
                     margin: '2vh', 
                     fontFamily: 'Arial, sans-serif'
                 }}>
-                <h2 style = {{width: '100%', margin: '0', marginTop: '2%', display: 'flex', marginBottom: '0', justifyContent: 'center', alignItems: 'center'}}><LockOutlinedIcon />Login</h2>
+                <div style = {{width: '100%', margin: '0', marginTop: '2%', display: 'flex', marginBottom: '0', flexDirection: 'column', alignItems: 'center'}}>
+                    <LockOutlinedIcon sx = {{fontSize: '30px'}}/>
+                    <h3 style = {{width: '100%', margin: '0', marginTop: '2%', display: 'flex', marginBottom: '0', justifyContent: 'center', alignItems: 'center'}}>Login</h3>
+                </div>
                 
                 <>
                 <div className = 'email-container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '-2%' }}>

@@ -221,7 +221,7 @@ function FoodLog() {
                             </Box>
                         </button>
                     </div>
-                    <MacroProgressBar label="Energy" color="#4CAF50" unit = ' kcal' nutritionTarget = {nutritionGoals.calories} nutrition = {totalNutrition.total_calories}/>
+                    <MacroProgressBar label="Energy" color="#4CAF50" unit = ' kcal' nutritionTarget = {nutritionGoals.calories||0} nutrition = {totalNutrition.total_calories}/>
                     <MacroProgressBar label="Protein" value={90} color="#2196F3" unit = 'g'  nutritionTarget = {Math.round((nutritionGoals.protein_percent*nutritionGoals.calories*0.01)/4)} nutrition = {totalNutrition.total_protein} />
                     <MacroProgressBar label="Fat" value={75} color="#00BCD4" unit = 'g'  nutritionTarget = {Math.round((nutritionGoals.fat_percent*nutritionGoals.calories*0.01)/9)} nutrition = {totalNutrition.total_fats} />
                     <MacroProgressBar label="Carbs" value={60} color="#FF5722" unit = 'g' nutritionTarget = {Math.round((nutritionGoals.carbohydrate_percent*nutritionGoals.calories*0.01)/4)} nutrition = {totalNutrition.total_carbs} />

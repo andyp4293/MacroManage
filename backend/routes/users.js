@@ -101,5 +101,32 @@ router.post('/signin', async (req, res) => {
     
 });
 
+// route for checking if an email is registered for forgot password 
+router.post('/forgotpassword', async (req, res) => {
+    let { email } = req.body;
+    email = email.toLowerCase();
+
+    try {
+        // checks to see if an account with this email exists exists 
+        const check = await pool.query(`
+            SELECT * FROM users
+            WHERE email = $1`, 
+            [email]
+        ); 
+        if (check.rows.length == 0) { // if the length is 0 then the account with that email doesn't exist
+            return res.status(404).json({message: 'Email is not registered'});  
+        }
+
+        // send success if email is registered
+        return res.status(200).json({message: 'Login successful'}); 
+
+    }
+    catch (error) {
+        console.log('Error checking email', error);
+    }
+        
+    
+});
+
 
 module.exports = router; 
