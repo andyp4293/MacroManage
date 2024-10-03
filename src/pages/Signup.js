@@ -2,6 +2,8 @@ import React, { useState} from 'react';
 import {Box, Button, Typography, CircularProgress} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const backendUrl = process.env.REACT_APP_APIURL;
@@ -24,6 +26,19 @@ function Signup() {
 
     const [loading, setLoading] = useState(false); // for when the frontend is waiting to get a response back 
 
+    const notifySuccess = () => {
+        toast.success('Signed up successfully, please log in', {
+            position: "top-right",
+            autoClose: 3000, // slose after 3 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: 'colored',
+        });
+    };
+
     const handleSignup = async () => {
         try {
             setLoading(true);
@@ -45,6 +60,7 @@ function Signup() {
               });
             }
             else {
+              notifySuccess();  
               setError(''); 
               navigate('/login'); // redirects to login page if no errors
             }

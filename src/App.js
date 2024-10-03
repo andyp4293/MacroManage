@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';  
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';  
 import Navbar from './components/Navbar';
 import Calculator from './pages/Calculator';
 import WeightLog from './pages/Weightlog';
 import FoodLog from './pages/Foodlog';
 import Login from './pages/Login'; 
-import Signup from './pages/Signup'; 
+import Signup from './pages/Signup';
+import { ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css';   
 
 function App() {
     const [loggedIn, setLoggedIn] = useState(false); 
@@ -31,6 +33,7 @@ function App() {
                     height: '100%'
                 }}>
                     <Routes>  
+                        <Route path="/" element={<Navigate to="/food-log" />} />
                         <Route path="/calculator" element={<Calculator />} />
                         <Route path="/food-log" element={<FoodLog />} />
                         <Route path="/weight-log" element={<WeightLog />} />
@@ -39,6 +42,7 @@ function App() {
                     </Routes>
                 </div>
             </div>
+            <ToastContainer/>
         </Router>
     );
 }

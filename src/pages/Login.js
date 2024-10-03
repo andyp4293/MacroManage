@@ -2,6 +2,8 @@ import React, { useState, useEffect} from 'react';
 import {Box, Button, Typography, CircularProgress} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
@@ -16,6 +18,19 @@ function Login({onLogin}) {
 
     const [error, setError] = useState(''); 
     const [loading, setLoading] = useState(false); // for when the frontend is waiting to get a response back 
+
+    const notifySuccess = () => {
+        toast.success('Logged in successfully', {
+            position: "top-right",
+            autoClose: 3000, // slose after 3 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: 'colored',
+        });
+    };
 
     const handleSignin = async () => {
         setLoading(true);
@@ -36,6 +51,7 @@ function Login({onLogin}) {
                 localStorage.setItem('token', data.token);  // save the jwt token in local storage
                 navigate('/food-log'); // redirects to food page
                 onLogin(); 
+                notifySuccess(); 
             }
             else {
                 setError(data.message); 
