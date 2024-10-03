@@ -130,7 +130,7 @@ function WeightLog() {
                             className = {styles['weight-input']}
                             onChange={(e) => {
                                 const newWeight = e.target.value;
-                                const regex = /^[0-9\b]+$/;  // only allows digits
+                                const regex = /^[0-9]+(\.[0-9]{1})?$/;
 
                                 if ((newWeight === '' || regex.test(newWeight)) && newWeight.length <= 3) { // calories can only be 99,999 at most
                                     setWeight(newWeight);  
