@@ -3,7 +3,9 @@ const pool = require('../db'); // Import the shared pool
 const router = express.Router();
 const bcrypt = require('bcryptjs'); // for encrypting the passwords
 const jwt = require('jsonwebtoken');
+const nodemailer = require("nodemailer");
 require('dotenv').config();  // load .env file
+const crypto = require('crypto');
 
 
 
@@ -101,32 +103,121 @@ router.post('/signin', async (req, res) => {
     
 });
 
-// route for checking if an email is registered for forgot password 
 router.post('/forgotpassword', async (req, res) => {
     let { email } = req.body;
     email = email.toLowerCase();
+    console.log(process.env.EMAIL_ID, process.env.EMAIL_PASSWORD); 
 
     try {
-        // checks to see if an account with this email exists exists 
+        // Check if an account with this email exists
         const check = await pool.query(`
             SELECT * FROM users
             WHERE email = $1`, 
             [email]
         ); 
-        if (check.rows.length == 0) { // if the length is 0 then the account with that email doesn't exist
-            return res.status(404).json({message: 'Email is not registered'});  
+        if (check.rows.length == 0) { 
+            // If the email is not registered
+            return res.status(404).json({ message: 'Email is not registered' });  
         }
 
-        // send success if email is registered
-        return res.status(200).json({message: 'Login successful'}); 
+        // Nodemailer setup to send email
+        const transporter = nodemailer.createTransport({
+            host: process.env.EMAIL_HOST,
+            port: process.env.EMAIL_PORT, 
+            auth: {
+                user: process.env.EMAIL_ID,  // email address
+                pass: process.env.EMAIL_PASSWORD  // pass of the email address
+            }
+        });
 
-    }
-    catch (error) {
-        console.log('Error checking email', error);
-    }
+
+        // email template
+        const mailTemplate = (content, buttonUrl, buttonText) => {
+            return `<!DOCTYPE html>
+            <html>
+            <body style="text-align: center; font-family: 'Verdana', serif; color: #000;">
+                <div
+                    style="
+                    max-width: 400px;
+                    margin: 10px;
+                    background-color: #fafafa;
+                    padding: 25px;
+                    border-radius: 20px;
+                    "
+                >
+                <p style="text-align: left;">
+                    ${content}
+                </p>
+                <a href="${buttonUrl}" target="_blank">
+                    <button
+                        style="
+                        background-color: #343d46;
+                        border: 0;
+                        width: 200px;
+                        height: 30px;
+                        border-radius: 6px;
+                        color: #fff;
+                    "
+                    >
+                    ${buttonText}
+                    </button>
+                </a>
+                <p style="text-align: left;">
+                    If you are unable to click the above button, copy paste the below URL into your address bar
+                </p>
+                    <a href="${buttonUrl}" target="_blank">
+                        <p style="margin: 0px; text-align: left; font-size: 10px; text-decoration: none;">
+                        ${buttonUrl}
+                        </p>
+                    </a>
+                </div>
+            </body>
+            </html>`;
+        };
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+
+        // store token inside users table of the account that you are resetting password
+        await pool.query(`
+            UPDATE users 
+            SET reset_token = $1, reset_token_expiration = NOW() + INTERVAL '1 hour' 
+            WHERE email = $2`, 
+            [resetToken, email]
+        );
+
+        const frontendurl = process.env.FRONTEND_URL; 
+        const resetUrl = `${frontendurl}/resetpassword?token=${resetToken}`;
+        const emailContent = mailTemplate(
+            'You requested a password reset. Please click the button below to reset your password.',
+            resetUrl,
+            'Reset Password'
+        );
+
+        const mailOptions = {
+            from: process.env.EMAIL_ID,
+            to: email,
+            subject: 'Password Reset MacroManage',
+            html: emailContent
+        };
         
-    
+        transporter.sendMail(mailOptions, function (error, _) {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'Error sending email' });
+            } else {
+                return res.status(200).json({ message: 'Reset password email sent.' });
+            }
+        });
+
+    } catch (error) {
+        console.log('Error checking email', error);
+        return res.status(500).json({ message: 'Server error' });
+    }
 });
+
+
+
+
 
 
 module.exports = router; 

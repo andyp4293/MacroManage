@@ -37,6 +37,10 @@ function GoalSelector({ open, onClose, goals }) {
 
 
     const handleSave = async () => {
+        if (!token){
+            window.location.href = '/login';
+            return; 
+        }
         try{
             const response = await fetch(`${backendUrl}/api/nutrition/set_nutrition_goals`, {
                 method: 'POST', 
