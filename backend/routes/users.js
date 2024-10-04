@@ -106,7 +106,6 @@ router.post('/signin', async (req, res) => {
 router.post('/forgotpassword', async (req, res) => {
     let { email } = req.body;
     email = email.toLowerCase();
-    console.log(process.env.EMAIL_ID, process.env.EMAIL_PASSWORD); 
 
     try {
         // Check if an account with this email exists
@@ -226,7 +225,7 @@ router.post('/resetpassword', async (req, res) => {
             [resetToken]
         );
 
-        if (user.rows.length > 0) { // if the length is greater than 0 then the reset token is still valid
+        if (user.rows.length == 0) { // if the length is greater than 0 then the reset token is still valid
             await pool.query(`
                 UPDATE users SET reset_token = NULL, reset_token_expiration = NULL 
                 WHERE reset_token = $1`, 
@@ -238,7 +237,7 @@ router.post('/resetpassword', async (req, res) => {
 
          // if email is not already in use, hash the password before inserting it
         const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);  
 
         // update the user's password and clear the reset token
         await pool.query(`
@@ -247,10 +246,6 @@ router.post('/resetpassword', async (req, res) => {
             [hashedPassword, user.rows[0].id]
         );
 
-        await pool.query(
-            'INSERT INTO nutrition_goals (user_id) VALUES ($1)',
-            [user.rows[0].id] // this ensures that every has a nutrition_goals row
-        );
 
         return res.status(200).json({message: 'Password reset successfully!'}); 
 

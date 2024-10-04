@@ -10,7 +10,7 @@ import { useLocation } from 'react-router-dom';
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
-function Signup() {
+function ResetPassword() {
     const navigate = useNavigate();
 
     const [password, setPassword] = useState('');
@@ -45,7 +45,7 @@ function Signup() {
         setLoading(true); 
 
         try {
-            const response = await fetch(`${backendUrl}/api/resetpassword`, {
+            const response = await fetch(`${backendUrl}/api/users/resetpassword`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -63,15 +63,20 @@ function Signup() {
                 setError(''); 
                 navigate('/login'); // redirects to login page if no errors
             } else {
+                console.log('hi'); 
                 response.json().then(data => {
                     setError(data.message); 
                 });
+                return; 
             }
 
         } catch (error) {
             console.error('Error Signing up:', error);
             setError(error); 
+        } finally {
+            setLoading(false); 
         }
+        
     };
 
 
@@ -219,4 +224,4 @@ function Signup() {
     );
 }
 
-export default Signup
+export default ResetPassword

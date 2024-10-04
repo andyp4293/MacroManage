@@ -45,6 +45,7 @@ function ForgotPassword() {
             if (response.ok) { // triggers if the status response is not 200-299, 
                 notifySuccess(); 
             }
+                
             else {
                 setError(data.message); 
             }
@@ -148,7 +149,7 @@ function ForgotPassword() {
                                 disabled = {loading}
                         >
                         <Typography sx = {{textTransform: 'none', color: "white", fontSize: '20px'}}>
-                            Sent Reset Password Link
+                            Submit
                         </Typography>
                 </Button>
                     {/* show loading spinner when loading */}
