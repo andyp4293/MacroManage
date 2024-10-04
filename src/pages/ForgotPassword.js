@@ -148,7 +148,7 @@ function ForgotPassword() {
                                 disabled = {loading}
                         >
                         <Typography sx = {{textTransform: 'none', color: "white", fontSize: '20px'}}>
-                            Reset Password
+                            Sent Reset Password Link
                         </Typography>
                 </Button>
                     {/* show loading spinner when loading */}

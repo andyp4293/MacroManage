@@ -186,7 +186,7 @@ router.post('/forgotpassword', async (req, res) => {
         );
 
         const frontendurl = process.env.FRONTEND_URL; 
-        const resetUrl = `${frontendurl}/resetpassword?token=${resetToken}`;
+        const resetUrl = `${frontendurl}/reset-password?token=${resetToken}`;
         const emailContent = mailTemplate(
             'You requested a password reset. Please click the button below to reset your password.',
             resetUrl,
@@ -215,6 +215,52 @@ router.post('/forgotpassword', async (req, res) => {
     }
 });
 
+// route for a user to reset password
+router.post('/resetpassword', async (req, res) => {
+    const {resetToken, newPassword} = req.body; 
+
+    try {
+        // checks to see if the reset token is still valid 
+        const user = await pool.query(`
+            SELECT * FROM users WHERE reset_token = $1 AND reset_token_expiration > NOW()`, 
+            [resetToken]
+        );
+
+        if (user.rows.length > 0) { // if the length is greater than 0 then the reset token is still valid
+            await pool.query(`
+                UPDATE users SET reset_token = NULL, reset_token_expiration = NULL 
+                WHERE reset_token = $1`, 
+                [resetToken]
+            ); // removes the expired reset token
+
+            return res.status(409).json({message: 'Link is expired, please request a new password reset'});  
+        }
+
+         // if email is not already in use, hash the password before inserting it
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        // update the user's password and clear the reset token
+        await pool.query(`
+            UPDATE users SET password = $1, reset_token = NULL, reset_token_expiration = NULL 
+            WHERE id = $2`, 
+            [hashedPassword, user.rows[0].id]
+        );
+
+        await pool.query(
+            'INSERT INTO nutrition_goals (user_id) VALUES ($1)',
+            [user.rows[0].id] // this ensures that every has a nutrition_goals row
+        );
+
+        return res.status(200).json({message: 'Password reset successfully!'}); 
+
+    }
+    catch (error) {
+        console.log('Error resetting password', error);
+    }
+        
+    
+});
 
 
 
