@@ -130,17 +130,21 @@ function WeightLog() {
                             className = {styles['weight-input']}
                             onChange={(e) => {
                                 const newWeight = e.target.value;
-                                const regex = /^[0-9]+(\.[0-9]{1})?$/;
+                                const regex = /^\d+(\.\d{0,2})?$/;
 
-                                if ((newWeight === '' || regex.test(newWeight)) && newWeight.length <= 3) { // calories can only be 99,999 at most
-                                    setWeight(newWeight);  
+                                if (newWeight === '') {
+                                    setWeight('');
+                                } 
+                                else if (regex.test(newWeight) && parseFloat(newWeight) <= 999.99) {
+                                    setWeight(newWeight);
                                 }
                             }}
                             value={weight} // value inside the input is whatever weight value currently is
                             onKeyDown = {(e) => {
                                 if (e.key === "Enter"){
-                                if (!loading)
-                                    addEntry(weight); 
+                                    if (!loading){
+                                        addEntry(weight); 
+                                    }
                                 }
                             }}
 
@@ -184,7 +188,7 @@ function WeightLog() {
                     <WeightChart data = {entries}/>
 
                 </div>
-                    <WeightStats/>
+                    <WeightStats data = {entries}/>
                 </div>
 
                 <ChatBox/>

@@ -22,6 +22,7 @@ function WeightTable({data, onChange}) {
     const token = localStorage.getItem('token'); // json web token
     // entries is an array for objects that will hold each entry's date and weight
     const [entries, setEntries] = useState([]); 
+    const [loading, setLoading] = useState(false); 
 
     const fetchWeightLogs = useCallback(async () => {
         if (!token) return; // prevent making the request if there is no token/user isn't logged in
@@ -81,7 +82,7 @@ function WeightTable({data, onChange}) {
     // func for saving the weight edit
 
     const handleSaveEdit = async (id) => {
-        
+        setLoading(true);
 
         try {
             const response = await fetch(`${backendUrl}/api/weight/edit_weight_entry/${id}`, {
@@ -109,17 +110,20 @@ function WeightTable({data, onChange}) {
         finally {
             setEditIndex(null); 
             onChange(); 
+            setLoading(false); 
         }
     }
 
     // ensure the user cannot type a number greater 999.999 or less than 0  
     const handleEditInput = (event) =>{
-        let value = event.target.value; // Get the current value of the input
-        
-        // the weight value inside the input only changes as long as it is below 1000
-        // the input also cannot have more than 7 digits, highest possible input is 999.999
-        if (value < 1000 && value.length < 8 && value >= 0){ // if the current value is 999, if a user tries typing another 9 the value won't change
-            setNewWeight(value);
+        let newWeight = event.target.value; // Get the current value of the input
+        const regex = /^\d+(\.\d{0,2})?$/;
+
+        if (newWeight === '') {
+            setNewWeight('');
+        } 
+        else if (regex.test(newWeight) && parseFloat(newWeight) <= 999.99) {
+            setNewWeight(newWeight);
         }
     }
 
@@ -184,6 +188,13 @@ function WeightTable({data, onChange}) {
                                         style={{ width: '80px' }}
                                         max = '1000'
                                         min = '0'
+                                        onKeyDown = {(e) => {
+                                            if (e.key === "Enter"){
+                                                if (!loading){
+                                                    handleSaveEdit(entry.id); 
+                                                }
+                                            }
+                                        }}
                                         />
                                         <span className = {styles['edit-unit']}>lbs</span>
                                     </div>
@@ -220,7 +231,9 @@ function WeightTable({data, onChange}) {
                                 <div className={styles['actionButtons']}>
                                     <button
                                         className={styles['actionButton']}
-                                        onClick={() => setEditIndex(index)}
+                                        onClick={() => {setEditIndex(index)
+                                            setNewWeight(entry.weight_lbs)}
+                                        }
                                     >
                                         <EditIcon style={{ fontSize: '18px' }} />
                                     </button>
