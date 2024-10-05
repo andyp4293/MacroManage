@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import {Box, Button, Typography, CircularProgress} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,15 @@ const backendUrl = process.env.REACT_APP_APIURL;
 
 function Signup() {
     const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    useEffect(() => {
+        if (token) { // if a user is logged in and tries to access the signup page they will be redirected to food log
+            navigate('/food-log');
+        }
+    }, [token, navigate]);  
+
+
+
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
 

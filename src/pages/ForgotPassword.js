@@ -2,6 +2,7 @@ import React, { useState, useEffect} from 'react';
 import {Box, Button, Typography, CircularProgress} from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
@@ -9,6 +10,16 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 const backendUrl = process.env.REACT_APP_APIURL;
 
 function ForgotPassword() {
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    useEffect(() => {
+        if (token) { // if a user is logged in and tries to access the login page they will be redirected to food log
+            navigate('/food-log');
+        }
+    }, [token, navigate]);  
+
+
+
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
 

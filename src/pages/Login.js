@@ -10,6 +10,14 @@ const backendUrl = process.env.REACT_APP_APIURL;
 
 function Login({onLogin}) {
     const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    useEffect(() => {
+        if (token) { // if a user is logged in and tries to access the login page they will be redirected to food log
+            navigate('/food-log');
+        }
+    }, [token, navigate]);  
+
+
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
 

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, Select, MenuItem, FormControl, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
 function GoalSelector({ open, onClose, goals }) {
     const token = localStorage.getItem('token'); // json web token
+
     const [calories, setCalories] = useState(null);
     const [carbs, setCarbs] = useState(null);
     const [fat, setFat] = useState(null);
@@ -13,6 +16,20 @@ function GoalSelector({ open, onClose, goals }) {
     const [totalPercent, setTotalPercent] = useState(null); 
     const [message, setMessage] = useState(''); 
     const [changed, setChanged] = useState(false); // for keeping the save button disabled if the user didn't change from their original percentages
+
+    const navigate = useNavigate();
+    const notifyError = () => {
+        toast.error('Please log in before editing nutrition goals.', {
+            position: "top-right",
+            autoClose: 3000, // slose after 3 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: 'colored',
+        });
+    };
 
     useEffect(() => {
         if (goals !== undefined) {
@@ -38,7 +55,8 @@ function GoalSelector({ open, onClose, goals }) {
 
     const handleSave = async () => {
         if (!token){
-            window.location.href = '/login';
+            navigate('/login');
+            notifyError(); 
             return; 
         }
         try{
@@ -259,7 +277,7 @@ function GoalSelector({ open, onClose, goals }) {
                     {`${totalPercent}%`}
                 </p> 
             </div>
-            <Button onClick={handleSave} style = {{backgroundColor: (totalPercent === 100 && changed && calories !== '') ? '#343d46': '#E5E5E5', color: 'white', textTransform: 'none'}} disabled = {(totalPercent !== 100 || !changed || calories === '')}>
+            <Button disableRipple onClick={handleSave} style = {{backgroundColor: (totalPercent === 100 && changed && calories !== '') ? '#343d46': '#E5E5E5', color: 'white', textTransform: 'none'}} disabled = {(totalPercent !== 100 || !changed || calories === '')}>
                 Save Goals
             </Button>
             {message &&
