@@ -6,6 +6,8 @@ import styles from '../styles/FoodSearch.module.css';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import AddIcon from '@mui/icons-material/Add';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -40,6 +42,20 @@ function FoodSearchModal({ open, onClose, addFood }) {
     const [passedServingQty, setPassedServingQty] = useState('');
 
     const [selectedServingUnit, setSelectedServingUnit] = useState('unit1');
+
+    const navigate = useNavigate();
+    const notifyError = () => {
+        toast.error('Please log in before adding a weight entry.', {
+            position: "top-right",
+            autoClose: 3000, // slose after 3 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: 'colored',
+        });
+    };
 
     const handleServingSelect = (e) => {
         if (e.target.value.length < 15) {
@@ -144,7 +160,8 @@ function FoodSearchModal({ open, onClose, addFood }) {
 
     const handleAdd = () => {
         if(!token) {
-            window.location.href = '/login';// prompts the user to login if they aren't and they try to add an entry
+            notifyError(); 
+            navigate('/login');// prompts the user to login if they aren't and they try to add an entry
             return; 
         }
         const foodDetails = {

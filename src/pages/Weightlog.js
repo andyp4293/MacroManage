@@ -6,6 +6,8 @@ import WeightTable from '../components/WeightTable';
 import {CircularProgress} from '@mui/material';
 import ChatBox from '../components/Chatbox';
 import WeightStats from '../components/WeightStats';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const backendUrl = process.env.REACT_APP_APIURL;
 
@@ -20,6 +22,19 @@ function WeightLog() {
 
     // entries is an array for objects that will hold each entry's date and weight
     const [entries, setEntries] = useState([]); 
+    const navigate = useNavigate();
+    const notifyError = () => {
+        toast.error('Please log in before adding a weight entry.', {
+            position: "top-right",
+            autoClose: 3000, // slose after 3 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: 'colored',
+        });
+    };
 
 
     const fetchWeightLogs = useCallback(async () => {
@@ -48,7 +63,8 @@ function WeightLog() {
     // func to add a new weight entry whenever user presses save
     const addEntry = async (addWeight) => {
         if(!token) {
-            window.location.href = '/login';// prompts the user to login if they aren't and they try to add an entry
+            navigate('/login'); ;// prompts the user to login if they aren't and they try to add an entry
+            notifyError(); 
         }
         setLoading(true); 
         let weightValue;
