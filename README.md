@@ -1,70 +1,117 @@
-# Getting Started with Create React App
+# MacroManage
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**MacroManage** is a full-stack web application designed to help users track their food intake and weight, with features like secure login, password recovery, and detailed logs. Users can monitor their daily nutrition and weight progress over time.
 
-## Available Scripts
+## Table of Contents
+- [Demo](#demo)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Usage](#usage)
 
-In the project directory, you can run:
+## Demo
 
-### `npm start`
+You can try the live application here: [MacroManage](https://macromanage.netlify.app/food-log)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
+- **Food Database**: Database with thousands of food items sourced from the USDA database. 
+- **Track food intake**: Log your meals and monitor your daily nutritional breakdown (calories, protein, carbs, fats).
+- **Change nutrition goals**: Customize and set your own nutrition goals based on your dietary needs.
+- **Weight tracking**: Record your weight regularly and monitor your progress over time.
+- **Login and authentication**: Secure login features including email/password authentication, and password recovery.
+- **Forgot password**: If a user forgets their password, they can reset it via an email link.
+- **Responsive design**: Fully responsive, optimized for both desktop and mobile devices.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Tech Stack
 
-### `npm test`
+### Frontend:
+- **React.js**: Handles the dynamic user interface and front-end logic.
+- **Netlify**: Frontend is hosted on Netlify for fast, global access.
+  
+### Backend:
+- **Node.js**: Backend for handling API requests and business logic.
+- **Express.js**: Serves the API routes and handles backend processes.
+- **PostgreSQL**: Database for storing user data, food logs, and weight logs.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Authentication:
+- **JWT (JSON Web Tokens)**: Used for secure user authentication.
+- **Nodemailer**: Integrated with email services for "Forgot Password" functionality.
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To run the application locally, follow these steps:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
+- [Node.js](https://nodejs.org/) installed
+- [PostgreSQL](https://www.postgresql.org/) database running locally or remotely
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Backend Setup
 
-### `npm run eject`
+1. Clone the repository:
+   git clone https://github.com/your-username/macromanage.git
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Navigate to backend folder: 
+   cd macromanage/backend
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Install backend dependencies:
+   npm install
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. Create a .env in the backend folder and add your environment variables:
+  PORT=5000
+  DATABASE_URL=your-postgresql-connection-string
+  JWT_SECRET=your-jwt-secret
+  EMAIL_USER=your-email@example.com
+  EMAIL_PASS=your-email-password
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+5. Start backend server:
+   node index.js
 
-## Learn More
+### Frontend Setup
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Navigate to root folder "macromanage'
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. Install frontend devepencies:
+   npm install
 
-### Code Splitting
+3. Create a .env in the root folder and add your environment variables:
+  REACT_APP_API_URL=http://localhost:5000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. Start frontend:
+   npm start
 
-### Analyzing the Bundle Size
+5. Visit http://localhost:3000 to use the application.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Usage
 
-### Making a Progressive Web App
+### Signing Up
+1. Navigate the login page on top right.
+2. Click on sign up
+3. Enter the required information, including your email, password, and any other necessary details.
+4. Submit the form to create your account.
+5. After successful registration, you will be redirected to the login page.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Logging In
+1. Navigate to the login page.
+2. Enter your registered email and password.
+3. Click the "Login" button to access your account.
 
-### Advanced Configuration
+### Logging Food
+1. Sign in to the application.
+2. Navigate to the "Food Log" section.
+3. Add meals, specifying the food items and their respective nutritional information (calories, protein, carbs, fats).
+4. Track daily intake and see how it compares to your nutrition goals.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Tracking Weight
+1. Go to the "Weight Log" section.
+2. Enter your current weight for the day.
+3. View weight progress over time through the visual weight tracker.
 
-### Deployment
+### Changing Nutrition Goals
+1. Navigate to the "Nutrition Goals" section.
+2. Set your desired calorie and macro goals.
+3. Save changes to update your nutrition goals accordingly.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Forgot Password
+1. On the login page, click "Forgot Password."
+2. Enter your email to receive a password reset link.
+3. Follow the link in your email to reset your password securely. (Usually in the spam folder)
