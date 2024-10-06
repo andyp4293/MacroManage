@@ -265,8 +265,10 @@ function Signup() {
 
         {/* show loading spinner when loading */}
         {loading && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-            <CircularProgress sx = {{color: '#343d46'}} size={24} />May take a while for server to respond, please wait up to 1 minute. 
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px', marginBottom: '0' }}>
+            <CircularProgress sx = {{color: '#343d46'}} size={24} /> 
+            <p>May take a while for server to respond, please wait up to 1 minute. </p>
+
           </Box>
         )}
         {error && <Box className = 'error-message' style={{width: '100%', borderRadius: '4px', display: 'flex', justifyContent: 'center', height: '30px', border: '', color: 'red'}} >
